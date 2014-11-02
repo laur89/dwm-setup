@@ -1,5 +1,5 @@
-#!/usr/bin/env python3.2
-# -*- coding: utf-8 -*- 
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 # py3 !
 # Requires psutil module for memory, cpu and bandwidth usage retrieval:
 #   apt-get install python3-pip
@@ -23,10 +23,11 @@ import string
 modefile = '/tmp/DWM_statusbar_mode.dat'  # !!! Be careful with editing this - other programs might refer to that file !!!
 startmode = '1'   # Default mode to start in
 wx_log = "/data/.tmp/tartu_wx_log.txt"    # Be careful with editing this - another script manages this file !!!
-interfaces_file = "/tmp/connected_interfaces.dat" # Be careful with editing this - another script manages this file !!!
+interfaces_file = "/tmp/connected_interfaces.dat"  # Be careful with editing this - another script manages this file !!!
 
 cpudata_main = '/proc/stat'     # File containing processor info
 
+default_interface = 'eth0'
 max_mode = 3  # Maximum mode value
 min_mode = 1   # Minimum mode value
 
@@ -41,7 +42,7 @@ def find_mode():
     with open(modefile, 'r') as f:
         new_mode = f.read()
 
-    if new_mode == 'restart':        
+    if new_mode == 'restart':
         #path=os.path.realpath(__file__) # Path to the current script
         sys.stdout.flush()  # Flushes open file objects etc;
         python = sys.executable
@@ -49,7 +50,7 @@ def find_mode():
         sys.exit()
 
     return new_mode
-    
+
 
 class Segment:
     icons = {
@@ -84,7 +85,7 @@ class Segment:
         'up_arrow': '\u1e4b',
         'down_arrow': '\u1e4a',
         'equals': '=',
-        
+
         'double_arrow': '\u1e2b',
         'arrow': '\u1e00',
         'miniarrow': '\u1e02',
@@ -104,34 +105,34 @@ class Segment:
         'error': '\x04',
         'white': '\x07',
         'warning': '\x08',
-        
+
         'black_yellow': '\x09',    # black text, yellow bg
         'yellow_black': '\x0A',
-        
+
         'black_blue': '\x0B',     # black text, blue bg
         'blue_black': '\x0C',
         'white_blue': '\x0D',
-        
+
         'black_gray': '\x0E',       # black text, gray bg
         'gray_black': '\x0F',
         'white_gray': '\x10',       # gray bg, white txt
-        
+
         'black_orange': '\x12',     # black text, brght orange bg
         'orange_black': '\x13',
         'white_orange': '\x11',     # white text on brght orange bg
-        
+
         'black_magenta': '\x14',     # black text, magenta bg
         'magenta_black': '\x15',
         'white_magenta': '\x08',
-        
-        
+
+
         # Dummy vars:
         'None': '',
         'None_black': '',
         'black_None': '',
     }
 
-        
+
     def get_bar(self, percent, length=10, type='round-regular'):
         bar = []
         fill_length = round(percent / 100 * length)
@@ -191,10 +192,10 @@ class Segment:
 
 class Music(Segment):
     trim_length = 30    # nr of characters to trim song info to;
-    
+
     def __str__(self):
         return self._module
-        
+
     def __init__(self, color):
         Segment.__init__(self)
 
@@ -221,8 +222,8 @@ class Music(Segment):
                 playing,
                 current + str('/') + total,
             ])
-            
-            try: 
+
+            try:
                 bat._bar  # Show progress bar only if there's no bar present for the battery
             except:
                 self.get_bar(percent),
@@ -237,7 +238,7 @@ class Music(Segment):
 class Vol(Segment):
     def __str__(self):
         return self._module
-        
+
     def __init__(self, color):
         Segment.__init__(self)
 
@@ -247,8 +248,8 @@ class Vol(Segment):
             no_bat_bar = False
         except:
             no_bat_bar = True
-            
-            
+
+
         try:
             cmd = run_cmd(['amixer', 'get', 'Master'])
         except OSError:
@@ -277,17 +278,17 @@ class Vol(Segment):
             self.set_icon('vol_high', color)
         else:
             self.set_icon('vol_medium', color)
-            
+
         if no_bat_bar:
             self.get_bar(volume)
             self.build_module(self._bar+'\u3000'+str(volume)+'%', color)
         else:
             self.build_module(str(volume)+'%', color)
-            
+
 class MailSegment(Segment):
     def __str__(self):
         return self._module
-        
+
     def __init__(self, color):
         Segment.__init__(self)
 
@@ -326,7 +327,7 @@ class MailSegment(Segment):
 class Date(Segment):
     def __str__(self):
         return self._module
-        
+
     def __init__(self, color):
         Segment.__init__(self)
 
@@ -337,39 +338,39 @@ class Date(Segment):
 class Time(Segment):
     def __str__(self):
         return self._module
-        
+
     def __init__(self, color):
         Segment.__init__(self)
 
         self.set_icon('None', color)
         self.build_module(datetime.datetime.now().strftime('%R'), color, False) # 'False' bypasses the arrow addition, allowing also calling this class with only 1 color
-        
+
 
 class Mem(Segment):
     def __str__(self):
         return self._module
-    
+
     def __init__(self, color):
         Segment.__init__(self)
 
         self.set_icon('ram', color)
-        
+
         mem = str(round(psutil.phymem_usage()[3])) + '%'
         self.build_module(mem, color)
-        
+
 class CPU(Segment):
     def __str__(self):
         return self._module
-        
+
     def __init__(self, color, all_cpus=False):
         Segment.__init__(self)
-        
+
         self.set_icon('cpu', color)
 
         if all_cpus == True:
         #  CPU percentage per core:
             cpuloads = psutil.cpu_percent(interval=sleep_interval, percpu=True)
-            
+
             output = ''
             for i, load in enumerate(cpuloads):
                 rounded = str(round(load)) + '%'
@@ -385,20 +386,20 @@ class CPU(Segment):
             output = str(round(psutil.cpu_percent(interval=sleep_interval))) + '%'
             if len(output) == 2:
                 output = ' ' + output # pad the value if only one digit
-            
+
         self.build_module(output, color)
 
 class CPU_manual(Segment):
     ''' Calculates cpu percentage without the use of psutil lib '''
-    
+
     def __str__(self):
         return self._module
-        
+
     def __init__(self, color, all_cpus=False):
         Segment.__init__(self)
 
         self.set_icon('cpu', color)
-        
+
         global cpu_dict
 
         # Read in CPU data:
@@ -408,69 +409,69 @@ class CPU_manual(Segment):
         if all_cpus == True:
         #  CPU percentage per core:
             output = ''
-                
+
             for i, line in enumerate(cpu_datalines[1:]):
                 if line.startswith('cpu'):
                     # Load the old values from the dictionary:
                     idle_old = cpu_dict.get(i)[0]
                     cpu_old_total = cpu_dict.get(i)[1]
-                    
+
                     line = line.split()
                     idle = int(line[4])
                     cpu_total = int(line[1]) + int(line[2]) + int(line[3]) + idle
                     cpu_diff = cpu_total - cpu_old_total
-                    
+
                     cpu_perc = str(round(100 * (cpu_diff - (idle - idle_old)) / cpu_diff)) + '%'
-                    
+
                     if len(cpu_perc) == 2:
                         cpu_perc = ' ' + cpu_perc  # pad the value if only one digit
-                    
-                    
+
+
                     output = output + 'CPU' + str(i) + ': ' + cpu_perc + ' ' + self.icons.get('miniarrow') + ' '
 
                     # add old data to dictionary:
                     cpu_dict[i] = [idle, cpu_total]
                 else:
                     break
-                    
+
             # remove the trailing ' | ' from last item:
             output = output[0:len(output)-3]
 
         else:
         #  CPU percentage overall:
-            
+
             cpu_data = cpu_datalines[0].split()
-            
+
             idle = int(cpu_data[4])
             cpu_total = int(cpu_data[1]) + int(cpu_data[2]) + int(cpu_data[3]) + idle
             cpu_diff = cpu_total - cpu_old_total
-            
+
             output = str(round(100 * (cpu_diff - (idle - idle_old)) / cpu_diff)) + '%'
-            
+
             idle_old = idle
             cpu_old_total = cpu_total
-            
+
             if len(output) == 2:
                 output = ' ' + output  # pad the value if only one digit
-            
+
         self.build_module(output, color)
-        
-        
+
+
 class cpu_and_mem(Segment):
     ''' Prints total CPU and Mem percentage within single module '''
     def __str__(self):
         return self._module
-    
+
     def __init__(self, color):
         Segment.__init__(self)
         self.set_icon('cpu', color)
-        
+
         cpu = str(round(psutil.cpu_percent(interval=sleep_interval))) + '%'
         if len(cpu) == 2:
             cpu=' ' + cpu # pad the value if only one digit
-        
-        mem = str(round(psutil.phymem_usage()[3])) + '%'
-        
+
+        mem = str(round(psutil.phymem_usage()[2])) + '%'
+
         self.build_module(cpu + '\u3000' + self.icons.get('miniarrow')  + '\u3000' +
                                                             self.icons.get('ram') + '\u3000' + mem
                                                                                             , color)
@@ -480,10 +481,10 @@ class cpu_and_temp(Segment):
 
     def __str__(self):
         return self._module
-        
+
     def __init__(self, color):
         Segment.__init__(self)
-        
+
         self.set_icon('cpu', color)
 
         # Find and store the temps:
@@ -499,7 +500,7 @@ class cpu_and_temp(Segment):
 
         # CPU percentages & module assembly:
         cpuloads = psutil.cpu_percent(interval=sleep_interval, percpu=True)
-        
+
         output = ''
         for i, load in enumerate(cpuloads):
             rounded = str(round(load)) + '%'
@@ -510,15 +511,15 @@ class cpu_and_temp(Segment):
         # remove the trailing ' | ' from last item:
         output = output[0:len(output)-3]
 
-            
+
         self.build_module(output, color)
-        
+
 
 class bat_(Segment):
     # FYI: to simply see whether AC power is connected:   cat /sys/class/power_supply/C1F2/online
     def __str__(self):
         return self._module
-        
+
     def __init__(self, color):
         Segment.__init__(self)
 
@@ -553,20 +554,20 @@ class bat_(Segment):
             #self.set_icon('AC', color)
             #self.build_module('', color)
             self.build_module(None)
-            
+
 class wx(Segment):
     ''' Reads temperature from custom WX file that's managed by different script '''
 
     def __str__(self):
         return self._module
-        
+
     def __init__(self, color):
         Segment.__init__(self)
 
         try:
             with open(wx_log, 'r') as f:
                 wx_info = f.readlines()
-            
+
             # Extract temperature (implying temp is on the second line, i.e. indx 1):
             index = wx_info[1].find('Temp:')
             index2 = wx_info[1].find(' °C')
@@ -598,18 +599,18 @@ class wx(Segment):
             self.build_module("wx file can't be read", color)
             return
         self.build_module(temp, color)
-        
+
 class cpu_temp(Segment):
     ''' Prints sys temps '''
 
     def __str__(self):
         return self._module
-        
+
     def __init__(self, color):
         Segment.__init__(self)
 
         self.set_icon('cpu', color)
-        
+
         try:
             systemps = os.popen('sensors').readlines()
             cpu_output = ''
@@ -628,10 +629,10 @@ class hdd_temp(Segment):
 
     def __str__(self):
         return self._module
-        
+
     def __init__(self, color):
         Segment.__init__(self)
-        
+
         self.set_icon('hdd', color)
 
         try:
@@ -646,10 +647,10 @@ class gpu_temp(Segment):
 
     def __str__(self):
         return self._module
-        
+
     def __init__(self, color):
         Segment.__init__(self)
-        
+
         self.set_icon('gpu', color)
 
         try:
@@ -657,26 +658,26 @@ class gpu_temp(Segment):
             self.build_module(gpu_temp, color)
         except:
             self.build_module("temp can't be read from nvidia-settings", color)
-            
+
 class network(Segment):
     def __str__(self):
         return self._module
-        
+
     def __init__(self, color):
         Segment.__init__(self)
         # Rx/Tx data also at  /sys/class/net/wlan0/statistics/[tx_bytes | rx_bytes]
-        
+
         global ntw_startTime
         global recv_old
         global sent_old
 
         self.set_icon('network_eth', color)
-        
+
         nw_data = psutil.network_io_counters(pernic=True) # a dict datatype;
         ntw_endTime = time.time()
         timediff = float(ntw_endTime - ntw_startTime)
         ntw_startTime = time.time()   # As timediff got calculated, log the new startTime
-        
+
         # Find which interface data to show:
         try:
             with open(interfaces_file, 'r') as f:
@@ -690,8 +691,8 @@ class network(Segment):
                 # Try to find SSID as well:
                 if len(nw_local_data) >= 3:
                     ssid_line = nw_local_data[2].split()
-                    active = active + '/' + ssid_line[1] 
-            elif active == 'eth0':
+                    active = active + '/' + ssid_line[1]
+            elif active == 'eth0' or active == 'eth1':
                 int_data = nw_data.get(active)
             else:
                 # No (known) connection:
@@ -703,23 +704,23 @@ class network(Segment):
         if active != None:
             sent = float(int_data[0])
             recv = float(int_data[1])
-            
+
             sent_diff = float((sent - sent_old) * 8)  # Find the difference between last measure point, convert to bits
-            recv_diff = float((recv - recv_old) * 8) 
-            
+            recv_diff = float((recv - recv_old) * 8)
+
             # Find current Tx:
             sent_current = round( ((sent_diff / 1048576) / timediff), 1) # translates into Mbit
-            
+
             if sent_current < 1.0:
                 sent_current = str(round( ((sent_diff / 1024) / timediff))) + ' Kbit/s'
             elif sent_current > 1024.0:
                 sent_current = str(round( ((sent_diff / 1073741824) / timediff), 2)) + ' Gbit/s'
             else:
                 sent_current = str(sent_current) + ' Mbit/s'
-                
+
             # Find current Rx:
             recv_current = round( ((recv_diff / 1048576) / timediff), 1) # translates into Mbit
-            
+
             if recv_current < 1.0:
                 recv_current = str(round( ((recv_diff / 1024) / timediff))) + ' Kbit/s'
             elif recv_current > 1024.0:
@@ -727,55 +728,55 @@ class network(Segment):
             else:
                 recv_current = str(recv_current) + ' Mbit/s'
 
-            
-            
+
+
             # Find total sent:
             sent_total = round(sent / 1048576, 1) # translates into MB
-            
+
             if sent_total < 1.0:
                 sent_total = str(round(sent / 1024)) + ' KB'
             elif sent_total > 1024.0:
                 sent_total = str(round(sent / 1073741824, 2)) + ' GB'
             else:
                 sent_total = str(sent_total) + ' MB'
-                
+
             # Find total recv:
             recv_total = round(recv / 1048576, 1) # translates into MB
-            
+
             if recv_total < 1.0:
                 recv_total = str(round(recv / 1024)) + ' KB'
             elif recv_total > 1024.0:
                 recv_total = str(round(recv / 1073741824, 2)) + ' GB'
             else:
                 recv_total = str(recv_total) + ' MB'
-                
+
             # Reset the variables:
             sent_old = sent
             recv_old = recv
 
-            
+
             self.build_module(
                 str(active + self.icons.get('miniarrow') + '\u3000' + self.icons.get('down_arrow')  + '\u3000' + recv_current +
                 '\u3000' + self.icons.get('double_arrow') + '\u3000' + recv_total + self.icons.get('miniarrow') + '\u3000' +
                 self.icons.get('up_arrow')  + '\u3000' + sent_current + '\u3000' + self.icons.get('double_arrow') + '\u3000' + sent_total)
                             , color)
-            
+
         else:   # No (known) interfaces connected:
             self.build_module('No connection', color)
-   
+
 
 
 ############ START ##############
-############################### 
+###############################
 
 # Find usage, if cml arguments were passed:
 if len(sys.argv) > 1:
     # Find current mode:
     with open(modefile, 'r') as f:
         mode = int(f.read())
-    
+
     arg = sys.argv[1]
-    
+
     if arg == 'next':
         # Switch to next mode:
         mode += 1
@@ -789,11 +790,11 @@ if len(sys.argv) > 1:
     else:
         print('unknown usage option. abort.')
         sys.exit(1)
-        
+
     # Write new mode to statusfile:
     with open(modefile, 'w') as f:
         f.write(str(mode))
-    
+
     sys.exit()
 
 
@@ -814,10 +815,10 @@ try:
         int_data = nw_data.get(active)
     else:   # Meaning no 'default' interface was listed
         # because vars have to be initialized nevertheless:
-        int_data = nw_data.get('wlan0')
+        int_data = nw_data.get(default_interface)
 
 except: # meaning interfaces_file has not yet been created, so initialize vars with wlan data:
-    int_data = nw_data.get('wlan0')
+    int_data = nw_data.get(default_interface)
 
 sent_old = float(int_data[0])
 recv_old = float(int_data[1])
@@ -826,14 +827,14 @@ recv_old = float(int_data[1])
 
 with open(cpudata_main, 'r') as f:
     cpu_datalines = f.readlines()
-    
+
 cpu_data = cpu_datalines[0].split()
 idle_old = int(cpu_data[4])
 cpu_old_total = int(cpu_data[1]) + int(cpu_data[2]) + int(cpu_data[3]) + idle_old
 
 # Per core var initialization:
 cpu_dict = {}
-    
+
 for i, line in enumerate(cpu_datalines[1:]):
     if line.startswith('cpu'):
         line = line.split()
@@ -845,7 +846,7 @@ for i, line in enumerate(cpu_datalines[1:]):
     else:
         break
 
-#################### END OF INITIALIZATION  ########################### 
+#################### END OF INITIALIZATION  ###########################
 
 # Write the default mode to statusfile:
 with open(modefile, 'w') as f:
@@ -860,36 +861,36 @@ while 1:
         if mode == '1':
             #cpu = CPU('black_yellow', False) # if second parameter is True, then CPU() returns recource usage for all cores
             #mem = Mem('black_blue')
-            bat = bat_('white_gray')
+#            bat = bat_('white_gray')
             time_ = Time('white')
             date = Date('white_gray')
             vol = Vol('white_blue')
             music = Music('black_yellow')
-            weather = wx('white_gray')
+#            weather = wx('white_gray')
             cpu = cpu_and_mem('white_gray')
 
             status=str(
                                     str(cpu) +
-                                    str(bat) +
+#                                    str(bat) +
                                     str(music) +
-                                    str(weather) +
+#                                    str(weather) +
                                     str(vol) +
                                     str(date) +
                                     str(time_)
                             )
-                            
+
 
             #del bat        # Remove bat object, as many formatting rules depend on its _bar existence;
             #time.sleep(sleep_interval)  # sleep provided by the CPU class (psutils)
-            
-        elif mode == '2':          
+
+        elif mode == '2':
             bat = bat_('white_gray')
             time_ = Time('white')
             date = Date('white_gray')
             vol = Vol('white_blue')
             ntw = network('black_yellow')
             weather = wx('white_gray')
-            
+
             status=str(
                                     str(ntw) +
                                     str(bat) +
@@ -898,13 +899,13 @@ while 1:
                                     str(date) +
                                     str(time_)
                             )
-            
+
             time.sleep(sleep_interval)
-            
+
         elif mode == '3':
             #cpu = CPU_manual('white_gray', True)
             cpu = cpu_and_temp('white_gray')
-            bat = bat_('white_gray')
+#            bat = bat_('white_gray')
             time_ = Time('white')
             date = Date('white_gray')
             vol = Vol('white_blue')
@@ -913,10 +914,10 @@ while 1:
             hdd_temp_ = hdd_temp('black_yellow')
             gpu_temp_ = gpu_temp('black_yellow')
             mem = Mem('black_yellow')
-            
+
             status=str(
                                     str(mem) +
-                                    str(bat) +
+#                                    str(bat) +
                                     str(cpu) +
                                     #str(cpu_temp_) +
                                     str(gpu_temp_) +
@@ -932,10 +933,10 @@ while 1:
         else:
             # Script exits on unrecongnised mode:
             sys.exit()
-        
+
         # Finally, set the root window:
         os.system('xsetroot -name "' + status + '        "')   # trailing spaces are because of the systray; try without them, you'll see;
-        
+
         # Find operating mode:
         mode = find_mode()
     except:

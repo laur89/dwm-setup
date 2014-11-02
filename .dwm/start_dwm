@@ -2,7 +2,7 @@
 # Will be executed by ~/.xinitrc
 # and will in turn execute $session_startfile
 
-session_startfile="$HOME/.dwm-session-startuplist"
+session_startfile="$HOME/.dwm/dwm-session-startuplist"
 # ==============================
 
 if test -z "$DBUS_SESSION_BUS_ADDRESS"; then
@@ -15,16 +15,13 @@ xset fp rehash
 
 # Load the Xresources database:
 [[ -f ~/.Xresources ]] && xrdb -merge ~/.Xresources # Do not background!
-# load keymaps: (twice; dunno why needed)
-xmodmap ~/.keymaps
-xmodmap ~/.keymaps
 # ---------------------------------------------------------------
 # Draw the status bar:
 #while true; do
 #    python3 /home/laur/Documents/comp/DWM/bars/py_bar.py
 #    sleep 1        # Sleep is currently provided by the py script itself
 #done &
-python3 /home/laur/Documents/comp/DWM/bars/py_bar.py &
+python3 $HOME/.dwm/bars/py_bar.py &
 
 # Start the programs/scripts in $session_startfile:
 if [ -f "$session_startfile" ]; then
@@ -34,6 +31,9 @@ else
 fi
 
 sleep 3
+
+# load keymaps: (twice; dunno why needed)
+xmodmap ~/.keymaps
 
 # loop, so exiting dwm actually restarts it without exiting clients:
 #while true; do
