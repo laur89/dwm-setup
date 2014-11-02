@@ -1,0 +1,5 @@
+report them!
+
+ - alsa volume part is not good, and also libs are not c99 compatible, forcing cmus to use bad hack (my fault)
+ - all socket related parts are hanging when they connot connect
+ - write a f* manual

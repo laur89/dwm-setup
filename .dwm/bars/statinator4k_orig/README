@@ -1,0 +1,23 @@
+statinator4k (formerly known as dstat, more formerly known as dwmstatus)
+
+Simple status gatherer. statinator4k is based upon dwmstat (released in 2008 by
+Jeremy Jay to the public domain)
+
+ - handles libnotify events (using notify.c from dwmstat)
+ - gets cpu usage directly from /sys/class/power
+ - gets memory usage directly from /proc/meminfo
+ - gets Clocks directly from
+   /sys/devices/system/cpu/cpu?/cpufreq/scaling_cur_freq
+ - get cpu themperature directly from
+   /sys/devices/virtual/thermal/thermal_zone?/temp
+ - gets network status from /proc/net/dev
+ - gets wifi signal level directly from /proc/net/wireless
+ - gets battery info from /proc/acpi/battery/BAT?
+ - gets cmus info directly from unix socket
+ - gets mpd info directly from port (WIP, does not work now!)
+ - gets volume with alsa libs (baaaaad. need better solution!)
+ - output format for dwm, dwm with colorbar path, dwm-sprinkles and html (WIP)
+   more could be easily added
+
+Configuration is done by editing config.h and config.mk
+
