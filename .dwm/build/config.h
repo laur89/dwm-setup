@@ -1,5 +1,5 @@
-/* 
-Configuration file for DWM. 
+/*
+Configuration file for DWM.
 Maintainer: illusionist
 https://www.github.com/nixmeal
 */
@@ -25,19 +25,19 @@ static const char colors[NUMCOLORS][ColLast][21] = {
 //    { "#000000", "#000000", "#000000" },  // unusable
     { "#877C43", "#020202", "#FFD73E" },  // 09 - yellow bg; black text
     { "#337373", "#FFD73E", "#020202" },  // 0A - yellow text; black bg
-    
+
     { "#1C678C", "#020202", "#5555E8" },  // 0B - blue bg; black txt
     { "#808080", "#5555E8", "#020202" },  // 0C - blue txt; black bg
     { "#FFEE00", "#FFFFFF", "#5555E8" },  // 0D - white txt; blue bg
-    
+
     { "#E300FF", "#020202", "#4E5C67" },  // 0E - grey bg; black txt
     { "#E300FF", "#4E5C67", "#020202" },  // 0F - grey txt; black bg
     { "#E300FF", "#FFFFFF", "#4E5C67" },  // 10 - grey bg; white txt
-    
+
     { "#E300FF", "#FFFFFF", "#F15A25" },  // 11 - white txt; brght_orange_bg
     { "#E300FF", "#020202", "#F15A25" },  // 12 - brght_orange_bg; black text
     { "#4C4C4C", "#F15A25", "#020202" },  // 13 - brght_orange_txt; black bg
-    
+
     { "#B1D354", "#020202", "#B3277E" },  // 14 - magenta bg; black text
     { "#BF9F5F", "#B3277E", "#020202" },  // 15 - magenta text; black bg
 //    { "#3995BF", "#B3277E", "#FFFFFF" },  // 16 - white text; magenta bg
@@ -57,13 +57,13 @@ static const char selfgcolor[]      = "#eeeeee";
 // [end]
 
 static const char font[]					= "Terminus2 10";
-static const unsigned int borderpx  		= 3;        	// border pixel of windows 
+static const unsigned int borderpx  		= 2;        	// border pixel of windows
 static const unsigned int snap         		= 20;     	// snap pixel
 static const unsigned int gappx				= 0;		// gap pixel between windows (uselessgaps patch)
 static const Bool showbar               	= True;  	// False means no bar
 static const Bool topbar                	= True;  	// False means bottom bar
-static const unsigned int systrayspacing 	= 2;   		// systray spacing 
-static const Bool showsystray       		= True;     	// False means no systray 
+static const unsigned int systrayspacing 	= 2;   		// systray spacing
+static const Bool showsystray       		= True;     	// False means no systray
 static const Bool transbar					= False;		// True means transparent status bar
 
 /* Layout(s) */
@@ -103,7 +103,9 @@ static const Rule rules[] = {
 	{ "Icedove",		NULL,		"Write:",	    1 << 0,	  	True,		False, 		-1 },
 	//{ "Icedove",		NULL,		"New Event",	    1 << 0,	  	True,		False, 		-1 },
 	{ "Geany",		NULL,		NULL,	    1 << 1,	  	False,		False, 		-1 },
+	{ "Gvim",		NULL,		NULL,	    1 << 1,	  	False,		False, 		-1 },
 	{ "Eclipse",		NULL,		NULL,	    1 << 1,	  	False,		False, 		-1 },
+	{ "Spring Tool Suite",		NULL,		NULL,	    1 << 1,	  	False,		False, 		-1 },
     // Eclipse'i splash:
 	{ "Java",		NULL,		"Eclipse",	    1 << 1,	  	True,		False, 		-1 },
     // Android dev stuff:
@@ -111,6 +113,8 @@ static const Rule rules[] = {
 	{ "emulator64-arm",		NULL,		NULL,	    1 << 1,	  	True,		False, 		-1 },
     //
 	{ "MonoDevelop",		NULL,		NULL,	    1 << 1,	  	False,		False, 		-1 },
+    // SoapUI:
+	{ "FocusProxy",		NULL,		NULL,	    1 << 1,	  	False,		False, 		-1 },
 	{ "VirtualBox",		NULL,		NULL,		1 << 1,		False,		False,		-1 },
 	{ "Skype",		NULL,		NULL,	    1 << 2,	  	False,		False, 		-1 },
 	{ "Pidgin",		NULL,		NULL,	    1 << 2,	  	False,		False, 		-1 },
@@ -134,11 +138,12 @@ static const Rule rules[] = {
 	{ "Gimp",     		NULL,       NULL,       1 << 6,     True,      False,		-1 },
 
 	{ NULL,		NULL,		"KeePass Password Safe",	    1 << 8,	  	True,		False, 		-1 },
+	{ "Keepassx",		NULL,		"Auto-Type - KeePassX",		NULL,			True,		True,		-1 },
 	{ "Keepassx",		NULL,		NULL,		1 << 8,			True,		True,		-1 },
 	{ "Truecrypt",		NULL,		NULL,		1 << 8,			True,		True,		-1 },
 	{ "Deluge",		NULL,		NULL,		1 << 8,			True,		True,		-1 },
 	{ "Transmission-gtk",		NULL,		NULL,		1 << 8,			True,		True,		-1 },
-    
+
 	{ "Galculator",		NULL,		NULL,		0,			True,		True,		-1 },
 	{ NULL,		NULL,		"MonoDevelop External Console",		1 << 1,			True,		False,		-1 },
 
@@ -174,7 +179,7 @@ static const char *brightdown[]		=	{ "/usr/local/bin/set_brightness.sh", "DOWN",
 //static const char *on[]				=	{ "/home/garry/.scripts/system", "net", "on", NULL };
 //static const char *off[]			=	{ "/home/garry/.scripts/system", "net", "off", NULL };
 //static const char *killnotify[]		=	{ "/home/garry/.scripts/system", "killnotify", NULL };
-static const char *screenshot[]		=	{ "/usr/local/bin/screenshot.sh", NULL };
+static const char *screenshot[]		=	{ "/data/dev/scripts/system/screenshot.sh", NULL };
 //static const char *translate[]		=	{ "/home/garry/.scripts/dmenu-translate", NULL };
 static const char *wallch[]			=	{ "/home/garry/.scripts/wallpaper", "next", NULL };
 static const char *wallrev[]		=	{ "/home/garry/.scripts/wallpaper", "prev", NULL };
@@ -229,7 +234,7 @@ static Key keys[] = {
 	{ Altkey,							XK_Return,				spawn,				{.v = terminal } },
 //	{ 0,               					XK_F1,      			spawn,      	    {.v = dmenurun } },
 	{ Modkey,	 						XK_e,	   				spawn,	   			{.v = fileman} },
-	{ Modkey,						 	XK_Pause, 				spawn,	   			{.v = shutdown } }, 
+	{ Modkey,						 	XK_Pause, 				spawn,	   			{.v = shutdown } },
 	{ 0,							    0x1008ff03,				spawn, 				{.v = brightdown} },
 	{ 0, 							    0x1008ff02,				spawn,				{.v = brightup} } ,
 //	{ Altkey,							XK_F2,      			spawn,	   			{.v = gmrun } },
@@ -309,7 +314,7 @@ static Key keys[] = {
 	//{ Altkey,							XK_3,					spawn,				SHCMD("iocane b 3")},
 	//{ Altkey|Ctrlkey,   			   	XK_1, 					spawn,      	    SHCMD("iocane b 1")},
 	{ Modkey|Shiftkey,  			    XK_m,      				toggle_ffm, 	    {0} },          // toggle focus follows mouse
-	{ Modkey,           			    XK_z,   		   	    toggleview, 	    {.ui = 1 << 8} },	
+	{ Modkey,           			    XK_z,   		   	    toggleview, 	    {.ui = 1 << 8} },
 	{ Modkey|Shiftkey,					XK_z,				    tag,				{.ui = 1 << 8} },
 	TAGKEYS(            			    XK_1,                      0)
 	TAGKEYS(            			    XK_2,                      1)
@@ -359,6 +364,6 @@ static Button buttons[] = {
     { ClkStatusText,		Modkey,		    Button6,		spawn,			{.v = statusbar_prev } },   // selects previous mode for statusbar
     { ClkStatusText,		Modkey,		    Button7,		spawn,			{.v = statusbar_next } },
 
-    
+
 };
 /* vim: set ts=4 sw=4 tw=0: */

@@ -33,7 +33,14 @@ fi
 sleep 3
 
 # load keymaps: (twice; dunno why needed)
-xmodmap ~/.keymaps
+xrandr --output DP-2 --auto --right-of DP-1 &
+#xmodmap ~/.keymaps # deprecated!
+
+# disable system beep:
+xset -b &
+
+# spoof window manager, so java apps would recognize it:
+wmname LG3D &
 
 # loop, so exiting dwm actually restarts it without exiting clients:
 #while true; do

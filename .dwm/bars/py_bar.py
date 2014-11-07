@@ -6,7 +6,7 @@
 #   pip-3 install psutil
 #    (if install gives 'fatal error: Python.h: No such file or directory', then apt-get install python3-dev
 ######################################################
-# Can't recall from whom Python base was take, but I suspect it was first developed by Lokaltog (I might be mistaken!)
+# Can't recall from whom Python base was taken, but I suspect it was first developed by Lokaltog (I might be mistaken!)
 # Design copied from TrillbyWhite's github page: https://github.com/TrilbyWhite/dwmStatus/blob/master/bar.png
 ######################################################
 import sys
@@ -18,7 +18,6 @@ from urllib.request import urlopen
 import xml.dom.minidom
 import psutil
 import time
-import string
 
 modefile = '/tmp/DWM_statusbar_mode.dat'  # !!! Be careful with editing this - other programs might refer to that file !!!
 startmode = '1'   # Default mode to start in
@@ -817,7 +816,7 @@ try:
         # because vars have to be initialized nevertheless:
         int_data = nw_data.get(default_interface)
 
-except: # meaning interfaces_file has not yet been created, so initialize vars with wlan data:
+except: # meaning interfaces_file has not yet been created, so initialize vars with default_interface data:
     int_data = nw_data.get(default_interface)
 
 sent_old = float(int_data[0])
@@ -859,21 +858,21 @@ mode = startmode    # Default starting status
 while 1:
     try:
         if mode == '1':
-            #cpu = CPU('black_yellow', False) # if second parameter is True, then CPU() returns recource usage for all cores
+            #cpu = CPU('black_yellow', False) # if second parameter is True, then CPU() returns resource usage per core;
             #mem = Mem('black_blue')
-#            bat = bat_('white_gray')
+            #bat = bat_('white_gray')
             time_ = Time('white')
             date = Date('white_gray')
             vol = Vol('white_blue')
             music = Music('black_yellow')
-#            weather = wx('white_gray')
+            #weather = wx('white_gray')
             cpu = cpu_and_mem('white_gray')
 
-            status=str(
+            status = str(
                                     str(cpu) +
-#                                    str(bat) +
+                                    #str(bat) +
                                     str(music) +
-#                                    str(weather) +
+                                    #str(weather) +
                                     str(vol) +
                                     str(date) +
                                     str(time_)
@@ -891,7 +890,7 @@ while 1:
             ntw = network('black_yellow')
             weather = wx('white_gray')
 
-            status=str(
+            status = str(
                                     str(ntw) +
                                     str(bat) +
                                     str(weather) +
@@ -905,7 +904,7 @@ while 1:
         elif mode == '3':
             #cpu = CPU_manual('white_gray', True)
             cpu = cpu_and_temp('white_gray')
-#            bat = bat_('white_gray')
+            #bat = bat_('white_gray')
             time_ = Time('white')
             date = Date('white_gray')
             vol = Vol('white_blue')
@@ -915,9 +914,9 @@ while 1:
             gpu_temp_ = gpu_temp('black_yellow')
             mem = Mem('black_yellow')
 
-            status=str(
+            status = str(
                                     str(mem) +
-#                                    str(bat) +
+                                    #str(bat) +
                                     str(cpu) +
                                     #str(cpu_temp_) +
                                     str(gpu_temp_) +
