@@ -7,7 +7,7 @@ logdir="/var/log/custom_logs/"
 
 #---------------------------------------------------
 export DISPLAY=:0.0
-    
+
 # See policykit käitati tavaliste DE-de puhul /etc/xdg/autostart/polkit-gnome....desktop-ist;
 # kui ei käivitanud, siis andis network-manager wireless võrku ühendamisel permission errori:
 # teine variant, kuidas soovitatakse NM permission errorist jagu saada:
@@ -22,10 +22,11 @@ export DISPLAY=:0.0
 /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1 &
 
 
-for PROG in "rxvt-unicode" "blueman-applet" "nm-applet" "xfce4-volumed" "todo.sh --auto" "skype" "spacefm" "Earth_sunlight_wallpaper_changer.sh" "sunlight_map_wallpaper_changer.sh" "keepassx" "delay_screensaver.py" "icedove" "ssh-agent"; do
+for PROG in "rxvt-unicode" "blueman-applet" "nm-applet" "xfce4-volumed" "todo.sh --auto" "skype" "spacefm" "Earth_sunlight_wallpaper_changer.sh" "sunlight_map_wallpaper_changer.sh" "keepassx" "delay_screensaver.py" "icedove" "ssh-agent" "volti" "davmail"; do
     if ! [[ "$(ps -e | grep "\b$PROG\b")" ]]; then
+        echo "Launching ${PROG}..."
         $PROG &
-        echo "Launching $PROG ..."
+        echo "Launched $PROG."
     fi
 done
 
@@ -70,5 +71,9 @@ size="$(( $(du -c $logdir | tail -n 1 | awk '{print $1}') / 1024 ))"
 if [[ "$size" -gt "$allowed_size" ]]; then
     notify-send -t 0 -i gtk-dialog-error "Error: $logdir directory over $allowed_size MB in size!" &
 fi
+#sleep 5;
+#sudo nvidia-bug-report.sh >> /tmp/minuNVIDlog.log
+#sleep 10;
+#msmtp -t < /tmp/logs_to_send.log >> /tmp/minuMSMTP.log
 
 
