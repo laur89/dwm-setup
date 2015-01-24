@@ -25,7 +25,8 @@ _patches=(
 
 for PATCH in "${_patches[@]}"; do
     echo "=> $PATCH"
-    patch -p1 < $PATCH || { echo "Error! press any key to continue with patching"; read lel; }
+    patch -p1 < $PATCH || { echo "Error! press any key to continue with patching"; read dummy; }
 done
 
 echo "DONE woooooo"
+exit 0

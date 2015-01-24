@@ -3,7 +3,7 @@
 # py3 !
 # Requires psutil module for memory, cpu and bandwidth usage retrieval:
 #   apt-get install python3-pip
-#   pip-3 install psutil
+#   sudo pip3 install psutil
 #    (if install gives 'fatal error: Python.h: No such file or directory', then apt-get install python3-dev
 ######################################################
 # Can't recall from whom Python base was taken, but I suspect it was first developed by Lokaltog (I might be mistaken!)

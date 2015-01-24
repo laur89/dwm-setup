@@ -22,7 +22,7 @@ static const char colors[NUMCOLORS][ColLast][21] = {
     { "#00dd00", "#FFFFFF", "#020202" },  // 07 - white
     { "#3995BF", "#FFFFFF", "#B3277E" },  // 08 - white text; magenta bg
     // STATUSBAR COLORS:
-//    { "#000000", "#000000", "#000000" },  // unusable
+    //{ "#000000", "#000000", "#000000" },  // unusable
     { "#877C43", "#020202", "#FFD73E" },  // 09 - yellow bg; black text
     { "#337373", "#FFD73E", "#020202" },  // 0A - yellow text; black bg
 
@@ -85,13 +85,13 @@ static const Tag tags[] = {
     /* name    layout       mfact  nmaster*/
     { "[web]",	&layouts[0], 	-1,    	-1 },
     { "[dev]", 	&layouts[3], 	0.63,  	-1 },
-    { "[chat]",  &layouts[0], 	-1,    	-1 },
-    { "[term]", 	&layouts[0], 	-1,    	-1 },
-    { "[FM]",  &layouts[0], 	-1,    	-1 },
-    { "[docs]", 	&layouts[0], 	-1,    	-1 },
-    { "[media]", 	&layouts[0], 	-1,    	-1 },
-    { "[misc]", 	&layouts[0], 	-1,    	-1 },
-	{ "BG",	&layouts[0],	-1,		-1 },
+    { "[chat]", &layouts[0], 	-1,    	-1 },
+    { "[term]",	&layouts[0], 	-1,    	-1 },
+    { "[FM]",   &layouts[0], 	-1,    	-1 },
+    { "[docs]",	&layouts[0], 	-1,    	-1 },
+    { "[media]",&layouts[0], 	-1,    	-1 },
+    { "[misc]", &layouts[0], 	-1,    	-1 },
+	{ "BG",	    &layouts[0],	-1,		-1 },
 };
 
 static const Rule rules[] = {
@@ -136,6 +136,7 @@ static const Rule rules[] = {
 //	{ "Gimp",     		"Layers - Brushes",       NULL,       1 << 6,     True,      False,		-1 },
 //	{ "Gimp",     		"Toolbox - Tool Options",       NULL,       1 << 6,     True,      False,		-1 },
 	{ "Gimp",     		NULL,       NULL,       1 << 6,     True,      False,		-1 },
+	{ "SWT",     		NULL,       "CollabNet GitEye ",       1 << 7,     True,      False,		-1 },
 
 	{ NULL,		NULL,		"KeePass Password Safe",	    1 << 8,	  	True,		False, 		-1 },
 	{ "Keepassx",		NULL,		"Auto-Type - KeePassX",		NULL,			True,		True,		-1 },
@@ -173,8 +174,8 @@ static const char *shutdown[]		=	{ "/home/garry/.scripts/system", "shutdown", NU
 static const char *hibernate[]		=	{ "/home/garry/.scripts/system", "hibernate", NULL };
 static const char *restart[]		=	{ "/home/garry/.scripts/system", "restart", NULL };
 static const char *suspend[]		=	{ "/home/garry/.scripts/system", "suspend", NULL };
-static const char *brightup[]		=	{ "/usr/local/bin/set_brightness.sh", "UP", NULL };
-static const char *brightdown[]		=	{ "/usr/local/bin/set_brightness.sh", "DOWN", NULL };
+static const char *brightup[]		=	{ "/data/dev/scripts/system/set_brightness.sh", "UP", NULL };
+static const char *brightdown[]		=	{ "/data/dev/scripts/system/set_brightness.sh", "DOWN", NULL };
 //static const char *mouse[]			=	{ "/home/garry/.scripts/system", "mouse", "toggle", NULL };
 //static const char *on[]				=	{ "/home/garry/.scripts/system", "net", "on", NULL };
 //static const char *off[]			=	{ "/home/garry/.scripts/system", "net", "off", NULL };
@@ -193,7 +194,7 @@ static const char *mpdnext[]		=	{ "mpc", "next", NULL };
 static const char *mpdprev[]		=	{ "mpc", "prev", NULL };
 static const char *fileman[] 		= 	{ "spacefm", NULL };
 //static const char *gmrun[] 			= 	{ "gmrun", NULL  };
-static const char *terminal[]  		= 	{ "urxvt", NULL };
+static const char *terminal[]  		= 	{ "urxvtc", NULL };
 static const char *calendar[]  		= 	{ "gsimplecal", NULL };
 static const char *menu[]			=	{ "mygtkmenu", "/home/garry/.scripts/menu.txt", NULL };
 //static const char *thunarterm[]		=	{ "/home/garry/.scripts/thunarterm", NULL };
@@ -201,15 +202,15 @@ static const char *menu[]			=	{ "mygtkmenu", "/home/garry/.scripts/menu.txt", NU
 static const char *dmenucmd[] = { "dmenu_run", "-fn", font, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbgcolor, "-sf", selfgcolor, NULL };
 static const char *keepass[]			=	{ "mono", "/usr/lib/keepass2/KeePass.exe", "--auto-type", NULL };
 static const char *lock_screen[]			=	{ "xscreensaver-command", "--lock", NULL };
-static const char *battery_status[]			=	{ "/usr/local/bin/battery_status.sh", NULL };
+static const char *battery_status[]			=	{ "/data/dev/scripts/system/battery_status.sh", NULL };
 static const char *history_back[]			=	{ "python", "/usr/local/bin/dynamic_button_remap.py", "history_back", NULL };
 static const char *history_forward[]			=	{ "python", "/usr/local/bin/dynamic_button_remap.py", "history_forward", NULL };
 static const char *tab_back[]			=	{ "python", "/usr/local/bin/dynamic_button_remap.py", "tab_back", NULL };
 static const char *tab_forward[]			=	{ "python", "/usr/local/bin/dynamic_button_remap.py", "tab_forward", NULL };
 static const char *FF_tabgroup_back[]			=	{ "python", "/usr/local/bin/dynamic_button_remap.py", "FF_tabgroup_back", NULL };
 static const char *FF_tabgroup_fwd[]			=	{ "python", "/usr/local/bin/dynamic_button_remap.py", "FF_tabgroup_fwd", NULL };
-static const char *statusbar_prev[]			=	{ "python3", "/home/laur/Documents/comp/DWM/bars/py_bar.py", "prev", NULL };
-static const char *statusbar_next[]			=	{ "python3", "/home/laur/Documents/comp/DWM/bars/py_bar.py", "next", NULL };
+static const char *statusbar_prev[]			=	{ "python3", "/home/laur/.dwm/bars/py_bar.py", "prev", NULL };
+static const char *statusbar_next[]			=	{ "python3", "/home/laur/.dwm/bars/py_bar.py", "next", NULL };
 static const char *ask_shutdown[]			=	{ "python", "/usr/local/bin/powerbtn.py", "next", NULL };
 //static const char *keyboard_tab_fwd[]			=	{ "python3", "/usr/local/bin/dynamic_button_remap.py", "keyboard_tab_fwd", NULL };
 

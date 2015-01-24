@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.2
+#!/usr/bin/env python3
 # py3 !
 # Requires psutil module for memory, cpu and bandwidth usage retrieval:
 #   apt-get install python3-pip
@@ -30,20 +30,20 @@ def find_status():
     f = open(modefile, 'r')
     new_status=f.read()
     f.close()
-        
+
     if new_status == 'restart':
         # Reset the status in statusfile:
         #f = open(modefile, 'w')
         #f.write(status)
         #f.close()
-        
+
         #path=os.path.realpath(__file__) # Path to the current script
         sys.stdout.flush()  # Flushes open file objects etc;
         python = sys.executable
         os.execl(python, python,  * sys.argv) # Resets itself
 
     return str(new_status)
-    
+
 def generate_bat_vars():
     # Generate bat_stat and percentage variables that are used by other classes:
     global bat_stat
@@ -59,10 +59,10 @@ def generate_bat_vars():
         if letter not in string.punctuation:
             bat_percentage += letter
     bat_percentage=int(bat_percentage)
-    
-    
-        
-    
+
+
+
+
 class Segment:
     icons = {
         'vol_mute': '\uea30',
@@ -82,7 +82,7 @@ class Segment:
         'bat_empty': '\uea25',
         'bat_charging': '\uea28',
         'bat_error': '\uea24',
-        
+
         'arrow': '\u1e00',
         'None': '',
     }
@@ -97,26 +97,26 @@ class Segment:
         'error': '\x04',
         'white': '\x07',
         'warning': '\x08',
-        
+
         'black_yellow': '\x09',    # black text, yellow bg
         'yellow_black': '\x0C',
-        
+
         'black_blue': '\x0A',     # black text, blue bg
         'blue_black': '\x0D',
-        
+
         'black_gray': '\x0B',       # black text, gray bg
         'gray_black': '\x0E',
-        
+
         'urgency_gray': '\x0F',
         'orage_gray': '\x10',       # find out what that is lol
-        
+
         # Dummy vars:
         'None': '',
         'None_black': '',
         'black_None': '',
     }
 
-        
+
     def get_bar(self, percent, length=10, type='round-regular'):
         bar = []
         fill_length = round(percent / 100 * length)
@@ -173,10 +173,10 @@ class Segment:
 
 class Music(Segment):
     trim_length = 30    # nr of characters to trim song info to;
-    
+
     def __str__(self):
         return self._text
-        
+
     def __init__(self, color):
         Segment.__init__(self)
 
@@ -203,7 +203,7 @@ class Music(Segment):
                 playing,
                 current + str('/') + total,
             ])
-            
+
             if 'Discharging,' not in bat_stat and 'Charging,' not in bat_stat:  # Show progress bar only if there's no bar present for the battery
                 text.extend([
                     self.get_bar(percent),
@@ -215,7 +215,7 @@ class Music(Segment):
 class Vol(Segment):
     def __str__(self):
         return self._text
-        
+
     def __init__(self, color):
         Segment.__init__(self)
 
@@ -250,7 +250,7 @@ class Vol(Segment):
 class MailSegment(Segment):
     def __str__(self):
         return self._text
-        
+
     def __init__(self, color):
         Segment.__init__(self)
 
@@ -289,7 +289,7 @@ class MailSegment(Segment):
 class Date(Segment):
     def __str__(self):
         return self._text
-        
+
     def __init__(self, color):
         Segment.__init__(self)
 
@@ -300,30 +300,30 @@ class Date(Segment):
 class Time(Segment):
     def __str__(self):
         return self._text
-        
+
     def __init__(self, color):
         Segment.__init__(self)
 
         self.set_icon('None', color)
         self.set_text(datetime.datetime.now().strftime('%R'), color, False) # 'False' bypasses the arrow addition;
-        
+
 
 class Mem(Segment):
     def __str__(self):
         return self._text
-    
+
     def __init__(self, color):
         Segment.__init__(self)
 
         self.set_icon('ram', color)
-        
+
         mem=str(round(psutil.phymem_usage()[3])) + '%'
         self.set_text(mem, color)
-        
+
 class CPU(Segment):
     def __str__(self):
         return self._text
-        
+
     def __init__(self, color):
         Segment.__init__(self)
         self.set_icon('cpu', color)
@@ -337,7 +337,7 @@ class CPU(Segment):
         #if cpu2 == 2:
         #   cpu2=' ' + cpu2
         #self.set_text(cpu1 + ' | ' + cpu2, 'black_yellow')
-        
+
         #  CPU percentage overall:
         cpuloads = str(round(psutil.cpu_percent(interval=1))) + '%'
         if len(cpuloads) == 2:
@@ -348,7 +348,7 @@ class bat_(Segment):
     # FYI: to simply see whether AC power is connected:   cat /sys/class/power_supply/C1F2/online
     def __str__(self):
         return self._text
-        
+
     def __init__(self, color):
         Segment.__init__(self)
 
@@ -374,12 +374,12 @@ class bat_(Segment):
         else:
             self.set_icon('AC', color)
             self.set_text('', color)
-            
+
 class wx(Segment):
     # reads weather info from file
     def __str__(self):
         return self._text
-        
+
     def __init__(self, color):
         Segment.__init__(self)
 
@@ -387,7 +387,7 @@ class wx(Segment):
             f=open(wx_log, 'r')
             wx_info=f.read()
             f.close()
-            
+
             # Extract temperature:
             index=wx_info.find('Temp:')
             index2=wx_info.find(' °C')
@@ -399,48 +399,48 @@ class wx(Segment):
         else:
             self.set_icon('None', color)
             self.set_text(None)
-            
-            
+
+
 class network(Segment):
     def __str__(self):
         return self._text
-        
-    def __init__(self, color):        
+
+    def __init__(self, color):
         Segment.__init__(self)
         # WHY ARE THESE GLOBAL VAR DECLARATIONS REQUIRED, globals already exist; i should be able to use them (without editing ofc)????:
         global ntw_startTime
         global wlan_sent_old
         global wlan_recv_old
-        
+
         nw_data=str(psutil.network_io_counters(pernic=True))
-        
+
         ntw_endTime=time.time()
         timediff=float(ntw_endTime - ntw_startTime)
         ntw_startTime=time.time()
         #print(timediff)
-        
+
         wlan_data=nw_data[nw_data.find('wlan0'):nw_data.find('eth0')]
         eth_data=nw_data[nw_data.find('eth0'):]
-        
+
         wlan_sent=float(wlan_data[wlan_data.find('bytes_sent=')+11:wlan_data.find(', bytes_recv')])
         wlan_recv=float(wlan_data[wlan_data.find('bytes_recv=')+11:wlan_data.find(', packets_sent')])
-        
+
         wlan_sent_diff=float((wlan_sent - wlan_sent_old) * 8)  # Find the difference between last measure point, convert to bits
-        wlan_recv_diff=float((wlan_recv - wlan_recv_old) * 8) 
-        
+        wlan_recv_diff=float((wlan_recv - wlan_recv_old) * 8)
+
         # Find current Tx/wlan:
         wlan_sent_current=round( ((wlan_sent_diff / 1048576) / timediff), 1) # translates into Mbit
-        
+
         if wlan_sent_current < 1.0:
             wlan_sent_current=str(round( ((wlan_sent_diff / 1024) / timediff), 1)) + ' Kbit/s'
         elif wlan_sent_current > 1024.0:
             wlan_sent_current=str(round( ((wlan_sent_diff / 1073741824) / timediff), 2)) + ' Gbit/s'
         else:
             wlan_sent_current=str(wlan_sent_current) + ' Mbit/s'
-            
+
         # Find current Rx/wlan:
         wlan_recv_current=round( ((wlan_recv_diff / 1048576) / timediff), 1) # translates into Mbit
-        
+
         if wlan_recv_current < 1.0:
             wlan_recv_current=str(round( ((wlan_recv_diff / 1024) / timediff), 1)) + ' Kbit/s'
         elif wlan_recv_current > 1024.0:
@@ -448,33 +448,33 @@ class network(Segment):
         else:
             wlan_recv_current=str(wlan_recv_current) + ' Mbit/s'
 
-        
-        
+
+
         # Find total sent/wlan:
         wlan_sent_total=round(wlan_sent / 1048576, 1) # translates into MB
-        
+
         if wlan_sent_total < 1.0:
             wlan_sent_total=str(round(wlan_sent / 1024, 1)) + ' KB'
         elif wlan_sent_total > 1024.0:
             wlan_sent_total=str(round(wlan_sent / 1073741824, 2)) + ' GB'
         else:
             wlan_sent_total=str(wlan_sent_total) + ' MB'
-            
+
         # Find total recv/wlan:
         wlan_recv_total=round(wlan_recv / 1048576, 1) # translates into MB
-        
+
         if wlan_recv_total < 1.0:
             wlan_recv_total=str(round(wlan_recv / 1024, 1)) + ' KB'
         elif wlan_recv_total > 1024.0:
             wlan_recv_total=str(round(wlan_recv / 1073741824, 2)) + ' GB'
         else:
             wlan_recv_total=str(wlan_recv_total) + ' MB'
-            
+
         # Reset the variables:
         wlan_sent_old=wlan_sent
         wlan_recv_old=wlan_recv
-        
-        
+
+
         self.set_icon('AC', color)
         self.set_text(str('Rx: ' + wlan_recv_current + '  ' + wlan_recv_total + ' | ' + 'Tx: ' + wlan_sent_current + '  ' + wlan_sent_total), color)
 
@@ -486,7 +486,7 @@ if len(sys.argv) > 1:
     f = open(modefile, 'r')
     mode=f.read()
     f.close()
-    
+
     if sys.argv[1] == 'next':
         # Switch to next mode:
         mode += 1
@@ -500,14 +500,14 @@ if len(sys.argv) > 1:
     else:
         print('unknown usage option. abort.')
         sys.exit(1)
-        
+
     # Write new mode to statusfile:
     f = open(modefile, 'w')
     f.write(mode)
     f.close()
-    
+
     sys.exit()
-    
+
 # initialize vars:
 nw_data=str(psutil.network_io_counters(pernic=True))
 ntw_startTime=int(time.time())
@@ -528,7 +528,7 @@ status=find_status()    # Default starting status
 while 1:
     if status == '1':
         generate_bat_vars()
-        
+
         cpu = str(CPU('black_yellow'))
         bat = str(bat_('black_gray'))
         mem = str(Mem('black_blue'))
@@ -558,7 +558,7 @@ while 1:
         vol = str(Vol('black_blue'))
         ntw = str(network('black_yellow'))
         weather = str(wx('black_gray'))
-        
+
         command=str(
                                 'xsetroot -name "'+
                                 ntw +

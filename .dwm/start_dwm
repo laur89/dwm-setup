@@ -2,49 +2,36 @@
 # Will be executed by ~/.xinitrc
 # and will in turn execute $session_startfile
 
-session_startfile="$HOME/.dwm/dwm-session-startuplist"
 # ==============================
 
-if test -z "$DBUS_SESSION_BUS_ADDRESS"; then
-    eval `dbus-launch --sh-syntax --exit-with-session`
+# skip, if dwm is already running:
+if [[ "$(ps -e | grep "\bdwm\b")" ]]; then
+    echo "dwm appears to be already running. abort."
+    exit 1
 fi
-# Load bitmap fonts:
-xset +fp ~/.fonts
-xset fp rehash
-#sleep 1
 
-# Load the Xresources database:
-[[ -f ~/.Xresources ]] && xrdb -merge ~/.Xresources # Do not background!
+# !! removed this at 04.01.15; if some access issues, then prolly because of this;
+#if test -z "$DBUS_SESSION_BUS_ADDRESS"; then
+    #eval `dbus-launch --sh-syntax --exit-with-session`
+#fi
 # ---------------------------------------------------------------
 # Draw the status bar:
 #while true; do
 #    python3 /home/laur/Documents/comp/DWM/bars/py_bar.py
 #    sleep 1        # Sleep is currently provided by the py script itself
 #done &
-python3 $HOME/.dwm/bars/py_bar.py &
-
-# Start the programs/scripts in $session_startfile:
-if [ -f "$session_startfile" ]; then
-    source $session_startfile &
-else
-    rxvt-unicode &
-fi
-
-sleep 3
-
-# load keymaps: (twice; dunno why needed)
-xrandr --output DP-2 --auto --right-of DP-1 &
-#xmodmap ~/.keymaps # deprecated!
-
-# disable system beep:
-xset -b &
+# enda py bar:
+#python3 $HOME/.dwm/bars/py_bar.py &
+# dzen2 setup:
+$HOME/.dwm/bars/dzen2/statusbar &
 
 # spoof window manager, so java apps would recognize it:
 wmname LG3D &
 
-# loop, so exiting dwm actually restarts it without exiting clients:
+# loop, so exiting dwm actually restarts it without exiting clients;
+# (pointless if using restart patch):
 #while true; do
-    # Log stderror to a file
+    # Log stderror to a file:
     #dwm 2>  $HOME/.logs/dwm.log
     # No error logging:
     dwm >/dev/null 2>&1
