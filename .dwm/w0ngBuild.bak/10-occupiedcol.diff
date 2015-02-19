@@ -1,0 +1,12 @@
+--- dwm.c.orig	2013-01-16 06:51:33.108136083 +0530
++++ b/dwm.c	2013-01-16 06:56:45.299778129 +0530
+@@ -842,8 +841,7 @@ drawbar(Monitor *m) {
+ 	dc.x = 0;
+ 	for(i = 0; i < LENGTH(tags); i++) {
+         dc.w = TEXTW(tags[i].name);
+-		col = dc.colors[ (m->tagset[m->seltags] & 1 << i) ?
+-       1 : (urg & 1 << i ? 2:0) ];
++		col = dc.colors[ (m->tagset[m->seltags] & 1 << i) ? 1 : (urg & 1 << i ? 2:(occ & 1 << i ? 3:0)) ];
+         drawtext(tags[i].name, col, True);
+		 drawsquare(m == selmon && selmon->sel && selmon->sel->tags & 1 << i,
+		            occ & 1 << i, col);

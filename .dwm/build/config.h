@@ -136,7 +136,7 @@ static const Rule rules[] = {
 //	{ "Gimp",     		"Layers - Brushes",       NULL,       1 << 6,     True,      False,		-1 },
 //	{ "Gimp",     		"Toolbox - Tool Options",       NULL,       1 << 6,     True,      False,		-1 },
 	{ "Gimp",     		NULL,       NULL,       1 << 6,     True,      False,		-1 },
-	{ "SWT",     		NULL,       "CollabNet GitEye ",       1 << 7,     True,      False,		-1 },
+	{ "SWT",     		NULL,       "CollabNet GitEye",       1 << 7,     True,      False,		-1 },
 
 	{ NULL,		NULL,		"KeePass Password Safe",	    1 << 8,	  	True,		False, 		-1 },
 	{ "Keepassx",		NULL,		"Auto-Type - KeePassX",		NULL,			True,		True,		-1 },
@@ -364,6 +364,7 @@ static Button buttons[] = {
     { ClkClientWin,         Modkey,         Button1,        zoom,      {0} },
     { ClkStatusText,		Modkey,		    Button6,		spawn,			{.v = statusbar_prev } },   // selects previous mode for statusbar
     { ClkStatusText,		Modkey,		    Button7,		spawn,			{.v = statusbar_next } },
+    { ClkStatusText,        0,              Button2,      spawn,          {.v = terminal } },
 
 
 };

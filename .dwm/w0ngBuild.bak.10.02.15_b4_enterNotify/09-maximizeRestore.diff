@@ -1,0 +1,17 @@
+diff -up a/dwm.c b/dwm.c
+--- a/dwm.c	2012-07-17 17:29:20.569822735 +1000
++++ b/dwm.c	2012-07-17 17:31:51.695670682 +1000
+@@ -1227,10 +1227,20 @@ setlayout(const Arg *arg) {
+
+ void
+ setlayout(const Arg *arg) {
+- 	if(!arg || !arg->v || arg->v != selmon->lt[selmon->sellt])
+- 		selmon->sellt ^= 1;
+-     if(arg && arg->v)
+-		selmon->lt[selmon->sellt] = (Layout *)arg->v;
++ 	selmon->sellt ^= 1;
++ 	if(!arg || !arg->v || arg->v != selmon->lt[selmon->sellt^1])
++ 		selmon->lt[selmon->sellt] = (Layout *)arg->v;
+     strncpy(selmon->ltsymbol, selmon->lt[selmon->sellt]->symbol, sizeof selmon->ltsymbol);
+     if(selmon->sel)
+         arrange(selmon);

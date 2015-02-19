@@ -1,0 +1,191 @@
+--- dwm.c
++++ dwm.c
+@@ -187,11 +196,15 @@
+ static Monitor *dirtomon(int dir);
+ static void drawbar(Monitor *m);
+ static void drawbars(void);
++static void drawtab(Monitor *m);
++static void drawtabs(void);
+ static void drawsquare(Bool filled, Bool empty, Bool invert, unsigned long col[ColLast]);
+-static void drawtext(const char *text, unsigned long col[ColLast], Bool invert);
++static void drawtext(Drawable drawable, const char *text, unsigned long col[ColLast], Bool invert);
++//static void drawtabtext(const char *text, unsigned long col[ColLast], Bool invert);
+ static void enternotify(XEvent *e);
+ static void expose(XEvent *e);
+ static void focus(Client *c);
++static void focuswin(const Arg* arg);
+ static void focusin(XEvent *e);
+ static void focusmon(const Arg *arg);
+ static void focusstack(const Arg *arg);
+@@ -773,13 +819,13 @@
+ 	for(i = 0; i < LENGTH(tags); i++) {
+ 		dc.w = TEXTW(tags[i]);
+ 		col = m->tagset[m->seltags] & 1 << i ? dc.sel : dc.norm;
+-		drawtext(tags[i], col, urg & 1 << i);
++		drawtext(dc.drawable, tags[i], col, urg & 1 << i);
+ 		drawsquare(m == selmon && selmon->sel && selmon->sel->tags & 1 << i,
+-		           occ & 1 << i, urg & 1 << i, col);
++			   occ & 1 << i, urg & 1 << i, col);
+ 		dc.x += dc.w;
+ 	}
+ 	dc.w = blw = TEXTW(m->ltsymbol);
+-	drawtext(m->ltsymbol, dc.norm, False);
++	drawtext(dc.drawable, m->ltsymbol, dc.norm, False);
+ 	dc.x += dc.w;
+ 	x = dc.x;
+ 	if(m == selmon) { /* status is only drawn on selected monitor */
+@@ -789,19 +835,20 @@
+ 			dc.x = x;
+ 			dc.w = m->ww - x;
+ 		}
+-		drawtext(stext, dc.norm, False);
++		drawtext(dc.drawable, stext, dc.norm, False);
+ 	}
+ 	else
+ 		dc.x = m->ww;
+ 	if((dc.w = dc.x - x) > bh) {
+ 		dc.x = x;
+ 		if(m->sel) {
+-			col = m == selmon ? dc.sel : dc.norm;
+-			drawtext(m->sel->name, col, False);
++		  //			col = m == selmon ? dc.sel : dc.norm;
++		  //	drawtext(dc.drawable, m->sel->name, col, False);
++		  drawtext(dc.drawable, m->sel->name, dc.norm, False);
+ 			drawsquare(m->sel->isfixed, m->sel->isfloating, False, col);
+ 		}
+ 		else
+-			drawtext(NULL, dc.norm, False);
++		  drawtext(dc.drawable, NULL, dc.norm, False);
+ 	}
+ 	XCopyArea(dpy, dc.drawable, m->barwin, dc.gc, 0, 0, m->ww, bh, 0, 0);
+ 	XSync(dpy, False);
+@@ -816,6 +863,104 @@
+ }
+ 
+ void
++drawtabs(void) {
++	Monitor *m;
++
++	for(m = mons; m; m = m->next)
++		drawtab(m);
++}
++
++static int
++cmpint(const void *p1, const void *p2) {
++  /* The actual arguments to this function are "pointers to
++     pointers to char", but strcmp(3) arguments are "pointers
++     to char", hence the following cast plus dereference */
++  return *((int*) p1) > * (int*) p2;
++}
++
++
++void
++drawtab(Monitor *m) {
++	unsigned long *col;
++	Client *c;
++	int i;
++	int itag = -1;
++	char view_info[50];
++	int view_info_w = 0;
++	int sorted_label_widths[MAXTABS];
++	int tot_width;
++	int maxsize = bh;
++	dc.x = 0;
++
++	//view_info: indicate the tag which is displayed in the view
++	for(i = 0; i < LENGTH(tags); ++i){
++	  if((selmon->tagset[selmon->seltags] >> i) & 1) {
++	    if(itag >=0){ //more than one tag selected
++	      itag = -1;
++	      break;
++	    }
++	    itag = i;
++	  }
++	}
++	if(0 <= itag  && itag < LENGTH(tags)){
++	  snprintf(view_info, sizeof view_info, "[%s]", tags[itag]);
++	} else {
++	  strncpy(view_info, "[...]", sizeof view_info);
++	}
++	view_info[sizeof(view_info) - 1 ] = 0;
++	view_info_w = TEXTW(view_info);
++	tot_width = view_info_w;
++
++	/* Calculates number of labels and their width */
++	m->ntabs = 0;
++	for(c = m->clients; c; c = c->next){
++	  if(!ISVISIBLE(c)) continue;
++	  m->tab_widths[m->ntabs] = TEXTW(c->name);
++	  tot_width += m->tab_widths[m->ntabs];
++	  ++m->ntabs;
++	  if(m->ntabs >= MAXTABS) break;
++	}
++
++	if(tot_width > m->ww){ //not enough space to display the labels, they need to be truncated
++	  memcpy(sorted_label_widths, m->tab_widths, sizeof(int) * m->ntabs);
++	  qsort(sorted_label_widths, m->ntabs, sizeof(int), cmpint);
++	  tot_width = view_info_w;
++	  for(i = 0; i < m->ntabs; ++i){
++	    if(tot_width + (m->ntabs - i) * sorted_label_widths[i] > m->ww)
++	      break;
++	    tot_width += sorted_label_widths[i];
++	  }
++	  maxsize = (m->ww - tot_width) / (m->ntabs - i);
++	} else{
++	  maxsize = m->ww;
++	}
++	i = 0;
++	for(c = m->clients; c; c = c->next){
++	  if(!ISVISIBLE(c)) continue;
++	  if(i >= m->ntabs) break;
++	  if(m->tab_widths[i] >  maxsize) m->tab_widths[i] = maxsize;
++	  dc.w = m->tab_widths[i];
++	  col = (c == m->sel)  ? dc.sel : dc.norm;
++	  drawtext(dc.tabdrawable, c->name, col, 0);
++	  dc.x += dc.w;
++	  ++i;
++	}
++
++	/* cleans interspace between window names and current viewed tag label */
++	dc.w = m->ww - view_info_w - dc.x;
++	drawtext(dc.tabdrawable, NULL, dc.norm, 0);
++
++	/* view info */
++	dc.x += dc.w;
++	dc.w = view_info_w;
++	drawtext(dc.tabdrawable, view_info, dc.norm, 0);
++
++	XCopyArea(dpy, dc.tabdrawable, m->tabwin, dc.gc, 0, 0, m->ww, th, 0, 0);
++	XSync(dpy, False);
++}
++
++
++void
+ drawsquare(Bool filled, Bool empty, Bool invert, unsigned long col[ColLast]) {
+ 	int x;
+ 
+@@ -827,13 +972,14 @@
+ 		XDrawRectangle(dpy, dc.drawable, dc.gc, dc.x+1, dc.y+1, x, x);
+ }
+ 
++
+ void
+-drawtext(const char *text, unsigned long col[ColLast], Bool invert) {
++drawtext(Drawable drawable, const char *text, unsigned long col[ColLast], Bool invert) {
+ 	char buf[256];
+ 	int i, x, y, h, len, olen;
+ 
+ 	XSetForeground(dpy, dc.gc, col[invert ? ColFG : ColBG]);
+-	XFillRectangle(dpy, dc.drawable, dc.gc, dc.x, dc.y, dc.w, dc.h);
++	XFillRectangle(dpy, drawable, dc.gc, dc.x, dc.y, dc.w, dc.h);
+ 	if(!text)
+ 		return;
+ 	olen = strlen(text);
+@@ -1656,6 +1822,7 @@
+ 	sw = DisplayWidth(dpy, screen);
+ 	sh = DisplayHeight(dpy, screen);
+ 	bh = dc.h = dc.font.height + 2;
++	th = bh;
+ 	updategeom();
+ 	/* init atoms */
+ 	wmatom[WMProtocols] = XInternAtom(dpy, "WM_PROTOCOLS", False);

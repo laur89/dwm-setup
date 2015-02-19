@@ -21,9 +21,10 @@ fi
 #    sleep 1        # Sleep is currently provided by the py script itself
 #done &
 # enda py bar:
+
 #python3 $HOME/.dwm/bars/py_bar.py &
 # dzen2 setup:
-$HOME/.dwm/bars/dzen2/statusbar &
+$HOME/.dwm/bars/w0ng_bash/statusbar &
 
 # spoof window manager, so java apps would recognize it:
 wmname LG3D &
@@ -32,7 +33,7 @@ wmname LG3D &
 # (pointless if using restart patch):
 #while true; do
     # Log stderror to a file:
-    #dwm 2>  $HOME/.logs/dwm.log
+    dwm 2>  /var/log/custom_logs/dwm.log
     # No error logging:
-    dwm >/dev/null 2>&1
+    #dwm >/dev/null 2>&1
 #done
