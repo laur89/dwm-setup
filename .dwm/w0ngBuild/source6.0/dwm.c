@@ -128,6 +128,7 @@ typedef struct {
     unsigned long colors[MAXCOLORS][ColLast];
 	Drawable drawable;
 	Drawable tabdrawable;
+	Drawable celldrawable;
 	GC gc;
 	struct {
 		int ascent;
@@ -154,10 +155,10 @@ typedef struct {
 struct Monitor {
 	char ltsymbol[16];
 	int num;
-	int by;               /* bar geometry */
-	int ty;               /* tab bar geometry */
-	int mx, my, mw, mh;   /* screen size */
-	int wx, wy, ww, wh;   /* window area  */
+	int by;               /* bar y location*/
+	int ty;               /* tab bar y location */
+	int mx, my, mw, mh;   /* screen size, as in total */
+	int wx, wy, ww, wh;   /* window area, ie where windows can be drawn  */
 	unsigned int seltags;
 	unsigned int sellt; // TODO: selected layout? saab olla 0 või 1
 	unsigned int tagset[2];
@@ -171,8 +172,9 @@ struct Monitor {
 	Monitor *next;
 	Window barwin;
 	Window tabwin;
+	Window cellwin; // alt+tab window
 	int ntabs;
-	int tab_widths[MAXTABS];
+	int tab_widths[MAXTABS]; //TODO remove, as now all the tabs are of uniform width;
 	const Layout *lt[2]; // TODO: contains current and previous layout???
 	int curtag; // TODO: shows which view we're currently in?
 	int prevtag;
@@ -243,6 +245,7 @@ static void expose(XEvent *e);
 static void focus(Client *c);
 static void focuswin(const Arg* arg);
 static void focusin(XEvent *e);
+static void altTab(const Arg *arg);
 static void focusmon(const Arg *arg);
 static void focusstack(const Arg *arg);
 static Atom getatomprop(Client *c, Atom prop);
@@ -363,6 +366,7 @@ static Bool running = True;
 static Cursor cursor[CurLast];
 static Display *dpy;
 static DC dc;
+static DC cellDC;
 static Monitor *mons = NULL, *selmon = NULL;
 static Window root;
 
@@ -640,14 +644,25 @@ cleanup(void) {
 	for(m = mons; m; m = m->next)
 		while(m->stack)
 			unmanage(m->stack, False);
-	if(dc.font.set)
+    // TODO: leave it like this?:
+	if(dc.font.set) {
 		XFreeFontSet(dpy, dc.font.set);
-	else
+		XFreeFontSet(dpy, cellDC.font.set);
+	 } else {
 		XFreeFont(dpy, dc.font.xfont);
+		XFreeFont(dpy, cellDC.font.xfont);
+    }
 	XUngrabKey(dpy, AnyKey, AnyModifier, root);
+
 	XFreePixmap(dpy, dc.drawable);
 	XFreePixmap(dpy, dc.tabdrawable);
+	XFreePixmap(dpy, dc.celldrawable);
 	XFreeGC(dpy, dc.gc);
+	XFreePixmap(dpy, cellDC.drawable);
+	XFreePixmap(dpy, cellDC.tabdrawable);
+	XFreePixmap(dpy, cellDC.celldrawable);
+	XFreeGC(dpy, cellDC.gc);
+
 	XFreeCursor(dpy, cursor[CurNormal]);
 	XFreeCursor(dpy, cursor[CurMove]);
 
@@ -684,6 +699,8 @@ cleanupmon(Monitor *mon) {
 	XDestroyWindow(dpy, mon->barwin);
 	XUnmapWindow(dpy, mon->tabwin);
 	XDestroyWindow(dpy, mon->tabwin);
+	XUnmapWindow(dpy, mon->cellwin);
+	XDestroyWindow(dpy, mon->cellwin);
 	free(mon->mfacts);
 	free(mon->nmasters);
 	free(mon->lts);
@@ -801,6 +818,13 @@ configurenotify(XEvent *e) {
 			if(dc.tabdrawable != 0)
 				XFreePixmap(dpy, dc.tabdrawable);
 			dc.tabdrawable = XCreatePixmap(dpy, root, sw, th, DefaultDepth(dpy, screen));
+            // TODO: is this necessary?
+			if(dc.celldrawable != 0)
+				XFreePixmap(dpy, dc.celldrawable);
+            // TODO: cw, ch??? (cwch asendasin praegu 10-ga)
+			dc.celldrawable = XCreatePixmap(dpy, root, 10, 10, DefaultDepth(dpy, screen));
+			/*dc.celldrawable = XCreatePixmap(dpy, root, cw, ch, DefaultDepth(dpy, screen));*/
+
 			updatebars();
 			for(m = mons; m; m = m->next){
                 resizebarwin(m);
@@ -1654,38 +1678,73 @@ incnmaster(const Arg *arg) {
 	arrange(selmon);
 }
 
+/*void*/
+/*initfont(const char *fontstr) {*/
+	/*char *def, **missing;*/
+	/*int n;*/
+
+	/*dc.font.set = XCreateFontSet(dpy, fontstr, &missing, &n, &def);*/
+	/*if(missing) {*/
+		/*while(n--)*/
+			/*fprintf(stderr, "dwm: missing fontset: %s\n", missing[n]);*/
+		/*XFreeStringList(missing);*/
+	/*}*/
+	/*if(dc.font.set) {*/
+		/*XFontStruct **xfonts;*/
+		/*char **font_names;*/
+
+		/*dc.font.ascent = dc.font.descent = 0;*/
+		/*XExtentsOfFontSet(dc.font.set);*/
+		/*n = XFontsOfFontSet(dc.font.set, &xfonts, &font_names);*/
+		/*while(n--) {*/
+			/*dc.font.ascent = MAX(dc.font.ascent, (*xfonts)->ascent);*/
+			/*dc.font.descent = MAX(dc.font.descent,(*xfonts)->descent);*/
+			/*xfonts++;*/
+		/*}*/
+	/*}*/
+	/*else {*/
+		/*if(!(dc.font.xfont = XLoadQueryFont(dpy, fontstr))*/
+		/*&& !(dc.font.xfont = XLoadQueryFont(dpy, "fixed")))*/
+			/*die("error, cannot load font: '%s'\n", fontstr);*/
+		/*dc.font.ascent = dc.font.xfont->ascent;*/
+		/*dc.font.descent = dc.font.xfont->descent;*/
+	/*}*/
+	/*dc.font.height = dc.font.ascent + dc.font.descent;*/
+/*}*/
+
+/// TODO: rename
 void
-initfont(const char *fontstr) {
+initfont2(const char *fontstr, DC *dc) {
 	char *def, **missing;
 	int n;
 
-	dc.font.set = XCreateFontSet(dpy, fontstr, &missing, &n, &def);
+	dc->font.set = XCreateFontSet(dpy, fontstr, &missing, &n, &def);
 	if(missing) {
 		while(n--)
 			fprintf(stderr, "dwm: missing fontset: %s\n", missing[n]);
 		XFreeStringList(missing);
 	}
-	if(dc.font.set) {
+	if(dc->font.set) {
 		XFontStruct **xfonts;
 		char **font_names;
 
-		dc.font.ascent = dc.font.descent = 0;
-		XExtentsOfFontSet(dc.font.set);
-		n = XFontsOfFontSet(dc.font.set, &xfonts, &font_names);
+		dc->font.ascent = dc->font.descent = 0;
+		XExtentsOfFontSet(dc->font.set);
+		n = XFontsOfFontSet(dc->font.set, &xfonts, &font_names);
 		while(n--) {
-			dc.font.ascent = MAX(dc.font.ascent, (*xfonts)->ascent);
-			dc.font.descent = MAX(dc.font.descent,(*xfonts)->descent);
+			dc->font.ascent = MAX(dc->font.ascent, (*xfonts)->ascent);
+			dc->font.descent = MAX(dc->font.descent,(*xfonts)->descent);
 			xfonts++;
 		}
 	}
 	else {
-		if(!(dc.font.xfont = XLoadQueryFont(dpy, fontstr))
-		&& !(dc.font.xfont = XLoadQueryFont(dpy, "fixed")))
+		if(!(dc->font.xfont = XLoadQueryFont(dpy, fontstr))
+		&& !(dc->font.xfont = XLoadQueryFont(dpy, "fixed")))
 			die("error, cannot load font: '%s'\n", fontstr);
-		dc.font.ascent = dc.font.xfont->ascent;
-		dc.font.descent = dc.font.xfont->descent;
+		dc->font.ascent = dc->font.xfont->ascent;
+		dc->font.descent = dc->font.xfont->descent;
 	}
-	dc.font.height = dc.font.ascent + dc.font.descent;
+	dc->font.height = dc->font.ascent + dc->font.descent;
 }
 
 #ifdef XINERAMA
@@ -2569,6 +2628,7 @@ setlayout(const Arg *arg) {
  	selmon->sellt ^= 1;
 
     // if this check true, only then assign provided layout as current:
+    //  TODO: here is exception, since NULL arg produces error in third expression:
  	if(!arg || !arg->v || arg->v != selmon->lt[selmon->sellt^1]) // TODO: viimane check on if arg->v != ei ole eelmine? (eelmine on juba flipiga selekteeritud)
                                                                  // point ehk selles, et kuna esimese rea peal nagunii flipiti, siis eelmine on juba selekteeritud?*/
 		selmon->lt[selmon->sellt] = selmon->lts[selmon->curtag] = (Layout *)arg->v;
@@ -2710,7 +2770,7 @@ setup(void) {
 	/* init screen */
 	screen = DefaultScreen(dpy);
 	root = RootWindow(dpy, screen);
-	initfont(font);
+	initfont2(font, &dc);
 	sw = DisplayWidth(dpy, screen);
 	sh = DisplayHeight(dpy, screen);
 	bh = dc.h = dc.font.height;
@@ -2754,6 +2814,8 @@ setup(void) {
     }
 	dc.drawable = XCreatePixmap(dpy, root, DisplayWidth(dpy, screen), bh, DefaultDepth(dpy, screen));
 	dc.tabdrawable = XCreatePixmap(dpy, root, DisplayWidth(dpy, screen), th, DefaultDepth(dpy, screen));
+    // TODO: should the width be so huge?
+	dc.celldrawable = XCreatePixmap(dpy, root, 300, 300, DefaultDepth(dpy, screen));
 	dc.gc = XCreateGC(dpy, root, 0, NULL);
 	XSetLineAttributes(dpy, dc.gc, 1, LineSolid, CapButt, JoinMiter);
 	if(!dc.font.set)
@@ -2772,6 +2834,9 @@ setup(void) {
 			|EnterWindowMask|LeaveWindowMask|StructureNotifyMask|PropertyChangeMask;
 	XChangeWindowAttributes(dpy, root, CWEventMask|CWCursor, &wa);
 	XSelectInput(dpy, root, wa.event_mask);
+    cellDC = dc; // make a copy
+    initfont2(cellFont, &cellDC);
+    cellDC.h = cellDC.font.height;
 	grabkeys();
 }
 
@@ -3610,4 +3675,304 @@ tagcycle(const Arg *arg) {
     const Arg a = { .i = 1 << curtag };
     tag(&a);
     view(&a);
+}
+
+Bool deleteme_(XEvent *ev) {
+  /*KeySym altKey = XKeysymToKeycode(dpy, XK_Alt_L);*/
+  KeyCode kc = XKeysymToKeycode(dpy, XK_Alt_L);
+  /*KeySym altKey = XKeyCodeToKeysym(dpy, XK_Alt_L, 0);*/
+
+  if (ev->type == KeyRelease && ev->xkey.keycode == kc) return False;
+  return True;
+}
+
+//////////////// ALT-TAB:
+void altTab(const Arg *arg) {
+   XEvent ev;
+   KeySym keySym;
+   /*KeySym tabKey = XKeysymToKeycode(dpy, XK_Tab);*/
+   /*KeySym altKey = XKeysymToKeycode(dpy, XK_Alt_L);*/
+   /*KeyCode tabKey = XKeysymToKeycode(dpy, XK_Tab);*/
+   KeyCode altKeyCode = XKeysymToKeycode(dpy, XK_Alt_L);
+   int deleteme = 0;
+   fprintf(stderr, "start of function\n");
+
+    if ( !selmon->cellwin ) {
+        selmon->cellwin = XCreateSimpleWindow(dpy, root, 1, 1, 1, 1, 0, 0, dc.colors[0][ColBG]);
+    }
+
+                        // Prolly bad idea
+                        /*XGrabKey(dpy, AnyKey, AnyModifier, root,*/
+						 /*True, GrabModeAsync, GrabModeAsync);*/
+    /*if(XGrabPointer(dpy, root, False, MOUSEMASK, GrabModeAsync, GrabModeAsync,*/
+        /*None, cursor[CurMove], CurrentTime) != GrabSuccess)*/
+        /*return;*/
+
+    /*if(XGrabKeyboard(dpy, root, False, */
+ XGrabKey( dpy, AnyKey, AnyModifier, root, False, GrabModeAsync, GrabModeAsync);
+                /*fprintf(stderr, "could not grab \n");*/
+
+    /*return;*/
+/*}*/
+
+    do {
+        /*XMaskEvent(dpy, MOUSEMASK|ExposureMask|SubstructureRedirectMask, &ev);*/
+        /*XMaskEvent(dpy, AltMask|Mod1Mask|ExposureMask|SubstructureRedirectMask|KeyPressMask|KeyReleaseMask, &ev);*/
+        XMaskEvent(dpy, KeyPressMask|KeyReleaseMask, &ev);
+
+        keySym = XKeycodeToKeysym(dpy, ev.xkey.keycode, 0);
+        switch (ev.type) {
+            /*case ConfigureRequest:*/
+            /*case Expose:*/
+            /*[>case MotionNotify: // TODO: do we want to pass this one?<]*/
+            /*case MapRequest:*/
+                /*handler[ev.type](&ev);*/
+                /*break;*/
+            case KeyPress:
+                fprintf(stderr, "keypress, %d\n", deleteme);
+                //TODO siia loogika?
+                if ( keySym == XK_Tab ) {
+                    fprintf(stderr, "keypress, tab\n");
+                    updateAndDrawAltTab(selmon);
+                }
+                break;
+            case KeyRelease:
+                if ( keySym == XK_Alt_L ) {
+                    fprintf(stderr, "keyrelease, alt\n");
+                }
+                /*if ( keySym == XK_Alt_L ) return;*/
+                break;
+        }
+        deleteme++;
+    } while(ev.type != KeyRelease || keySym != XK_Alt_L); // until alt is released
+    /*} while(deleteme_(&ev)); // until alt is released*/
+
+   fprintf(stderr, "exited from the loop!\n");
+        XUngrabKey(dpy, AnyKey, AnyModifier, root);
+
+    // Finally, hide away the window:
+   /*XLowerWindow( dpy, m->cellwin);*/
+   // OR???:
+   XMoveWindow(dpy, selmon->cellwin, cellWidth * -2, 0); // hide
+   // TODO: is xsync needed here?:
+   XSync(dpy, False);
+}
+
+void
+updateAndDrawAltTab(Monitor *m) {
+int MAX_CLIENTS = 10; //TODO move out
+   unsigned long *col;
+   Client *c;
+   int i;
+   int itag = -1;
+   char view_info[50];
+   int view_info_w = 0;
+   int sorted_label_widths[MAX_CLIENTS];
+   int tot_width;
+   int maxsize = bh;
+   int nrOfCells;
+   int singleCellHeight = cellDC.font.height; //TODO; kui mingieid vahealasid teha, siis siit alusta?
+   int totalCellHeight;
+   int ch; // TODO needs to be calculated
+   int cwy, cwx; // cell window origin
+
+
+   /*if ( !m->cellwin )*/
+       /*m->cellwin = XCreateSimpleWindow(dpy, root, 100, 100, 100, 100, 0, 0, dc.colors[0][ColBG]);*/
+
+    //TODO: move this out? make const? what is it for lel?
+	XSetWindowAttributes wa = {
+		.override_redirect = True,
+		.background_pixmap = ParentRelative,
+		.event_mask = ButtonPressMask|ExposureMask
+	};
+
+   // Calculate total cell block height
+   for( i = 0, c = m->clients; c; c = c->next, i++){
+     if(!ISVISIBLE(c)) continue;
+     totalCellHeight += singleCellHeight;
+     if(i >= MAX_CLIENTS) break;
+   }
+
+    /*if(cellDC.celldrawable != 0)*/
+        /*XFreePixmap(dpy, cellDC.celldrawable);*/
+	/*cellDC.celldrawable = XCreatePixmap(dpy, root, cellWidth, totalCellHeight, DefaultDepth(dpy, screen));*/
+
+   //TODO: better it
+   /*if (!totalCellHeight) return;*/
+   /*totalCellHeight=1;*/
+   /*totalCellHeight = (totalCellHeight == 0) ? 50 : totalCellHeight;*/
+
+   cwy = m->wh/2 - totalCellHeight/2;
+   cwx = m->wx + m->ww/2 - cellWidth/2;
+
+
+   /*dc.x = m->wx+300;*/
+   /*dc.y = cy;*/
+   cellDC.x = 0;
+   cellDC.y = 0;
+   cellDC.w = cellWidth;
+
+   //view_info: indicate the tag which is displayed in the view:
+   /*
+    *for(i = 0; i < LENGTH(tags); ++i){
+    *  if((selmon->tagset[selmon->seltags] >> i) & 1) {
+    *    if(itag >=0){ //more than one tag selected
+    *      itag = -1;
+    *      break;
+    *    }
+    *    itag = i;
+    *  }
+    *}
+    *if(0 <= itag  && itag < LENGTH(tags)){
+    *  snprintf(view_info, sizeof view_info, "[%s]", tags[itag]);
+    *} else {
+    *  strncpy(view_info, "[...]", sizeof view_info);
+    *}
+    */
+   /*view_info[sizeof(view_info) - 1 ] = 0;*/
+   /*view_info_w = TEXTW(view_info);*/
+   /*tot_width = view_info_w;*/
+
+   /* Calculates number of labels and their width */
+   /*for( i = 0, c = m->clients; c; c = c->next, i++){*/
+     /*if(!ISVISIBLE(c)) continue;*/
+     /*totalCellHeight += singleCellHeight;*/
+     /*if(i >= MAX_CLIENTS) break;*/
+   /*}*/
+
+// TODO: do we need this?
+   /*if(tot_width > m->ww){ //not enough space to display the labels, they need to be truncated*/
+     /*memcpy(sorted_label_widths, m->tab_widths, sizeof(int) * m->ntabs);*/
+     /*qsort(sorted_label_widths, m->ntabs, sizeof(int), cmpint);*/
+     /*tot_width = view_info_w;*/
+     /*for(i = 0; i < m->ntabs; ++i){*/
+       /*if(tot_width + (m->ntabs - i) * sorted_label_widths[i] > m->ww)*/
+         /*break;*/
+       /*tot_width += sorted_label_widths[i];*/
+     /*}*/
+     /*maxsize = (m->ww - tot_width) / (m->ntabs - i);*/
+   /*} else{*/
+     /*maxsize = m->ww;*/
+   /*}*/
+
+   for( i = 0, c = m->clients; c; c = c->next ) {
+     if(!ISVISIBLE(c)) continue;
+     if(i >= MAX_CLIENTS) break;
+
+    // coloring:
+     if( m->nmasters[m->curtag] > 1 && i < m->nmasters[m->curtag]) // more than one master client
+        // color masters differently:
+        col = (c == m->sel) ? cellDC.colors[16] : cellDC.colors[15];
+     else // single master client
+        col = (c == m->sel) ? cellDC.colors[13] : cellDC.colors[12];
+        /*
+         *col = dc.colors[ (m->tagset[m->seltags] & 1 << i) ?
+         *1 : (urg & 1 << i ? 2:0) ]
+         */
+     drawCells(cellDC.celldrawable, c->name, col, 0);
+     /*drawCells(cellDC.celldrawable, c->name, col, 0);*/
+     /*drawTabbarTextDELETEME(cellDC.celldrawable, c->name, col, 0);*/
+     /*drawTabbarText(dc.celldrawable, c->name, col, 0);*/
+
+     cellDC.y += singleCellHeight;
+     i++; // may not be in loop control!
+   }
+
+   /*[> cleans interspace between window names and current viewed tag label <]*/
+   /*dc.w = m->ww - view_info_w - dc.x;*/
+   /*drawCells(dc.tabdrawable, NULL, dc.colors[0], 0);*/
+
+   /*[> view info <]*/
+   /*dc.x += dc.w;*/
+   /*dc.w = view_info_w;*/
+   /*drawCells(dc.tabdrawable, view_info, dc.colors[0], 0);*/
+
+   // first clean up:
+   // TODO: moveresize instead?
+   /*if ( m->cellwin ) {*/
+	/*XUnmapWindow(dpy, m->cellwin);*/
+	/*XDestroyWindow(dpy, m->cellwin);*/
+   /*}*/
+
+        // first create the xwindow; TODO: does it really need to be re-created errytime?
+        // perhaps hide it and expose later if re-used?
+        // TODO2: cellHeight here is the total, and should already be calculated by this moment;
+        // TODO3: cellwin Window struct alt siia kohalikku tuua? ei näe pointi
+        // monitoriga sidumiseks;
+		/*m->cellwin = XCreateWindow(dpy, root, cwx, cwy, cellWidth, totalCellHeight, 10, DefaultDepth(dpy, screen),*/
+					  /*CopyFromParent, DefaultVisual(dpy, screen),*/
+					  /*CWOverrideRedirect|CWBackPixmap|CWEventMask, &wa);*/
+
+   /*if ( !m->cellwin )*/
+       /*m->cellwin = XCreateSimpleWindow(dpy, root, cwx, cwy, cellWidth, totalCellHeight, 0, 0, dc.colors[0][ColBG]);*/
+    XMoveResizeWindow(dpy, m->cellwin, cwx, cwy, cellWidth, totalCellHeight);
+    XDefineCursor(dpy, m->cellwin, cursor[CurNormal]);
+
+
+   XMapRaised(dpy, m->cellwin);
+   XCopyArea(dpy, cellDC.celldrawable, m->cellwin, cellDC.gc, 0, 0, cellWidth, totalCellHeight, 0, 0);
+   XSync(dpy, False);
+
+}
+
+void
+drawCells(Drawable drawable, const char *text, unsigned long col[ColLast], Bool pad) {
+	char buf[256];
+	int i, x, y, h, len, olen;
+    const short lenOfTrailingWhitespace = 4;
+    const short lenOfTrailingSymbols = 3;
+    const short lenOfTruncationDots = 3;
+    const short isDefaultTabWidth = ( cellDC.w == tabWidth ) ? 1 : 0;
+    const char trailingSymbol = '>';
+
+	XSetForeground(dpy, cellDC.gc, col[ColBG]);
+	/*XFillRectangle(dpy, cellDC.drawable, cellDC.gc, cellDC.x, cellDC.y, cellDC.w, cellDC.h);*/
+	XFillRectangle(dpy, drawable, cellDC.gc, cellDC.x, cellDC.y, cellDC.w, cellDC.h);
+	if(!text)
+		return;
+	olen = strlen(text)+lenOfTrailingWhitespace; // create 4-width buffer for tabs which do NOT need to be truncated;
+    h = pad ? (cellDC.font.ascent + cellDC.font.descent) : 0;
+    y = cellDC.y + ((cellDC.h + cellDC.font.ascent - cellDC.font.descent) / 2);
+	x = cellDC.x + (h / 2);
+	/* shorten text if necessary */
+	for(len = MIN(olen, sizeof buf); len && textnw(text, len) > cellDC.w - h; len--);
+	if(!len)
+		return;
+	memcpy(buf, text, len);
+
+    /*if ( dc.w == 200 ) { // meaning default tab width, i.e. there's enough room for all the tabs on the bar;*/
+        /*if(len < olen)*/
+            /*for(i = len-7; i && i > len - 10; buf[--i] = '.');*/
+        /*for(i = len-4; i && i > len - 7; buf[--i] = '>');*/
+        /*for(i = len; i && i > len - 4; buf[--i] = ' ');*/
+    /*} else {*/
+        /*if(len < olen)*/
+            /*for(i = len; i && i > len - 3; buf[--i] = '.');*/
+    /*}*/
+
+    if (isDefaultTabWidth) { // meaning default tab width, i.e. there's enough room for all the tabs on the bar;
+        if(len < olen) { // truncate
+            // locate starting point by absolute values...:
+            /*for(i = len-(lenOfTrailingSymbols+lenOfTrailingWhitespace); i && i > len - (lenOfTrailingSymbols+lenOfTrailingWhitespace+lenOfTruncationDots); buf[--i] = '.');*/
+            /*for(i = len-lenOfTrailingWhitespace; i && i > len - (lenOfTrailingSymbols+lenOfTrailingWhitespace); buf[--i] = trailingSymbol);*/
+
+            for(i = len; i && i > len - (lenOfTrailingWhitespace); buf[--i] = ' ');
+            // ...or relative:
+            for(; i && i > len - (lenOfTrailingSymbols+lenOfTrailingWhitespace); buf[--i] = trailingSymbol);
+            for(; i && i > len - (lenOfTrailingSymbols+lenOfTrailingWhitespace+lenOfTruncationDots); buf[--i] = '.');
+        } else {
+            for(i = len; i && i > len - (lenOfTrailingWhitespace-1); buf[--i] = trailingSymbol);
+            buf[--i] = ' ';
+        }
+    } else {
+        if(len < olen) // truncation for shorter-than-default tab widths:
+            for(i = len; i && i > len - 3; buf[--i] = '.');
+    }
+
+	XSetForeground(dpy, cellDC.gc, col[ColFG]);
+	if(cellDC.font.set)
+		XmbDrawString(dpy, drawable, cellDC.font.set, cellDC.gc, x, y, buf, len);
+	else
+    XDrawString(dpy, drawable, cellDC.gc, x, y, buf, len);
 }

@@ -12,6 +12,8 @@
 /* appearance */
 static const char font[] = "-*-xbmicons-medium-r-*-*-12-*-*-*-*-*-*-*" ","
                            "-*-terminus-medium-r-*-*-12-*-*-*-*-*-*-*";
+static const char cellFont[] = "-*-xbmicons-medium-r-*-*-12-*-*-*-*-*-*-*" ","
+                               "-*-terminus-medium-r-*-*-24-*-*-*-*-*-*-*";
 //static const char font[] = "-*-Terminus2-*-*-*-*-*-*-*-*-*-*-*-*";
 
 static const char colors[NUMCOLORS][ColLast][9] = {
@@ -45,6 +47,7 @@ static const Bool topbar            = True;     /* False means bottom bar */
 static const unsigned int systrayspacing = 2;   /* systray spacing */
 static const Bool showsystray       = True;     /* False means no systray */
 static /*!const*/ Bool focus_follows_mouse     = True;         /* toggle focus-follows-mouse default */
+static const unsigned int cellWidth = 300;
 static const unsigned int tabWidth  = 200;      /* default tab width;
                                                    (if more tabs are added, width is
                                                    decreased so all tabs fit onto bar) */
@@ -266,6 +269,7 @@ static Key keys[] = {
 { MODKEY|ControlMask|ShiftMask, XK_o,      resetcfactall,       NULL },
   { MODKEY,                 XK_Return,        zoom,           {0} },
   { MODKEY,                 XK_Tab,           view,           {0} },
+  { AltMask,                XK_Tab,           altTab,           {0} },
   { MODKEY,           	  	XK_c,             killclient,     {0} },
   { AltMask,               	XK_F4,            killclient,     {0} },
   { MODKEY,                 XK_t,             setlayout,      {.v = &layouts[0]} },
