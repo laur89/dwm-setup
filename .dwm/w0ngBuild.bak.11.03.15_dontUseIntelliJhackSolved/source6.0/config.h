@@ -47,10 +47,10 @@ static const Bool topbar            = True;     /* False means bottom bar */
 static const unsigned int systrayspacing = 2;   /* systray spacing */
 static const Bool showsystray       = True;     /* False means no systray */
 static /*!const*/ Bool focus_follows_mouse     = True;         /* toggle focus-follows-mouse default */
-static const unsigned int cellWidth = 300;      /* altTab's window width */
+static const unsigned int cellWidth = 300;
 static const unsigned int tabWidth  = 200;      /* default tab width;
                                                    (if more tabs are added, width is
-                                                   decreased so all tabs fit onto the bar) */
+                                                   decreased so all tabs fit onto bar) */
 
 /*   Display modes of the tab bar: never shown, always shown, shown only in */
 /*   monocle mode in presence of several windows.                           */
@@ -130,18 +130,15 @@ static const Rule rules[] = {
 	{ "Pidgin",		NULL,		NULL,	    1 << 2,	  	False,		False, 		-1 },
 	{ "URxvt",		NULL,		NULL,	    1 << 3,	  	False,		False, 		-1 },
 	{ "Spacefm",		NULL,		NULL,	    1 << 4,	  	False,		False, 		-1 },
-    { "libreoffice",		NULL,		NULL,	    1 << 5,	  	False,		False, 		-1 },
-    { "LibreOffice",		NULL,		NULL,	    1 << 5,	  	False,		False, 		-1 },
-    //{ "libreoffice-calc",		NULL,		NULL,	    1 << 5,	  	False,		False, 		-1 },
-    //{ "libreoffice-startcenter",		NULL,		NULL,	    1 << 5,	  	False,		False, 		-1 },
+    { "libreoffice-writer",		NULL,		NULL,	    1 << 5,	  	False,		False, 		-1 },
+    { "libreoffice-calc",		NULL,		NULL,	    1 << 5,	  	False,		False, 		-1 },
+    { "libreoffice-startcenter",		NULL,		NULL,	    1 << 5,	  	False,		False, 		-1 },
     { "Evince",		NULL,		NULL,	    1 << 5,	  	False,		False, 		-1 },
     { "Zathura",		NULL,		NULL,	    1 << 5,	  	False,		False, 		-1 },
     { "Xpdf",		NULL,		NULL,	    1 << 5,	  	False,		False, 		-1 },
+    { "Calibre-ebook-viewer",		NULL,		NULL,	    1 << 5,	  	False,		False, 		-1 },
     //{ NULL,		"calibre - || calibre_library ||",		NULL,	    1 << 5,	  	False,		False, 		-1 },
-    //{ "Calibre-gui",		NULL,		NULL,	    1 << 5,	  	False,		False, 		-1 },
-    // libprs500 is calibre; for some reason title matching is not working:
-    { "libprs500",		NULL,		NULL,    1 << 5,	  	False,		False, 		-1 },
-    //{ "Calibre-ebook-viewer",		NULL,		NULL,	    1 << 5,	  	False,		False, 		-1 },
+    { "Calibre-gui",		NULL,		NULL,	    1 << 5,	  	False,		False, 		-1 },
 	{ "Ario",		NULL,		NULL,	    1 << 6,	  	False,		False, 		-1 },
 	{ "Smplayer",		NULL,		NULL,	    1 << 6,	  	False,		False, 		-1 },
 	{ "mplayer",		NULL,		NULL,	    1 << 6,	  	False,		False, 		-1 },
@@ -154,8 +151,8 @@ static const Rule rules[] = {
 	{ "SWT",     		NULL,       "CollabNet GitEye",       1 << 7,     False,      False,		-1 },
 
 	{ "Keepassx",		NULL,		"Auto-Type",		NULL,			True,		True,		-1 },
-	{ "Keepassx",		NULL,		"pass",		1 << 8,			True,		True,		-1 },
-	//{ "Keepassx",		NULL,		"passwd_db.kdbx - KeePassX",		1 << 8,			True,		True,		-1 },
+	{ "Keepassx",		NULL,		"passes",		1 << 8,			True,		True,		-1 },
+	{ "Keepassx",		NULL,		"passwd_db.kdbx - KeePassX",		1 << 8,			True,		True,		-1 },
 	{ "Truecrypt",		NULL,		NULL,		1 << 8,			True,		True,		-1 },
 	{ "Deluge",		NULL,		NULL,		1 << 8,			True,		True,		-1 },
 	{ "Transmission-gtk",		NULL,		NULL,		1 << 8,			True,		True,		-1 },
@@ -218,7 +215,7 @@ static const Rule rules[] = {
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
 /* commands */
-static const char *dmenucmd[]      = { "dmenu_run", "-fn", font, "-nb", colors[12][ColBG], "-nf", colors[12][ColFG], "-sb", colors[1][ColBG], "-sf", colors[1][ColFG], NULL };
+static const char *dmenucmd[]     = { "dmenu_run", "-fn", font, "-nb", colors[12][ColBG], "-nf", colors[12][ColFG], "-sb", colors[1][ColBG], "-sf", colors[1][ColFG], NULL };
 static const char *termcmd[]       = { "urxvtc", NULL };
 static const char scratchpadname[] = "scratchpad";
 static const char *scratchpadcmd[] = { "urxvtc", "-name", scratchpadname, "-geometry", "100x25", NULL };
@@ -252,9 +249,7 @@ static Key keys[] = {
   { 0,                      XK_Print,         spawn,          {.v = screenshot}},
   { AltMask|ControlMask,	XK_Delete,        spawn,          {.v = lock_screen } },
   { MODKEY,                 XK_KP_Add,        spawn,          {.v = volupcmd } }, // numpad +
-  { MODKEY,                 XK_plus,          spawn,          {.v = volupcmd } }, // numpad +
   { MODKEY,                 XK_KP_Subtract,   spawn,          {.v = voldncmd } }, // numpad -
-  { MODKEY,                 XK_minus,         spawn,          {.v = voldncmd } }, // numpad -
   { MODKEY,                 XK_Pause,         spawn,          {.v = mpctog } },
   { 0,                      XK_Pause,         spawn,          {.v = mpctog } },
   { MODKEY,                 XK_Prior,         spawn,          {.v = mpcprev } },
@@ -384,7 +379,4 @@ static Button buttons[] = {
  *  { ClkTagBar,            MODKEY,         Button3,        toggletag,      {0} },
  */
 };
-
-const char client_class_idea[] = "sun-awt-X11-XFramePeer";
-const char client_class_notifyd[] = "xfce4-notifyd";
 

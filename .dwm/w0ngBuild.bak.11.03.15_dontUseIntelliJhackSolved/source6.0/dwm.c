@@ -207,6 +207,7 @@ struct Systray {
 };
 
 /* function declarations */
+static Bool isIntelliJ(Client *c);
 static void applyrules(Client *c);
 static Bool applysizehints(Client *c, int *x, int *y, int *w, int *h, Bool interact);
 static void arrange(Monitor *m);
@@ -347,14 +348,14 @@ static void (*handler[LASTEvent]) (XEvent *) = {
 	[ButtonPress] = buttonpress,
 	[ClientMessage] = clientmessage,
 	[ConfigureRequest] = configurerequest,
-	[ConfigureNotify] = configurenotify,
+	[ConfigureNotify] = configurenotify, // TODO siia ei saanud IDEA checki
 	[DestroyNotify] = destroynotify,
 	/*[EnterNotify] = enternotify_ffm,*/
-	[EnterNotify] = enternotify,
-	[Expose] = expose,
+	[EnterNotify] = enternotify, // TODO siia ei saanud IDEA checki
+	[Expose] = expose, // TODO siia ei saanud IDEA checki
 	[FocusIn] = focusin,
-	[KeyPress] = keypress,
-	[MappingNotify] = mappingnotify,
+	[KeyPress] = keypress, // TODO siia ei saanud idea checki
+	[MappingNotify] = mappingnotify, // TODO siia ei saanud idea checki
 	[MapRequest] = maprequest,
 	[MotionNotify] = motionnotify,
 	[PropertyNotify] = propertynotify,
@@ -387,6 +388,9 @@ applyrules(Client *c) {
 	Monitor *m;
 	XClassHint ch = { NULL, NULL };
 
+            // TODO: deleteme:
+            /*if ( isIntelliJ(c) ) return;*/
+
 	/* rule matching */
 	c->isfloating = c->tags = 0;
 	c->iscentred = 1;
@@ -409,14 +413,11 @@ applyrules(Client *c) {
 	}
     // TODO: modifications!
 	if(ch.res_class) {
-        /*fprintf(stderr, "    !applyrule: class \"%s\"\n", ch.res_class);*/
+        fprintf(stderr, "    !applyrule: class %s\n", ch.res_class);
 		XFree(ch.res_class);
     }
-
-	if(ch.res_name) {
-        /*fprintf(stderr, "    !applyrule: name \"%s\"\n", ch.res_name);*/
+	if(ch.res_name)
 		XFree(ch.res_name);
-    }
 	c->tags = c->tags & TAGMASK ? c->tags & TAGMASK : c->mon->tagset[c->mon->seltags];
 }
 
@@ -424,6 +425,9 @@ Bool
 applysizehints(Client *c, int *x, int *y, int *w, int *h, Bool interact) {
 	Bool baseismin;
 	Monitor *m = c->mon;
+
+            // TODO:
+            /*if ( isIntelliJ(c) ) return;*/
 
 	/* set minimum possible */
 	*w = MAX(1, *w);
@@ -523,7 +527,7 @@ attachaside(Client *c) {
 		return;
 	}
 	c->next = at->next;
-    at->next = c;
+	at->next = c;
 }
 
 void
@@ -732,6 +736,12 @@ clientmessage(XEvent *e) {
 	XClientMessageEvent *cme = &e->xclient;
 	Client *c = wintoclient(cme->window);
 
+	if(!c)
+		return;
+
+            // TODO: deleteme:
+            /*if ( isIntelliJ(c) ) return;*/
+
    if(showsystray && cme->window == systray->win && cme->message_type == netatom[NetSystemTrayOP]) {
        /* add systray icons */
        if(cme->data.l[1] == SYSTEM_TRAY_REQUEST_DOCK) {
@@ -773,6 +783,12 @@ clientmessage(XEvent *e) {
 
 	if(!c)
 		return;
+
+            // TODO: deleteme:
+            /*if ( isIntelliJ(c) ) return;*/
+
+
+
 	if(cme->message_type == netatom[NetWMState]) {
 		if(cme->data.l[1] == netatom[NetWMFullscreen] || cme->data.l[2] == netatom[NetWMFullscreen])
 			setfullscreen(c, (cme->data.l[0] == 1 /* _NET_WM_STATE_ADD    */
@@ -828,7 +844,7 @@ configurenotify(XEvent *e) {
 			if(dc.celldrawable != 0)
 				XFreePixmap(dpy, dc.celldrawable);
             // TODO: cw, ch??? (cwch asendasin praegu 10-ga)
-			dc.celldrawable = XCreatePixmap(dpy, root, cellWidth, 10, DefaultDepth(dpy, screen));
+			dc.celldrawable = XCreatePixmap(dpy, root, 10, 10, DefaultDepth(dpy, screen));
 			/*dc.celldrawable = XCreatePixmap(dpy, root, cw, ch, DefaultDepth(dpy, screen));*/
 
 			updatebars();
@@ -849,6 +865,11 @@ configurerequest(XEvent *e) {
 	XWindowChanges wc;
 
 	if((c = wintoclient(ev->window))) {
+            // TODO: deleteme:
+            /*if ( isIntelliJ(c) ) return;*/
+
+
+
 		if(ev->value_mask & CWBorderWidth)
 			c->bw = ev->border_width;
 		else if(c->isfloating || !selmon->lt[selmon->sellt]->arrange) {
@@ -1006,9 +1027,14 @@ destroynotify(XEvent *e) {
 	Client *c;
 	XDestroyWindowEvent *ev = &e->xdestroywindow;
 
-	if((c = wintoclient(ev->window)))
+	if((c = wintoclient(ev->window))) {
+            // TODO: deleteme:
+            /*if ( isIntelliJ(c) ) return;*/
+
+
+
 		unmanage(c, True);
-    else if((c = wintosystrayicon(ev->window))) {
+    } else if((c = wintosystrayicon(ev->window))) {
        removesystrayicon(c);
        resizebarwin(selmon);
        updatesystray();
@@ -1214,7 +1240,7 @@ drawtab(Monitor *m) {
    /* Calculates number of labels and their width */
    m->ntabs = 0;
    for(c = m->clients; c; c = c->next){
-     if(!ISVISIBLE(c) || isWindowClass(c, client_class_notifyd)) continue;
+     if(!ISVISIBLE(c)) continue;
      /*m->tab_widths[m->ntabs] = TEXTW(name);*/ // original
      m->tab_widths[m->ntabs] = tabWidth;
      tot_width += m->tab_widths[m->ntabs];
@@ -1222,8 +1248,7 @@ drawtab(Monitor *m) {
      if(m->ntabs >= MAXTABS) break;
    }
 
-   // TODO: this logic is deprecated, since all the tabs will be of constant width:
-   if(tot_width > m->ww){ //not enough space to display the labels/tabs, they need to be truncated
+   if(tot_width > m->ww){ //not enough space to display the labels, they need to be truncated
      memcpy(sorted_label_widths, m->tab_widths, sizeof(int) * m->ntabs);
      qsort(sorted_label_widths, m->ntabs, sizeof(int), cmpint);
      tot_width = view_info_w;
@@ -1238,14 +1263,10 @@ drawtab(Monitor *m) {
    }
 
    for( i = 0, c = m->clients; c; c = c->next ) {
-     if(!ISVISIBLE(c) || isWindowClass(c, client_class_notifyd)) continue;
+     if(!ISVISIBLE(c)) continue;
      if(i >= m->ntabs) break;
      if(m->tab_widths[i] >  maxsize) m->tab_widths[i] = maxsize;
-
-     // TODO: here is the place to center-justify tab text:
      dc.w = m->tab_widths[i];
-     /*dc.x = 0; // TODO: centerjustification should start with this one*/
-
      // orig:
      /*col = (c == m->sel)  ? dc.sel : dc.norm;*/
      if( m->nmasters[m->curtag] > 1 && i < m->nmasters[m->curtag]) // more than one master client
@@ -1316,8 +1337,11 @@ drawtext(Drawable drawable, const char *text, unsigned long col[ColLast], Bool p
 	else
 		XDrawString(dpy, drawable, dc.gc, x, y, buf, len);
 }
+
+/* only used for drawing text in the tab bar
+ */
 void
-drawTabbarText_ORIG(Drawable drawable, const char *text, unsigned long col[ColLast], Bool pad) {
+drawTabbarText(Drawable drawable, const char *text, unsigned long col[ColLast], Bool pad) {
 	char buf[256];
 	int i, x, y, h, len, olen;
     const short lenOfTrailingWhitespace = 4;
@@ -1369,205 +1393,6 @@ drawTabbarText_ORIG(Drawable drawable, const char *text, unsigned long col[ColLa
         if(len < olen) // truncation for shorter-than-default tab widths:
             for(i = len; i && i > len - 3; buf[--i] = '.');
     }
-
-	XSetForeground(dpy, dc.gc, col[ColFG]);
-	if(dc.font.set)
-		XmbDrawString(dpy, drawable, dc.font.set, dc.gc, x, y, buf, len);
-	else
-		XDrawString(dpy, drawable, dc.gc, x, y, buf, len);
-}
-
-/* only used for drawing text in the tab bar
- */
-void
-drawTabbarText_IN_WORKS_TO_CENTER_JUSTIFY(Drawable drawable, const char *text, unsigned long col[ColLast], Bool pad) {
-	char buf[256];
-	char text_buf[256]; //TODO: needs to be mem-managed!"
-	int i, x, y, h, len, olen;
-    const short lenOfTruncationDots = 3;
-    const short lenOfWhiteSpaceBufferEachSide = 2;
-    const short isDefaultTabWidth = ( dc.w == tabWidth ) ? 1 : 0;
-
-	XSetForeground(dpy, dc.gc, col[ColBG]);
-	/*XFillRectangle(dpy, dc.drawable, dc.gc, dc.x, dc.y, dc.w, dc.h);*/
-	XFillRectangle(dpy, drawable, dc.gc, dc.x, dc.y, dc.w, dc.h);
-	if(!text)
-		return;
-	olen = isDefaultTabWidth ? strlen(text) + lenOfWhiteSpaceBufferEachSide*2 : strlen(text);
-    h = pad ? (dc.font.ascent + dc.font.descent) : 0;
-    y = dc.y + ((dc.h + dc.font.ascent - dc.font.descent) / 2);
-	x = dc.x + (h / 2);
-	/* shorten text if necessary */
-	for(len = MIN(olen, sizeof buf); len && textnw(text, len) > dc.w - h; len--);
-	if(!len)
-		return;
-
-    if (isDefaultTabWidth) { // meaning default tab width, i.e. there's enough room for all the tabs on the bar;
-        if(len < olen) { // truncate
-            for( int i = 0; i < lenOfWhiteSpaceBufferEachSide; buf[i++] = ' ' ); // create whitespace buffer in the beginning;
-            memcpy(&buf[lenOfWhiteSpaceBufferEachSide], text, len);
-            // locate starting point by absolute values...:
-            /*for(i = len-(lenOfTrailingSymbols+lenOfTrailingWhitespace); i && i > len - (lenOfTrailingSymbols+lenOfTrailingWhitespace+lenOfTruncationDots); buf[--i] = '.');*/
-            /*for(i = len-lenOfTrailingWhitespace; i && i > len - (lenOfTrailingSymbols+lenOfTrailingWhitespace); buf[--i] = trailingSymbol);*/
-
-            for(i = len; i && i > len - (lenOfWhiteSpaceBufferEachSide); buf[--i] = ' ');
-            // ...or relative:
-            for(; i && i > len - (lenOfWhiteSpaceBufferEachSide+lenOfTruncationDots); buf[--i] = '.');
-            /*for(; i && i > len - strlen(text); --i);*/
-            /*for(i = len; i && i; buf[--i] = ' ');*/
-        } else {
-            // estimate text width:
-            len = strlen(text);
-            /*fprintf(stderr, "after len:%d\n", len );*/
-
-
-            int midPos = dc.w / 2;
-            int txtLen = textnw(text, len);
-            int pxPerChar = txtLen / len;
-            int lenOfBlanks = midPos - txtLen/2;
-            int nrOfBlanks = lenOfBlanks / pxPerChar;
-            /*fprintf(stderr, "buflen:%s\n", strlen(buf) );*/
-            /*for( r = 0, e = textnw(buf, txtLen+r); e < dc.w; buf[r++] = ' ', e = textnw(buf, txtLen+r) );*/
-            for( int i = 0; i < nrOfBlanks; buf[i++] = ' ' );
-            /*fprintf(stderr, "   buflen after:%d\n", strlen(buf) );*/
-
-            memcpy(&buf[nrOfBlanks], text, len);
-
-            /*for(i = len; i && i > len - (lenOfWhiteSpaceBufferEachSide); buf[--i] = ' ');*/
-            /*buf[--i] = ' ';*/
-        }
-    } else {
-        if(len < olen) // truncation for shorter-than-default tab widths:
-            for(i = len; i && i > len - 3; buf[--i] = '.');
-    }
-
-	XSetForeground(dpy, dc.gc, col[ColFG]);
-	if(dc.font.set)
-		XmbDrawString(dpy, drawable, dc.font.set, dc.gc, x, y, buf, len);
-	else
-		XDrawString(dpy, drawable, dc.gc, x, y, buf, len);
-}
-
-/* only used for drawing text in the tab bar
- */
-void
-drawTabbarText_NEWEST_CENTER_JUSTIFY_INWORKS(Drawable drawable, const char *text, unsigned long col[ColLast], Bool pad) {
-    // TODO: needs check to make sure buf size is enough to accommodate tabWidth worth of characters.
-	char buf[256];
-	char text_buf[256];
-	int i, x, y, h, len, olen, oolen;
-    const short lenOfTruncationDots = 3;
-    const short lenOfWhiteSpaceBufferEachSide = 2;
-    const Bool isDefaultTabWidth = ( dc.w == tabWidth ) ? True : False;
-
-	XSetForeground(dpy, dc.gc, col[ColBG]);
-	/*XFillRectangle(dpy, dc.drawable, dc.gc, dc.x, dc.y, dc.w, dc.h);*/
-	XFillRectangle(dpy, drawable, dc.gc, dc.x, dc.y, dc.w, dc.h);
-	if(!text) return;
-
-    oolen = strlen(text);
-	olen = isDefaultTabWidth ? oolen + lenOfWhiteSpaceBufferEachSide*2 : oolen;
-    h = pad ? (dc.font.ascent + dc.font.descent) : 0;
-    y = dc.y + ((dc.h + dc.font.ascent - dc.font.descent) / 2);
-	x = dc.x + (h / 2);
-	/* shorten text if necessary */
-	for(len = MIN(olen, sizeof buf); len && textnw(text, len) > dc.w - h; len--);
-	if(!len) return;
-
-    /*if (isDefaultTabWidth) { // meaning default tab width, i.e. there's enough room for all the tabs on the bar;*/
-        if(len < olen) { // truncate
-            for( int i = 0; i < lenOfWhiteSpaceBufferEachSide; buf[i++] = ' ' ); // create whitespace buffer in the beginning;
-            memcpy(&buf[lenOfWhiteSpaceBufferEachSide], text, oolen);
-            for(i = len; i && i > len - (lenOfWhiteSpaceBufferEachSide); buf[--i] = ' ');
-            for(; i && i > len - (lenOfWhiteSpaceBufferEachSide+lenOfTruncationDots); buf[--i] = '.');
-        } else { // no truncation
-            // reset len:
-            len = oolen;
-            // initialise buf:
-            memcpy(buf, text, len);
-            /*fprintf(stderr, "after len:%d\n", len );*/
-
-            // grow the appended/prepended text as long as dc.w:
-            while ( textnw(buf, len) < dc.w ) {
-                // copy to temp buf and append+prepend with whitespace:
-                text_buf[0] = ' ';
-                memcpy( &text_buf[1], buf, len );
-                text_buf[len+1] = ' ';
-                len += 2;
-
-                // copy back to main buf:
-                memcpy(buf, text_buf, len);
-            }
-        }
-    /*} else {*/
-        /*memcpy(buf, text, len);*/
-        /*if(len < olen) // truncation for shorter-than-default tab widths:*/
-            /*for(i = len; i && i > len - 3; buf[--i] = '.');*/
-    /*}*/
-
-	XSetForeground(dpy, dc.gc, col[ColFG]);
-	if(dc.font.set)
-		XmbDrawString(dpy, drawable, dc.font.set, dc.gc, x, y, buf, len);
-	else
-		XDrawString(dpy, drawable, dc.gc, x, y, buf, len);
-}
-
-/* only used for drawing text in the tab bar
- */
-void
-drawTabbarText(Drawable drawable, const char *text, unsigned long col[ColLast], Bool pad) {
-    // TODO: needs check to make sure buf size is enough to accommodate tabWidth worth of characters.
-	char buf[256];
-	char text_buf[256];
-	int i, x, y, h, len, olen, oolen;
-    const short lenOfTruncationDots = 3;
-    const short lenOfWhiteSpaceBufferEachSide = 2;
-    const Bool isDefaultTabWidth = ( dc.w == tabWidth ) ? True : False;
-
-	XSetForeground(dpy, dc.gc, col[ColBG]);
-	/*XFillRectangle(dpy, dc.drawable, dc.gc, dc.x, dc.y, dc.w, dc.h);*/
-	XFillRectangle(dpy, drawable, dc.gc, dc.x, dc.y, dc.w, dc.h);
-	if(!text) return;
-
-    oolen = strlen(text);
-	olen = isDefaultTabWidth ? oolen + lenOfWhiteSpaceBufferEachSide*2 : oolen;
-    h = pad ? (dc.font.ascent + dc.font.descent) : 0;
-    y = dc.y + ((dc.h + dc.font.ascent - dc.font.descent) / 2);
-	x = dc.x + (h / 2);
-	/* shorten text if necessary */
-	for(len = MIN(olen, sizeof buf); len && textnw(text, len) > dc.w - h; len--);
-	if(!len) return;
-
-    /*if (isDefaultTabWidth) { // meaning default tab width, i.e. there's enough room for all the tabs on the bar;*/
-        if(len < olen) { // truncate
-            for( int i = 0; i < lenOfWhiteSpaceBufferEachSide; buf[i++] = ' ' ); // create whitespace buffer in the beginning;
-            memcpy(&buf[lenOfWhiteSpaceBufferEachSide], text, oolen);
-            for(i = len; i && i > len - (lenOfWhiteSpaceBufferEachSide); buf[--i] = ' ');
-            for(; i && i > len - (lenOfWhiteSpaceBufferEachSide+lenOfTruncationDots); buf[--i] = '.');
-        } else { // no truncation
-            // reset len:
-            len = oolen;
-            // initialise buf:
-            memcpy(buf, text, len);
-            /*fprintf(stderr, "after len:%d\n", len );*/
-
-            // grow the appended/prepended text as long as dc.w:
-            while ( textnw(buf, len) < dc.w ) {
-                // copy to temp buf and append+prepend with whitespace:
-                text_buf[0] = ' ';
-                memcpy( &text_buf[1], buf, len );
-                text_buf[len+1] = ' ';
-                len += 2;
-
-                // copy back to main buf:
-                memcpy(buf, text_buf, len);
-            }
-        }
-    /*} else {*/
-        /*memcpy(buf, text, len);*/
-        /*if(len < olen) // truncation for shorter-than-default tab widths:*/
-            /*for(i = len; i && i > len - 3; buf[--i] = '.');*/
-    /*}*/
 
 	XSetForeground(dpy, dc.gc, col[ColFG]);
 	if(dc.font.set)
@@ -1633,6 +1458,9 @@ expose(XEvent *e) {
 
 void
 focus(Client *c) {
+            // TODO: deleteme:
+            /*if ( isIntelliJ(c) ) return;*/
+
 	if(!c || !ISVISIBLE(c))
 		for(c = selmon->stack; c && !ISVISIBLE(c); c = c->snext);
 	/* was if(selmon->sel) */
@@ -1670,6 +1498,11 @@ focus(Client *c) {
 void
 focusin(XEvent *e) { /* there are some broken focus acquiring clients */
 	XFocusChangeEvent *ev = &e->xfocus;
+	Client *c;
+
+    // TODO: deleteme:
+	/*if((c = wintoclient(ev->window)))*/
+            /*if ( isIntelliJ(c) ) return;*/
 
 	if(selmon->sel && ev->window != selmon->sel->win)
 		setfocus(selmon->sel);
@@ -1695,17 +1528,17 @@ focusstack(const Arg *arg) {
 	if(!selmon->sel)
 		return;
 	if(arg->i > 0) {
-		for(c = selmon->sel->next; c && (!ISVISIBLE(c) || isWindowClass(c, client_class_notifyd)); c = c->next);
+		for(c = selmon->sel->next; c && !ISVISIBLE(c); c = c->next);
 		if(!c)
-			for(c = selmon->clients; c && (!ISVISIBLE(c) || isWindowClass(c, client_class_notifyd)); c = c->next);
+			for(c = selmon->clients; c && !ISVISIBLE(c); c = c->next);
 	}
 	else {
 		for(i = selmon->clients; i != selmon->sel; i = i->next)
-			if(ISVISIBLE(i) && !isWindowClass(i, client_class_notifyd))
+			if(ISVISIBLE(i))
 				c = i;
 		if(!c)
 			for(; i; i = i->next)
-                if(ISVISIBLE(i) && !isWindowClass(i, client_class_notifyd))
+				if(ISVISIBLE(i))
 					c = i;
 	}
 	if(c) {
@@ -1857,7 +1690,7 @@ grabkeys(void) {
 		unsigned int i, j;
 		unsigned int modifiers[] = { 0, LockMask, numlockmask, numlockmask|LockMask };
 		KeyCode code;
-        const KeyCode altKeyCode = XKeysymToKeycode(dpy, XK_Alt_L);
+        KeyCode altKeyCode = XKeysymToKeycode(dpy, XK_Alt_L);
 
 		XUngrabKey(dpy, AnyKey, AnyModifier, root);
 		for(i = 0; i < LENGTH(keys); i++)
@@ -1975,7 +1808,6 @@ keypress(XEvent *e) {
 	unsigned int i;
 	KeySym keysym;
 	XKeyEvent *ev;
-    Arg a = { .v = e }; // TODO: deleteme
 
 	ev = &e->xkey;
 	keysym = XKeycodeToKeysym(dpy, (KeyCode)ev->keycode, 0);
@@ -1984,7 +1816,7 @@ keypress(XEvent *e) {
 		if(keysym == keys[i].keysym
 		&& CLEANMASK(keys[i].mod) == CLEANMASK(ev->state)
 		&& keys[i].func)
-                keys[i].func(&(keys[i].arg));
+			keys[i].func(&(keys[i].arg));
 
     //TODO: ???
     // ungrab Alt so it could be sent...
@@ -2035,6 +1867,10 @@ manage(Window w, XWindowAttributes *wa) {
 		c->mon = selmon;
 		applyrules(c);
 	}
+
+            // TODO: deleteme:
+            /*if ( isIntelliJ(c) ) return;*/
+
 	/* geometry */
 	if((!c->mon->lt[c->mon->sellt]->arrange || c->isfloating) && c->iscentred) {
 		c->x = c->oldx = c->mon->wx + (c->mon->ww / 2 - wa->width / 2);
@@ -2090,18 +1926,12 @@ manage(Window w, XWindowAttributes *wa) {
 	attachstack(c);
 	XMoveResizeWindow(dpy, c->win, c->x + 2 * sw, c->y, c->w, c->h); /* some windows require this */
 	setclientstate(c, NormalState);
-    if(!isWindowClass(c, client_class_notifyd)) {
-        if (c->mon == selmon)
-            unfocus(selmon->sel, False);
-        c->mon->sel = c;
-    }
-
-    arrange(c->mon);
+	if (c->mon == selmon)
+		unfocus(selmon->sel, False);
+	c->mon->sel = c;
+	arrange(c->mon);
 	XMapWindow(dpy, c->win);
-
-    if(!isWindowClass(c, client_class_notifyd)) {
-        focus(NULL);
-    }
+	focus(NULL);
 }
 
 void
@@ -2118,6 +1948,12 @@ maprequest(XEvent *e) {
 	static XWindowAttributes wa;
 	XMapRequestEvent *ev = &e->xmaprequest;
    Client *i;
+	Client *c;
+
+    // TODO: deleteme:
+	/*if((c = wintoclient(ev->window)))*/
+            /*if ( isIntelliJ(c) ) return;*/
+
    if((i = wintosystrayicon(ev->window))) {
        sendevent(i->win, netatom[Xembed], StructureNotifyMask, CurrentTime, XEMBED_WINDOW_ACTIVATE, 0, systray->win, XEMBED_EMBEDDED_VERSION);
        resizebarwin(selmon);
@@ -2155,6 +1991,11 @@ motionnotify(XEvent *e) {
 	static Monitor *mon = NULL;
 	Monitor *m;
 	XMotionEvent *ev = &e->xmotion;
+	Client *c;
+
+    // TODO: deleteme:
+	/*if((c = wintoclient(ev->window)))*/
+            /*if ( isIntelliJ(c) ) return;*/
 
 	if(ev->window != root)
 		return;
@@ -2281,6 +2122,10 @@ propertynotify(XEvent *e) {
 	Window trans;
 	XPropertyEvent *ev = &e->xproperty;
 
+    // TODO: deleteme:
+	/*if((c = wintoclient(ev->window)))*/
+            /*if ( isIntelliJ(c) ) return;*/
+
    if((c = wintosystrayicon(ev->window))) {
        if(ev->atom == XA_WM_NORMAL_HINTS) {
            updatesizehints(c);
@@ -2297,18 +2142,30 @@ propertynotify(XEvent *e) {
 	else if(ev->state == PropertyDelete)
 		return; /* ignore */
 	else if((c = wintoclient(ev->window))) {
+            // TODO: deleteme:
+            /*if ( isIntelliJ(c) ) return;*/
+
+
+
 		switch(ev->atom) {
 		default: break;
 		case XA_WM_TRANSIENT_FOR:
 
-            // TODO: this mofo is the culprit!
-            if ( isWindowClass(c, client_class_idea) ) return;
+            // TODO: deleteme:
+            if ( isIntelliJ(c) ) return;
+
+
 
 			if(!c->isfloating && (XGetTransientForHint(dpy, c->win, &trans)) &&
 			   (c->isfloating = (wintoclient(trans)) != NULL))
 				arrange(c->mon);
 			break;
 		case XA_WM_NORMAL_HINTS:
+            // TODO: deleteme:
+            if ( isIntelliJ(c) ) return;
+
+
+
 			updatesizehints(c);
 			break;
 		case XA_WM_HINTS:
@@ -2391,8 +2248,8 @@ isInArea( int wx, int wy, int ww, int wh, int px, int py ) {
             && py <= wy + wh && py >= wy) {
         return True;
     }
-
     return False;
+
 }
 
 // returns the sector of the client cursor currently is occupying:
@@ -2425,8 +2282,7 @@ findSector( Client *c ) {
     } else if ( isInArea( c->x, c->y + ch, cw, ch, xx, yy )
         || isInTriangle(c->x+cw, c->y+ch, c->x+cw, c->y+2*ch, c->x+c->w/2, c->y+c->h/2, xx, yy ) ) {
         return MidSideLeft;
-        // TODO: what to do with the middle section?: (currently have separated
-        //       middle section to 4 triangles)
+        // TODO: what to do with the middle section?:
     /*} else if ( isInArea( c->x + cw, c->y + ch, cw, ch, xx, yy ) ) {*/
         /*return MidCenter;*/
     } else if ( isInArea( c->x + 2*cw, c->y + ch, cw, ch, xx, yy )
@@ -2520,7 +2376,6 @@ Bool grabPointer( int sector ) {
 }
 
 // triangle logic from http://www.geeksforgeeks.org/check-whether-a-given-point-lies-inside-a-triangle-or-not/
-// note that this is far from perfect, since middle position gets undetected;
 float
 calculateTriangleArea(int x1, int y1, int x2, int y2, int x3, int y3) {
    return abs((x1*(y2-y3) + x2*(y3-y1)+ x3*(y1-y2))/2.0);
@@ -2565,6 +2420,7 @@ resizemouse(const Arg *arg) {
     ph = pw = -1;
     sector = findSector(c);
 
+    // TODO: handle MidCenter
     if (sector < 0 || sector == MidCenter || !grabPointer( sector) ) {
         XUngrabPointer(dpy, CurrentTime);
         return;
@@ -2670,6 +2526,11 @@ void
 resizerequest(XEvent *e) {
    XResizeRequestEvent *ev = &e->xresizerequest;
    Client *i;
+	Client *c;
+
+    // TODO: deleteme:
+	/*if((c = wintoclient(ev->window)))*/
+            /*if ( isIntelliJ(c) ) return;*/
 
    if((i = wintosystrayicon(ev->window))) {
        updatesystrayicongeom(i, ev->width, ev->height);
@@ -2688,6 +2549,11 @@ restack(Monitor *m) {
 	drawtab(m);
 	if(!m->sel)
 		return;
+
+    // TODO: deleteme:
+	/*if((c = wintoclient(m->sel)))*/
+            /*if ( isIntelliJ(c) ) return;*/
+
 	if(m->sel->isfloating || !m->lt[m->sellt]->arrange)
 		XRaiseWindow(dpy, m->sel->win); // raise the selected floating window
 	if(m->lt[m->sellt]->arrange) {
@@ -2707,14 +2573,13 @@ restack(Monitor *m) {
 void
 run(void) {
 	XEvent ev;
-    /*XAnyEvent e;*/
-    /*Client *c;*/
-
+    XAnyEvent e;
+    Client *c;
 	/* main event loop */
 	XSync(dpy, False);
 	while(running && !XNextEvent(dpy, &ev)) {
         /*//TODO: deleteme:*/
-        /*fprintf(stderr, "  @ run(): event type: %d\n", ev.type);*/
+        /*fprintf(stderr, "event type: %d\n", ev.type);*/
         /*e = ev.xany;*/
         /*if ( e.window && (c = wintoclient(e.window)) ) {*/
             /*if ( isIntelliJ(c) ) continue;*/
@@ -2782,8 +2647,6 @@ sendmon(Client *c, Monitor *m) {
 	detach(c);
 	detachstack(c);
 	c->mon = m;
-    // TODO: instead of assigning tags of target monitor, perhaps
-    // leave originals? or even rerun applyRules()?:
 	c->tags = m->tagset[m->seltags]; /* assign tags of target monitor */
 	attach(c);
 	attachstack(c);
@@ -3086,8 +2949,7 @@ setup(void) {
 			|EnterWindowMask|LeaveWindowMask|StructureNotifyMask|PropertyChangeMask;
 	XChangeWindowAttributes(dpy, root, CWEventMask|CWCursor, &wa);
 	XSelectInput(dpy, root, wa.event_mask);
-    cellDC = dc; // make a copy; //TODO, is it ok solution?
-
+    cellDC = dc; // make a copy
     initfont2(cellFont, &cellDC);
     cellDC.h = cellDC.font.height;
 	grabkeys();
@@ -3270,6 +3132,14 @@ void
 togglefloating(const Arg *arg) {
 	if(!selmon->sel)
 		return;
+
+
+
+
+            // TODO: deleteme:
+            if ( isIntelliJ(selmon->sel) ) return;
+
+
 	selmon->sel->isfloating = !selmon->sel->isfloating || selmon->sel->isfixed;
 	if(selmon->sel->isfloating) {
 		/* restore border when moving window into floating mode */
@@ -3365,96 +3235,27 @@ unmanage(Client *c, Bool destroyed) {
 	arrange(m);
 }
 
-Bool isWindowClassByWin(Window w, char *class) {
-    if (!w) return False;
-    if (!class) return False;
-
+//TODO: deleteme
+Bool isIntelliJ(Client *c) {
     char w_class[256];
-    /*char w_name[512];*/
-    /*const char idea_name[] = "IntelliJ IDEA";*/
+    char w_name[512];
+    const char idea_name[] = "IntelliJ IDEA";
+    const char idea_class[] = "jetbrains-idea";
 
-    gettextprop(w, XA_WM_CLASS, w_class, sizeof w_class);
-    /*fprintf(stderr, "  @isWindowClass: was called for \"%s\" class\n", w_class);*/
-
-    /*if(!gettextprop(c->win, netatom[NetWMName], w_name, sizeof w_name)) {*/
-        /*gettextprop(c->win, XA_WM_NAME, w_name, sizeof w_name);*/
-    /*}*/
-
-    /*fprintf(stderr, "class: %s\n", w_class);*/
-    /*fprintf(stderr, "name: %s\n", w_name);*/
-
-
-    /*if ( strstr(w_class, idea_class) ||*/
-            /*strstr(w_name, idea_name) ) {*/
-        /*[>fprintf(stderr, "  !! idea class detected!\n");<]*/
-        /*return True;*/
-    /*}*/
-    /*if ( strstr(w_name, idea_name) ) {*/
-        /*return True;*/
-    /*}*/
-    if ( strstr( w_class, class ) ) {
-        /*fprintf(stderr, "  @isWindowClass: %s class detected, returning true\n", w_class);*/
-        return True;
-    }
-
-    return False;
-}
-
-Bool isWindowClass(Client *c, const char *class) {
     if (!c || !c->win) return False;
-    if (!class) return False;
 
-    char w_class[256];
-    /*char w_name[512];*/
-    /*const char idea_name[] = "IntelliJ IDEA";*/
 
     gettextprop(c->win, XA_WM_CLASS, w_class, sizeof w_class);
-    /*fprintf(stderr, "  @isWindowClass: was called for \"%s\" class\n", w_class);*/
-
-    /*if(!gettextprop(c->win, netatom[NetWMName], w_name, sizeof w_name)) {*/
-        /*gettextprop(c->win, XA_WM_NAME, w_name, sizeof w_name);*/
-    /*}*/
-
-    /*fprintf(stderr, "class: %s\n", w_class);*/
-    /*fprintf(stderr, "name: %s\n", w_name);*/
-
-
-    /*if ( strstr(w_class, idea_class) ||*/
-            /*strstr(w_name, idea_name) ) {*/
-        /*[>fprintf(stderr, "  !! idea class detected!\n");<]*/
-        /*return True;*/
-    /*}*/
-    /*if ( strstr(w_name, idea_name) ) {*/
-        /*return True;*/
-    /*}*/
-    if ( strstr( w_class, class ) ) {
-        /*fprintf(stderr, "  @isWindowClass: %s class detected, returning true\n", w_class);*/
-        return True;
-    }
-
-    return False;
-}
-
-Bool isWindowName(Client *c, char *name) {
-    if (!c || !c->win) return False;
-    if (!name) return False;
-
-    char w_name[512];
+    fprintf(stderr, "class: %s\n", w_class);
 
     if(!gettextprop(c->win, netatom[NetWMName], w_name, sizeof w_name)) {
         gettextprop(c->win, XA_WM_NAME, w_name, sizeof w_name);
     }
+    fprintf(stderr, "name: %s\n", w_name);
 
-    /*fprintf(stderr, "class: %s\n", w_class);*/
-    /*fprintf(stderr, "name: %s\n", w_name);*/
-
-
-    /*if ( strstr(w_class, idea_class) ||*/
-            /*strstr(w_name, idea_name) ) {*/
-        /*[>fprintf(stderr, "  !! idea class detected!\n");<]*/
-        /*return True;*/
-    /*}*/
-    if ( strstr(w_name, name) ) {
+    if ( strstr(w_class, idea_class) ||
+            strstr(w_name, idea_name) ){
+        fprintf(stderr, "  !! idea class detected!\n");
         return True;
     }
 
@@ -3467,6 +3268,11 @@ unmapnotify(XEvent *e) {
 	XUnmapEvent *ev = &e->xunmap;
 
 	if((c = wintoclient(ev->window))) {
+            // TODO: deleteme:
+            /*if ( isIntelliJ(c) ) return;*/
+
+
+
 		if(ev->send_event)
 			setclientstate(c, WithdrawnState);
 		else
@@ -3522,14 +3328,14 @@ updatebarpos(Monitor *m) {
 	}
 
 	for(c = m->clients; c; c = c->next){
-	  if(ISVISIBLE(c) && !isWindowClass(c, client_class_notifyd)) ++nvis;
+	  if(ISVISIBLE(c)) ++nvis;
 	}
 
 	if(m->showtab == showtab_always
 	   || ((m->showtab == showtab_auto) &&
-            ((nvis > 1 && m->lt[m->sellt]->arrange == monocle) ||
-            (nvis > 2 && m->lt[m->sellt]->arrange == deck) ||
-            /*(nvis > 1) &&*/m->lt[m->sellt]->arrange == NULL)
+           ((nvis > 1 && m->lt[m->sellt]->arrange == monocle) ||
+           (nvis > 2 && m->lt[m->sellt]->arrange == deck) ||
+           /*(nvis > 1) &&*/m->lt[m->sellt]->arrange == NULL)
            ) ) {
 		m->wh -= th;
 		m->ty = m->toptab ? m->wy : m->wy + m->wh;
@@ -3805,6 +3611,9 @@ updatesystray(void) {
 
 void
 updatewindowtype(Client *c) {
+            // TODO: deleteme:
+            if ( isIntelliJ(c) ) return;
+
 	Atom state = getatomprop(c, netatom[NetWMState]);
 	Atom wtype = getatomprop(c, netatom[NetWMWindowType]);
 
@@ -4029,26 +3838,14 @@ tagcycle(const Arg *arg) {
 
 //////////////// ALT-TAB:
 void altTab(const Arg *arg) {
-    /*return;*/
-
-
-
-    /*XAllowEvents(dpy, AsyncKeyboard, (*(XEvent*)arg->v).xkey.time);*/
-    /*XAllowEvents(dpy, ReplayKeyboard, (*(XEvent*)arg->v).xkey.time);*/
-    /*XFlush(dpy); // has to go with replaykeyboard!!!*/
-
-
-
-
+    return;
    XEvent ev;
    KeySym keySym;
-   int keyMod;
    /*KeySym tabKey = XKeysymToKeycode(dpy, XK_Tab);*/
    /*KeySym altKey = XKeysymToKeycode(dpy, XK_Alt_L);*/
    /*KeyCode tabKey = XKeysymToKeycode(dpy, XK_Tab);*/
-   const KeyCode altKeyCode = XKeysymToKeycode(dpy, XK_Alt_L);
-   const KeyCode tabKeyCode = XKeysymToKeycode(dpy, XK_Tab);
-   fprintf(stderr, "\nstart of altTab function\n\n");
+   KeyCode altKeyCode = XKeysymToKeycode(dpy, XK_Alt_L);
+   fprintf(stderr, "start of function\n");
 
     if ( !selmon->cellwin ) {
         selmon->cellwin = XCreateSimpleWindow(dpy, root, 1, 1, 1, 1, 0, 0, dc.colors[0][ColBG]);
@@ -4069,20 +3866,11 @@ void altTab(const Arg *arg) {
 						 /*True, GrabModeAsync, GrabModeAsync);*/
                     // TODO:! (tries same grabber as in grabkeys(), ie the one confirmed to work)
                     // prolly doesn't work though since already-tried 'anyModifier'  includes not modifiers)
+                    XGrabKey(dpy, altKeyCode, 0, root,
+                            True, GrabModeAsync, GrabModeAsync);
     /*return;*/
 /*}*/
-    // need to call first time outside of the loop:
-    updateAndDrawAltTab(selmon);
 
-
-    XUngrabKey(dpy, tabKeyCode, 0, root);
-    XUngrabKey(dpy, tabKeyCode, AltMask, root);
-    /*XUngrabKey(dpy, AnyKey, AnyModifier, root);*/
-
-    XGrabKey(dpy, altKeyCode, 0, root, True, GrabModeAsync, GrabModeAsync);
-    XGrabKey(dpy, tabKeyCode, AnyModifier, root, True, GrabModeAsync, GrabModeAsync);
-
-    int c = 0; // TODO deleteme
     do {
         fprintf(stderr, "new cycle of do-loop.\n");
         /*XMaskEvent(dpy, MOUSEMASK|ExposureMask|SubstructureRedirectMask, &ev);*/
@@ -4090,8 +3878,6 @@ void altTab(const Arg *arg) {
         XMaskEvent(dpy, KeyPressMask|KeyReleaseMask, &ev);
 
         keySym = XKeycodeToKeysym(dpy, ev.xkey.keycode, 0);
-        keyMod = ev.xkey.state;
-
         fprintf(stderr, "detected key: %d\n", keySym);
         switch (ev.type) {
             /*case ConfigureRequest:*/
@@ -4108,32 +3894,19 @@ void altTab(const Arg *arg) {
                     updateAndDrawAltTab(selmon);
                 }
                 break;
-            // TODO: KeyRelease is only for debugging purposes:
             case KeyRelease:
-                fprintf(stderr, " keyrelease event detected\n");
+                /*handler[ev.type](&ev);*/
                 if ( keySym == XK_Alt_L ) {
                     fprintf(stderr, "keyrelease, alt\n");
                 }
                 /*if ( keySym == XK_Alt_L ) return;*/
                 break;
         }
-
-        // TODO: just-in-case counter; deleteme:
-        c++;
-        if (c > 10) break;
-    /*} while(ev.type != KeyRelease || ( keySym != XK_Alt_L && !(keySym & Mod1Mask) )); // until alt is released*/
-    } while(ev.type != KeyRelease ||  keySym != XK_Alt_L ); // until alt is released
+    } while(ev.type != KeyRelease || keySym != XK_Alt_L); // until alt is released
 
    fprintf(stderr, "exited from the loop!\n");
     /*XUngrabKey(dpy, AnyKey, AnyModifier, root);*/
-
-
-    /*XUngrabKey(dpy, altKeyCode, 0, root);*/
-    /*XGrabKey(dpy, tabKeyCode, AltMask, root,*/
-            /*True, GrabModeAsync, GrabModeAsync);*/
-
-    grabkeys();
-    /*XUngrabKey(dpy, tabKeyCode, Mod1Mask, root);*/
+    XUngrabKey(dpy, altKeyCode, 0, root);
 
     // Finally, hide away the window:
    /*XLowerWindow( dpy, m->cellwin);*/
@@ -4145,7 +3918,7 @@ void altTab(const Arg *arg) {
 
 void
 updateAndDrawAltTab(Monitor *m) {
-   int MAX_CLIENTS = 10; //TODO move out into config
+int MAX_CLIENTS = 10; //TODO move out
    unsigned long *col;
    Client *c;
    int i;
@@ -4157,7 +3930,7 @@ updateAndDrawAltTab(Monitor *m) {
    int maxsize = bh;
    int nrOfCells;
    int singleCellHeight = cellDC.font.height; //TODO; kui mingieid vahealasid teha, siis siit alusta?
-   int totalCellHeight = 0;
+   int totalCellHeight;
    int ch; // TODO needs to be calculated
    int cwy, cwx; // cell window origin
 
@@ -4174,14 +3947,10 @@ updateAndDrawAltTab(Monitor *m) {
 
    // Calculate total cell block height
    for( i = 0, c = m->clients; c; c = c->next, i++){
-     if(!ISVISIBLE(c) || isWindowClass(c, client_class_notifyd)) continue;
-
+     if(!ISVISIBLE(c)) continue;
      totalCellHeight += singleCellHeight;
      if(i >= MAX_CLIENTS) break;
    }
-   if(!totalCellHeight) return;
-   /*fprintf(stderr, "  single cell height: %d\n", singleCellHeight);*/
-   /*fprintf(stderr, "  cellwin total height: %d\n", totalCellHeight);*/
 
     /*if(cellDC.celldrawable != 0)*/
         /*XFreePixmap(dpy, cellDC.celldrawable);*/
@@ -4246,7 +4015,7 @@ updateAndDrawAltTab(Monitor *m) {
    /*}*/
 
    for( i = 0, c = m->clients; c; c = c->next ) {
-     if(!ISVISIBLE(c) || isWindowClass(c, client_class_notifyd)) continue;
+     if(!ISVISIBLE(c)) continue;
      if(i >= MAX_CLIENTS) break;
 
     // coloring:
@@ -4299,8 +4068,8 @@ updateAndDrawAltTab(Monitor *m) {
     XDefineCursor(dpy, m->cellwin, cursor[CurNormal]);
 
 
-   XCopyArea(dpy, cellDC.celldrawable, m->cellwin, cellDC.gc, 0, 0, cellWidth, totalCellHeight, 0, 0);
    XMapRaised(dpy, m->cellwin);
+   XCopyArea(dpy, cellDC.celldrawable, m->cellwin, cellDC.gc, 0, 0, cellWidth, totalCellHeight, 0, 0);
    XSync(dpy, False);
 
 }
