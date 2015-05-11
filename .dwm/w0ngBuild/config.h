@@ -92,6 +92,11 @@ static const char *mpctog[]        = { "mpc", "-q", "toggle", NULL };
 static const char *mpcprev[]       = { "mpc", "-q", "prev", NULL };
 static const char *mpcnext[]       = { "mpc", "-q", "next", NULL };
 
+static const char *brightup[]		=	{ "/data/dev/scripts/system/set_brightness.sh", "UP", NULL };
+static const char *brightdown[]		=	{ "/data/dev/scripts/system/set_brightness.sh", "DOWN", NULL };
+static const char *battery_status[]			=	{ "/data/dev/scripts/system/battery_status.sh", NULL };
+static const char *ask_shutdown[]			=	{ "python", "/usr/local/bin/powerbtn.py", "next", NULL };
+
 #include "push.c"
 static Key keys[] = {
   /* modifier               key               function        argument */
