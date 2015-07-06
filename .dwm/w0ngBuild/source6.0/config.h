@@ -4,11 +4,17 @@
 #include "gaplessgrid.c"
 #include "push.c"
 
+/* key definitions */
+#define MODKEY Mod4Mask
+#define AltMask Mod1Mask
+
+/* btn definitions */
+#define wheel_tilt_left 6 // wheel tilt left
+#define wheel_tilt_right 7 // wheel tilt right
+#define wheel_scroll_up 4 // wheel scroll up
+#define wheel_scroll_dn 5 // wheel scroll down
+
 #define NUMCOLORS 17 // needs to be re-defined in dwm.c.MAXCOLORS!
-#define Button6 6 // wheel tilt left
-#define Button7 7 // wheel tilt right
-#define Button4 4 // wheel scroll up
-#define Button5 5 // wheel scroll down
 /* appearance */
 static const char font[] = "-*-xbmicons-medium-r-*-*-12-*-*-*-*-*-*-*" ","
                            "-*-terminus-medium-r-*-*-12-*-*-*-*-*-*-*";
@@ -17,11 +23,11 @@ static const char cellFont[] = "-*-xbmicons-medium-r-*-*-12-*-*-*-*-*-*-*" ","
 //static const char font[] = "-*-Terminus2-*-*-*-*-*-*-*-*-*-*-*-*";
 
 static const char colors[NUMCOLORS][ColLast][9] = {
-  // border foreground background
+  //  border  foreground  background
   { "#282a2e", "#373b41", "#1d1f21" }, // 1 = normal (grey on black)
   //{ "#f0c674", "#c5c8c6", "#1d1f21" }, // 2 = selected (white on black)
   { "#060AE0", "#c5c8c6", "#1d1f21" }, // 2 = selected (white on black)
-  { "#dc322f", "#1d1f21", "#f0c674" }, // 3 = urgent (black on yellow)
+  { "#dc322f", "#dc322f", "#1d1f21" }, // 3 = urgent (black on yellow)
   { "#282a2e", "#282a2e", "#1d1f21" }, // 4 = darkgrey on black (for glyphs); and urgent
   { "#282a2e", "#1d1f21", "#282a2e" }, // 5 = black on darkgrey (for glyphs)
   { "#282a2e", "#cc6666", "#1d1f21" }, // 6 = red on black
@@ -31,13 +37,12 @@ static const char colors[NUMCOLORS][ColLast][9] = {
   { "#282a2e", "#81a2be", "#282a2e" }, // A = blue on darkgrey
   { "#282a2e", "#b294bb", "#282a2e" }, // B = magenta on darkgrey
   { "#282a2e", "#8abeb7", "#282a2e" }, // C = cyan on darkgrey
-  //{ "#282a2e", "#5F6267", "#1d1f21" }, // D = a bit lighter gray than normal on black; for occupied.
-  { "#FFFFFF", "#7f8185", "#1d1f21" }, // D = a bit lighter gray than normal on black; for monocle tab bar non-selected
+  { "#FFFFFF", "#7f8185", "#1d1f21" }, // D = a bit lighter gray than normal on black; for tab bar non-selected & tag occupied
   { "#FFFFFF", "#c5c8c6", "#5f6267" }, // E = used for selected title in tab bar
   //{ "#f0c674", "#b5bd68", "#FFFFFF" }, // F = for float client borders; index 0 is selected, 1 is normal, 2 unused
   { "#00A3CC", "#CCFFFF", "#FFFFFF" }, // F = for float client borders; index 0 is selected, 1 is normal, 2 unused
-  { "#FFFFFF", "#999A9D", "#616264" }, // G = non-selected master client tab
-  { "#FFFFFF", "#E2E4E2", "#9F9195" }, // H = selected master client tab
+  { "#FFFFFF", "#999A9D", "#616264" }, // G = non-selected master client tab (if > 1 nmast)
+  { "#FFFFFF", "#E2E4E2", "#9F9195" }, // H = selected master client tab (if > 1 nmast)
 };
 
 static const unsigned int borderpx  = 2;        /* border pixel of windows */
@@ -46,7 +51,13 @@ static const Bool showbar           = True;     /* False means no bar */
 static const Bool topbar            = True;     /* False means bottom bar */
 static const unsigned int systrayspacing = 2;   /* systray spacing */
 static const Bool showsystray       = True;     /* False means no systray */
+static const Bool transfer_pointer  = False;    /* False means do not move pointer to another mon on monitor change (focusmon()) */
+
+// these two cannot be both set to true!: (at least until focus() gets another param
+// to check wether enternotif walled it or not)
 static /*!const*/ Bool focus_follows_mouse     = True;         /* toggle focus-follows-mouse default */
+static /*!const*/ Bool mouse_follows_focus     = False;        /* again, default, since it's toggleable */
+
 static const unsigned int cellWidth = 300;      /* altTab's window width */
 static const unsigned int tabWidth  = 200;      /* default tab width;
                                                    (if more tabs are added, width is
@@ -65,6 +76,7 @@ static const float mfact      = 0.55;  /* factor of master area size [0.05..0.95
 static const int nmaster      = 1;     /* number of clients in master area */
 
 
+enum lyts { Tile, Float, Monocle, Bstack, Grid, Deck };
 static const Layout layouts[] = {
   /* symbol     arrange function */
   /*
@@ -85,16 +97,16 @@ static const Layout layouts[] = {
 /* Tagging */
 //static const char *tags[] = { "/u011a", "ä", "ä", "ä", "ä", "BG"};
 static const Tag tags[] = {
-    /* name          layout        mfact   nmaster*/
-    { "\uE000",    &layouts[0], 	-1,    	-1 },
-    { "\uE008",    &layouts[3], 	0.63,  	-1 },
-    { "\uE001",    &layouts[0], 	-1,    	-1 },
-    { "\uE002",    &layouts[0], 	-1,    	-1 },
-    { "\uE005",    &layouts[0], 	-1,    	-1 },
-    { "\uE003",    &layouts[0], 	-1,    	-1 },
-    { "\uE006",    &layouts[0], 	-1,    	-1 },
-    { "\uE007",    &layouts[0], 	-1,    	-1 },
-	{ "BG",	       &layouts[0],	    -1,		-1 },
+    /* name          layout            mfact   nmaster*/
+    { "\uE000",    &layouts[Tile],     	-1,    	-1 },
+    { "\uE008",    &layouts[Bstack], 	0.63,  	-1 },
+    { "\uE001",    &layouts[Tile],     	-1,    	-1 },
+    { "\uE002",    &layouts[Tile],     	-1,    	-1 },
+    { "\uE005",    &layouts[Tile], 	    -1,    	-1 },
+    { "\uE003",    &layouts[Tile], 	    -1,    	-1 },
+    { "\uE006",    &layouts[Tile], 	    -1,    	-1 },
+    { "\uE007",    &layouts[Tile], 	    -1,    	-1 },
+	{ "BG",	       &layouts[Tile],	    -1,		-1 },
 };
 
 static const Rule rules[] = {
@@ -159,6 +171,7 @@ static const Rule rules[] = {
 	{ "Truecrypt",		NULL,		NULL,		1 << 8,			True,		True,		-1 },
 	{ "Deluge",		NULL,		NULL,		1 << 8,			True,		True,		-1 },
 	{ "Transmission-gtk",		NULL,		NULL,		1 << 8,			True,		True,		-1 },
+	{ "Copyq",		NULL,		NULL,		NULL,			True,		False,		-1 },
 
 	{ "Galculator",		NULL,		NULL,		0,			True,		True,		-1 },
 	{ NULL,		NULL,		"MonoDevelop External Console",		1 << 1,			True,		False,		-1 },
@@ -204,9 +217,6 @@ static const Rule rules[] = {
  *};
  */
 
-/* key definitions */
-#define MODKEY Mod4Mask
-#define AltMask Mod1Mask
 
 #define TAGKEYS(KEY,TAG) \
 	{ MODKEY,                       KEY,      toggleview, {.ui = 1 << TAG} }, \
@@ -218,7 +228,8 @@ static const Rule rules[] = {
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
 /* commands */
-static const char *dmenucmd[]      = { "dmenu_run", "-fn", font, "-nb", colors[12][ColBG], "-nf", colors[12][ColFG], "-sb", colors[1][ColBG], "-sf", colors[1][ColFG], NULL };
+//static const char *dmenucmd[]      = { "dmenu_run", "-i", "-fn", font, "-nb", colors[12][ColBG], "-nf", colors[12][ColFG], "-sb", colors[1][ColBG], "-sf", colors[1][ColFG], NULL };
+static const char *dmenucmd[]      = { "dmenu_recent_aliases", NULL };
 static const char *termcmd[]       = { "urxvtc", NULL };
 static const char scratchpadname[] = "scratchpad";
 static const char *scratchpadcmd[] = { "urxvtc", "-name", scratchpadname, "-geometry", "100x25", NULL };
@@ -241,7 +252,9 @@ static const char *FF_tabgroup_back[]			=	{ "python", "/usr/local/bin/dynamic_bu
 static const char *FF_tabgroup_fwd[]			=	{ "python", "/usr/local/bin/dynamic_button_remap.py", "FF_tabgroup_fwd", NULL };
 static const char *statusbar_prev[]			=	{ "python3", "/home/laur/.dwm/bars/py_bar.py", "prev", NULL };
 static const char *statusbar_next[]			=	{ "python3", "/home/laur/.dwm/bars/py_bar.py", "next", NULL };
-static const char *keepassx[] = { "keepassx", NULL };
+
+// runorraise compliant:
+static const char *keepassx[] = { "keepassx", NULL, NULL, NULL, "Keepassx" };
 
 static Key keys[] = {
   /* modifier               key               function        argument */
@@ -262,6 +275,8 @@ static Key keys[] = {
   { MODKEY|ShiftMask,       XK_b,             togglebar,      {0} },
   { MODKEY,                 XK_j,             focusstack,     {.i = +1 } },
   { MODKEY,                 XK_k,             focusstack,     {.i = -1 } },
+  { MODKEY|ControlMask,                 XK_j,             focusstackwithoutrising,     {.i = +1 } },
+  { MODKEY|ControlMask,                 XK_k,             focusstackwithoutrising,     {.i = -1 } },
   // support exists, simply not using:
     /*
 	 *{ Modkey,           			    XK_h,   				cycle,  			{.i = -1} },
@@ -284,24 +299,37 @@ static Key keys[] = {
   { AltMask,                XK_Tab,           altTab,           {0} },
   { MODKEY,           	  	XK_c,             killclient,     {0} },
   { AltMask,               	XK_F4,            killclient,     {0} },
-  { MODKEY,                 XK_t,             setlayout,      {.v = &layouts[0]} },
-  { MODKEY,                 XK_f,             setlayout,      {.v = &layouts[1]} },
-  { MODKEY,                 XK_x,             setlayout,      {.v = &layouts[2]} },
-  { MODKEY,                 XK_b,             setlayout,      {.v = &layouts[3]} },
-  { MODKEY,                 XK_g,             setlayout,      {.v = &layouts[4]} },
-  { MODKEY,                 XK_m,             setlayout,      {.v = &layouts[5]} },
+  { MODKEY,                 XK_t,             setlayout,      {.v = &layouts[Tile]} },
+  { MODKEY,                 XK_f,             setlayout,      {.v = &layouts[Float]} },
+  { MODKEY,                 XK_x,             setlayout,      {.v = &layouts[Monocle]} },
+  { MODKEY,                 XK_b,             setlayout,      {.v = &layouts[Bstack]} },
+  { MODKEY,                 XK_g,             setlayout,      {.v = &layouts[Grid]} },
+  { MODKEY,                 XK_m,             setlayout,      {.v = &layouts[Deck]} },
   //{ MODKEY,                 XK_space,         setlayout,      {0} },
   //{ MODKEY|ShiftMask,       XK_space,         togglefloating, {0} },
   { MODKEY|ShiftMask,        XK_f,             togglefloating, {0} },
   { MODKEY,                 XK_0,             view,           {.ui = ~0 } },
   { MODKEY|ShiftMask,       XK_0,             tag,            {.ui = ~0 } },
+
+  // server: (server-client separation was meant for synergy-dwm hack, which never worked)
+  //{ MODKEY,                 XK_o,         focusmon,       {.i = -1 } },
+  //{ MODKEY,                 XK_period,        focusmon,       {.i = +1 } },
+  //{ MODKEY|ControlMask,                 XK_comma,         focusmon,       {.i = -1 } },
+  //{ MODKEY|ControlMask,                 XK_period,        focusmon,       {.i = +1 } },
+
+  // client:
   { MODKEY,                 XK_comma,         focusmon,       {.i = -1 } },
   { MODKEY,                 XK_period,        focusmon,       {.i = +1 } },
+  // these two so that synergy could call focusmon():
+  { ControlMask|MODKEY,                 XK_comma,         focusmon,       {.i = -1 } },
+  { ControlMask|MODKEY,                 XK_period,        focusmon,       {.i = +1 } },
+
   { MODKEY|ShiftMask,       XK_comma,         tagmon,         {.i = -1 } },
   { MODKEY|ShiftMask,       XK_period,        tagmon,         {.i = +1 } },
   { MODKEY|ShiftMask,       XK_r,             reload,         {0} },
 { MODKEY,                       XK_e,      runorraise,     {.v = keepassx } },
 	{ MODKEY|ShiftMask,  			    XK_m,      				toggle_ffm, 	    NULL },          // toggle focus follows mouse
+	{ MODKEY|ShiftMask|ControlMask,	    XK_m,      				toggle_mff, 	    NULL },          // toggle mouse follows focus
     { MODKEY,                           XK_z,                   toggleview,         {.ui = 1 << 8} },
     { MODKEY|ShiftMask,                  XK_z,                   tag,                {.ui = 1 << 8} },
     TAGKEYS(                  XK_1,                             0)
@@ -323,7 +351,7 @@ static Key keys[] = {
 static Button buttons[] = {
   /* click                event mask      button          function        argument */
 	{ ClkLtSymbol,          0,              Button1,        setlayout,      {0} },                         // Swaps between previous and current
-	{ ClkLtSymbol,          0,              Button3,        setlayout,      {.v = &layouts[1]} },   // Right click = monocle and previous, monocle and previous...
+	{ ClkLtSymbol,          0,              Button3,        setlayout,      {.v = &layouts[Float]} },   // Right click = monocle and previous, monocle and previous...
 	/* --------------------------------------menu-----------------------------------------*/
 	{ ClkRootWin,			0,				Button3,		spawn,			{.v = calendar } },         // root win == desktop nt
 	{ ClkWinTitle,			0,				Button2,		killclient,		{0} },
@@ -343,22 +371,29 @@ static Button buttons[] = {
 	{ ClkTagBar,            MODKEY,         Button3,        toggletag,      {0} },
 	{ ClkTabBar,            0,              Button1,        focuswin,      {0} },
     // Custom mouse wheel tilt commands:
-    { ClkClientWin,         AltMask,         Button6,        spawn,      {.v = history_back } },
-    { ClkClientWin,         AltMask,         Button7,        spawn,      {.v = history_forward} },
-    { ClkClientWin,         ControlMask,        Button6,        spawn,      {.v = tab_back } },
-    { ClkClientWin,         ControlMask,        Button7,        spawn,      {.v = tab_forward} },
-    { ClkClientWin,         ControlMask|ShiftMask,         Button6,        spawn,      {.v = FF_tabgroup_back } },
-    { ClkClientWin,         ControlMask|ShiftMask,         Button7,        spawn,      {.v = FF_tabgroup_fwd} },
-    { ClkClientWin,         MODKEY,         Button6,        setmfact,      {.f = -0.05} },
-    { ClkClientWin,         MODKEY,         Button7,        setmfact,      {.f = +0.05} },
-    { ClkWinTitle,          MODKEY,         Button7,        incnmaster,      {.i = -1 } },
-    { ClkWinTitle,          MODKEY,         Button6,        incnmaster,      {.i = +1 } },
+    { ClkClientWin,         AltMask,         wheel_tilt_left,        spawn,      {.v = history_back } },
+    { ClkClientWin,         AltMask,         wheel_tilt_right,        spawn,      {.v = history_forward} },
+    { ClkClientWin,         ControlMask,        wheel_tilt_left,        spawn,      {.v = tab_back } },
+    { ClkClientWin,         ControlMask,        wheel_tilt_right,        spawn,      {.v = tab_forward} },
+    { ClkClientWin,         ControlMask|ShiftMask,         wheel_tilt_left,        spawn,      {.v = FF_tabgroup_back } },
+    { ClkClientWin,         ControlMask|ShiftMask,         wheel_tilt_right,        spawn,      {.v = FF_tabgroup_fwd} },
+    { ClkClientWin,         MODKEY,         wheel_tilt_left,        setmfact,      {.f = -0.05} },
+    { ClkClientWin,         MODKEY,         wheel_tilt_right,        setmfact,      {.f = +0.05} },
+    { ClkWinTitle,          MODKEY,         wheel_tilt_right,        incnmaster,      {.i = -1 } },
+    { ClkWinTitle,          MODKEY,         wheel_tilt_left,        incnmaster,      {.i = +1 } },
     { ClkClientWin,         MODKEY,         Button1,        zoom,      {0} },
+	{ ClkClientWin,         MODKEY,  		wheel_scroll_up,	    focusstack,     {.i = +1 } },
+	{ ClkClientWin,         MODKEY,  		wheel_scroll_dn,	    focusstack,     {.i = -1 } },
+	{ ClkClientWin,         MODKEY|ControlMask,  		wheel_scroll_up,	    focusstackwithoutrising,     {.i = +1 } },
+	{ ClkClientWin,         MODKEY|ControlMask,  		wheel_scroll_dn,	    focusstackwithoutrising,     {.i = -1 } },
+
+    //{ ClkClientWin,         0,         Button1,        raise_floating_client,      {0} },
     //{ ClkClientWin,         0,              Button1,        raiseSelectedWindowAndUnGrabB1,      NULL },
-    { ClkStatusText,		MODKEY,		    Button6,		spawn,			{.v = statusbar_prev } },   // selects previous mode for statusbar (py_bar)
-    { ClkStatusText,		MODKEY,		    Button7,		spawn,			{.v = statusbar_next } },
-    { ClkStatusText,        0,              Button4,      spawn,          {.v = volupcmd } },
-    { ClkStatusText,        0,              Button5,      spawn,          {.v = voldncmd } },
+
+    { ClkStatusText,		MODKEY,		    wheel_tilt_left,		spawn,			{.v = statusbar_prev } },   // selects previous mode for statusbar (py_bar)
+    { ClkStatusText,		MODKEY,		    wheel_tilt_right,		spawn,			{.v = statusbar_next } },
+    { ClkStatusText,        0,              wheel_scroll_up,      spawn,          {.v = volupcmd } },
+    { ClkStatusText,        0,              wheel_scroll_dn,      spawn,          {.v = voldncmd } },
 
 /*
  *  { ClkLtSymbol,          0,              Button1,        setlayout,      {0} },  // Swaps between previous and current
@@ -385,6 +420,19 @@ static Button buttons[] = {
  */
 };
 
+/*
+ *Window class definitions:
+ */
 const char client_class_idea[] = "sun-awt-X11-XFramePeer";
 const char client_class_notifyd[] = "xfce4-notifyd";
 
+/*
+ *List of window classes that should not be interactive, ie not be drawn onto tabbar,
+ *not be selectable using meta+j/k keys...
+ */
+const char *ignored_class_list[] = {
+    client_class_notifyd
+};
+
+// synergy logfile location:
+const char synergy_log_file[] = "/var/log/custom_logs/synergy_server.log";

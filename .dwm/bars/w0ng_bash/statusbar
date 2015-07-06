@@ -11,7 +11,7 @@
 nwInterfaceStats=""
 
 # mail constants:
-PREFIXES=( \
+MAIL_PREFIXES=( \
     "ix" \
     "sb"  \
 )
@@ -50,7 +50,8 @@ sep_bar="\uE020"
 
 
 print_song_info() {
-  mpc_query="$(mpc current -f '[[[[%artist% \uE01B ]%title%]]|[%file%]]' | head -c 75)"
+  local mpc_query="$(mpc current -f '[[[[%artist% \uE01B ]%title%]]|[%file%]]' | head -c 75)"
+
   if [[ -n "$mpc_query" ]]; then
     #song_info="Off"
     echo -ne "${colour_dgry}${sep_solid}${colour_cyn} ${glyph_msc} ${mpc_query} "
@@ -59,7 +60,8 @@ print_song_info() {
 }
 
 print_torrent_status() {
-  torrent_status="$(transmission-remote -l | awk -F "  +" '$5 ~ /^[0-9]/ {print $5}')"
+  local torrent_status="$(transmission-remote -l | awk -F "  +" '$5 ~ /^[0-9]/ {print $5}')"
+
   if [[ ! $torrent_status ]]; then
     torrent_status="Idle"
   fi
@@ -69,7 +71,8 @@ print_torrent_status() {
 print_email_unread() {
   local counter=0
   # inbox & scoreboards
-  mailEcho=""
+  local mailEcho=""
+  local maildir unread_count
 
   #echo -ne "${colour_dgry}${sep_solid}${colour_ylw} ${glyph_eml}"
   #for maildir in $(find $HOME/mail/work/ \( -path "*Inbox/new" -o -path "*Inbox/.sb/new" \) -type d);do
@@ -77,7 +80,7 @@ print_email_unread() {
   for maildir in ${MAILDIRS_NEW[@]}; do
     unread_count="$(ls "$maildir" | wc -l)"
     if [[ "$unread_count" -gt 0 ]]; then
-        mailEcho+=" ${PREFIXES[$counter]}:${unread_count}"
+        mailEcho+=" ${MAIL_PREFIXES[$counter]}:${unread_count}"
     fi
     let counter+=1
     # alternative:
@@ -90,7 +93,7 @@ print_email_unread() {
 }
 
 print_last_msg() {
-  last_msg="$(cat $HOME/.logs/irssi_pipe)"
+  local last_msg="$(cat $HOME/.logs/irssi_pipe)"
   echo -ne "${colour_blk}${sep_solid}${colour_dylw} ${glyph_com} ${last_msg} "
 }
 
@@ -98,17 +101,17 @@ print_mem_used() {
   #mem_used="$(free -m | awk 'NR==3 {print $3}')" # used in MB
   #mem_used="$(free | awk '/buffers\/cache/{print $4/($3+$4) * 100.0;}')" # free in %
   #mem_used="$(free | awk '/buffers\/cache/{print $3/($3+$4) * 100.0;}')" # usage in %
-  mem_used="$(free | awk '/buffers\/cache/{print int($3/($3+$4) * 100.0);}')" # usage in %, rounded
+  local mem_used="$(free | awk '/buffers\/cache/{print int($3/($3+$4) * 100.0);}')" # usage in %, rounded
   echo -ne "${sep_line} ${glyph_mem} ${mem_used}% "
 }
 
 print_volume() {
-  volume="$(amixer get Master | tail -n1 | sed -r 's/.*\[(.*)%\].*/\1/')"
+  local volume="$(amixer get Master | tail -n1 | sed -r 's/.*\[(.*)%\].*/\1/')"
   echo -ne "${colour_dgry}${sep_solid}${colour_mag} ${glyph_vol} ${volume}% "
 }
 
 print_datetime() {
-  datetime="$(date "+%a %d ${sep_line} %H:%M")"
+  local datetime="$(date "+%a %d ${sep_line} %H:%M")"
   echo -ne "${colour_blk}${sep_solid}${colour_wht} ${glyph_tim} ${datetime} "
 }
 
@@ -136,37 +139,52 @@ fi
 # network (from: http://dzen.geekmode.org/dwiki/doku.php?id=dzen:network-meter)
 # cpu (from: https://bbs.archlinux.org/viewtopic.php?pid=661641#p661641)
 nwInterfaceStats=$(find_connected_if_stats)
-rx_old=$(cat $nwInterfaceStats/rx_bytes)
-tx_old=$(cat $nwInterfaceStats/tx_bytes)
+if [[ -n "$nwInterfaceStats" ]]; then
+    rx_old=$(cat $nwInterfaceStats/rx_bytes)
+    tx_old=$(cat $nwInterfaceStats/tx_bytes)
+else
+    rx_old=0
+    tx_old=0
+fi
 
 
 while true; do
   nwInterfaceStats="$(find_connected_if_stats)"
+  if [[ -n "$nwInterfaceStats" ]]; then
+    # get new rx/tx counts
+    rx_now=$(cat $nwInterfaceStats/rx_bytes)
+    tx_now=$(cat $nwInterfaceStats/tx_bytes)
+    # calculate the rate (K) and total (M)
+    rx_rate=$(convertTxRates $(($rx_now-$rx_old)))
+    tx_rate=$(convertTxRates $(($tx_now-$tx_old)))
+    #  let rx_total=$rx_now/1048576
+    #  let tx_total=$tx_now/1048576
+  else
+    rx_rate=""
+    tx_rate=""
+  fi
 
   # get new cpu idle and total usage
-  eval "$(awk '/^cpu /{print "cpu_idle_now=" $5 "; cpu_total_now=" $2+$3+$4+$5 }' /proc/stat)"
+  #eval "$(awk '/^cpu /{print "cpu_idle_now=" $5 "; cpu_total_now=" $2+$3+$4+$5 }' /proc/stat)"
+  eval "$(awk '/^cpu /{printf "cpu_idle_now=%.0f; cpu_total_now=%.0f", $5, $2+$3+$4+$5 }' /proc/stat)" # printf removes the scientific notation;
   cpu_interval=$((cpu_total_now-${cpu_total_old:-0}))
   # calculate cpu usage (%)
   let cpu_used="100 * ($cpu_interval - ($cpu_idle_now-${cpu_idle_old:-0})) / $cpu_interval"
 
-  # get new rx/tx counts
-  rx_now=$(cat $nwInterfaceStats/rx_bytes)
-  tx_now=$(cat $nwInterfaceStats/tx_bytes)
-  # calculate the rate (K) and total (M)
-  rx_rate=$(convertTxRates $(($rx_now-$rx_old)))
-  tx_rate=$(convertTxRates $(($tx_now-$tx_old)))
-  #  let rx_total=$rx_now/1048576
-  #  let tx_total=$tx_now/1048576
 
   # output vars
   print_cpu_used() {
     printf "%-14b" "${colour_dgry}${sep_solid}${colour_blu} ${glyph_cpu} ${cpu_used}%"
   }
   print_rx_rate() {
-    printf "%-15b" "${colour_blk}${sep_solid}${colour_grn} ${glyph_dl} ${rx_rate}"
+    if [[ -n "$rx_rate" ]]; then
+        printf "%-15b" "${colour_blk}${sep_solid}${colour_grn} ${glyph_dl} ${rx_rate}"
+    fi
   }
   print_tx_rate() {
-    printf "%-14b" "${colour_gry}${sep_line}${colour_red} ${glyph_ul} ${tx_rate}"
+    if [[ -n "$tx_rate" ]]; then
+        printf "%-14b" "${colour_gry}${sep_line}${colour_red} ${glyph_ul} ${tx_rate}"
+    fi
   }
 
   # Pipe to status bar, not indented due to printing extra spaces/tabs
