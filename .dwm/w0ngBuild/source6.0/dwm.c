@@ -1677,6 +1677,10 @@ enternotify(XEvent *e) {
     if (c && (c->isfloating || !selmon->lt[selmon->sellt]->arrange)) {
         restack(selmon);
     }
+
+    if(skip_ffm_tmp) {
+        skip_ffm_tmp ^= 1;
+    }
 }
 
 /*
@@ -1922,8 +1926,9 @@ focusstack(const Arg *arg) {
 	Client *c = NULL, *i;
     skip_ffm_tmp = False;
 
-	if(!selmon->sel)
+	if(!selmon->sel) {
 		return;
+    }
 
     // TODO: disable focus-follows-mouse, so super+mouse combo could be used;
     // kinda pointless actually, 'cause it only makes sense when we're in monocle lyt
