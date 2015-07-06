@@ -1652,7 +1652,11 @@ drawTabbarText_OLD(Drawable drawable, const char *text, unsigned long col[ColLas
 void
 enternotify(XEvent *e) {
     // enable ffm again, if it was temporarilly disabled in focusstack():
-    if(skip_ffm_tmp || !focus_follows_mouse) {
+
+    if(!focus_follows_mouse) {
+        return;
+    } else if(skip_ffm_tmp) {
+        skip_ffm_tmp ^= 1;
         return;
     }
 
@@ -1678,9 +1682,6 @@ enternotify(XEvent *e) {
         restack(selmon);
     }
 
-    if(skip_ffm_tmp) {
-        skip_ffm_tmp ^= 1;
-    }
 }
 
 /*
