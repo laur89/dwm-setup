@@ -95,9 +95,6 @@ enum { ClkTagBar, ClkTabBar, ClkLtSymbol, ClkStatusText, ClkWinTitle,
 enum { UpCorLeft, UpCenter, UpCorRight, MidSideLeft, MidCenter,
        MidSideRight, DnCorLeft, DnCenter, DnCorRight };             /* window sectors */
 
-// global tmp vars;  // TODO: remove this
-Bool skip_ffm_tmp = False;
-
 typedef union {
 	int i;
 	unsigned int ui;
@@ -1651,12 +1648,7 @@ drawTabbarText_OLD(Drawable drawable, const char *text, unsigned long col[ColLas
 
 void
 enternotify(XEvent *e) {
-    // enable ffm again, if it was temporarilly disabled in focusstack():
-
     if(!focus_follows_mouse) {
-        return;
-    } else if(skip_ffm_tmp) {
-        skip_ffm_tmp ^= 1;
         return;
     }
 
@@ -1925,17 +1917,9 @@ focusstackwithoutrising(const Arg *arg) {
 void
 focusstack(const Arg *arg) {
 	Client *c = NULL, *i;
-    skip_ffm_tmp = False;
 
 	if(!selmon->sel) {
 		return;
-    }
-
-    // TODO: disable focus-follows-mouse, so super+mouse combo could be used;
-    // kinda pointless actually, 'cause it only makes sense when we're in monocle lyt
-    // anyways, but still provides better ux in other lyts:
-    if(focus_follows_mouse) {
-        skip_ffm_tmp ^= 1;
     }
 
 	if(arg->i > 0) {
