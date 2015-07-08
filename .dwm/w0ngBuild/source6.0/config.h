@@ -51,7 +51,7 @@ static const Bool showbar           = True;     /* False means no bar */
 static const Bool topbar            = True;     /* False means bottom bar */
 static const unsigned int systrayspacing = 2;   /* systray spacing */
 static const Bool showsystray       = True;     /* False means no systray */
-static const Bool transfer_pointer  = False;    /* False means do not move pointer to another mon on monitor change (focusmon()) */
+static const Bool transfer_pointer  = True;     /* False means do not move pointer to another mon on monitor change (focusmon()) */
 
 // these two cannot be both set to true!: (at least until focus() gets another param
 // to check wether enternotif walled it or not)
@@ -66,7 +66,7 @@ static const unsigned int tabWidth  = 200;      /* default tab width;
 /*   Display modes of the tab bar: never shown, always shown, shown only in */
 /*   monocle mode in presence of several windows.                           */
 /*   Modes after showtab_nmodes are disabled                                */
-enum showtab_modes { showtab_never, showtab_auto, showtab_nmodes, showtab_always};
+enum showtab_modes { showtab_never, showtab_auto, showtab_nmodes, showtab_always };
 static const int showtab            = showtab_auto; /* Default tab bar show mode */
 static const Bool toptab            = True;         /* False means bottom tab bar */
 static const Bool resizehints = False; /* True means respect size hints in tiled resizals */
@@ -327,7 +327,7 @@ static Key keys[] = {
   { MODKEY|ShiftMask,       XK_comma,         tagmon,         {.i = -1 } },
   { MODKEY|ShiftMask,       XK_period,        tagmon,         {.i = +1 } },
   { MODKEY|ShiftMask,       XK_r,             reload,         {0} },
-{ MODKEY,                       XK_e,      runorraise,     {.v = keepassx } },
+//{ MODKEY,                       XK_e,      runorraise,     {.v = keepassx } },
 	{ MODKEY|ShiftMask,  			    XK_m,      				toggle_ffm, 	    NULL },          // toggle focus follows mouse
 	{ MODKEY|ShiftMask|ControlMask,	    XK_m,      				toggle_mff, 	    NULL },          // toggle mouse follows focus
     { MODKEY,                           XK_z,                   toggleview,         {.ui = 1 << 8} },
@@ -370,7 +370,7 @@ static Button buttons[] = {
 	{ ClkClientWin,         MODKEY|ShiftMask,         Button1,        tilemovemouse,  {0} },
 	{ ClkTagBar,            MODKEY,         Button3,        toggletag,      {0} },
 	{ ClkTabBar,            0,              Button1,        focuswin,      {0} },
-    // Custom mouse wheel tilt commands:
+    // Custom mouse wheel tilt&scroll commands:
     { ClkClientWin,         AltMask,         wheel_tilt_left,        spawn,      {.v = history_back } },
     { ClkClientWin,         AltMask,         wheel_tilt_right,        spawn,      {.v = history_forward} },
     { ClkClientWin,         ControlMask,        wheel_tilt_left,        spawn,      {.v = tab_back } },

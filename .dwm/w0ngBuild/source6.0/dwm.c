@@ -1776,22 +1776,9 @@ focusin(XEvent *e) { /* there are some broken focus acquiring clients */
 		setfocus(selmon->sel);
 }
 
-// TODO: mouse transferring focusmon with proportional mouse movement:
 void
-focusmon(const Arg *arg) {
-    Monitor *m, *prevMon;
-    prevMon = selmon;
-
-    if(!mons->next)
-        return;
-    if((m = dirtomon(arg->i)) == selmon)
-        return;
-    unfocus(selmon->sel, True);
-    selmon = m;
-    focus(NULL);
-
-    if (mouse_follows_focus || !transfer_pointer) return; // no point in moving cursor, if it's already following focus;
-
+transferPointerToNextMon(Monitor *prevMon) {
+    Monitor *m;
     int i, x, y, w, e;
     i = x = y = w = e = 0;
     float cx, cy; //coefficients
@@ -1810,6 +1797,23 @@ focusmon(const Arg *arg) {
 
     // set the new mouse pos:
     XWarpPointer(dpy, None, root, 0, 0, 0, 0, e + selmon->mw * cx, selmon->mh * cy);
+}
+
+void
+focusmon(const Arg *arg) {
+    Monitor *m, *prevMon;
+    prevMon = selmon;
+
+    if(!mons->next)
+        return;
+    if((m = dirtomon(arg->i)) == selmon)
+        return;
+    unfocus(selmon->sel, True);
+    selmon = m;
+    focus(NULL);
+
+    if (mouse_follows_focus || !transfer_pointer) return; // no point in moving cursor, if it's already following focus;
+    transferPointerToNextMon(prevMon);
 }
 
 //TODO: synergy-dwm comobo:
@@ -3052,6 +3056,23 @@ scan(void) {
 	}
 }
 
+// orig:
+/*void*/
+/*sendmon(Client *c, Monitor *m) {*/
+	/*if(c->mon == m)*/
+		/*return;*/
+	/*unfocus(c, True);*/
+	/*detach(c);*/
+	/*detachstack(c);*/
+	/*c->mon = m;*/
+    /*// TODO: instead of assigning tags of target monitor, perhaps*/
+    /*// leave originals? or even rerun applyRules()?:*/
+	/*c->tags = m->tagset[m->seltags]; [> assign tags of target monitor <]*/
+	/*attach(c);*/
+	/*attachstack(c);*/
+	/*focus(NULL);*/
+	/*arrange(NULL);*/
+/*}*/
 void
 sendmon(Client *c, Monitor *m) {
 	if(c->mon == m)
@@ -3060,9 +3081,8 @@ sendmon(Client *c, Monitor *m) {
 	detach(c);
 	detachstack(c);
 	c->mon = m;
-    // TODO: instead of assigning tags of target monitor, perhaps
-    // leave originals? or even rerun applyRules()?:
-	c->tags = m->tagset[m->seltags]; /* assign tags of target monitor */
+    // instead of assigning tags of target monitor, leave the old ones:
+	/*c->tags = m->tagset[m->seltags]; [> assign tags of target monitor <]*/
 	attach(c);
 	attachstack(c);
 	focus(NULL);
@@ -3159,7 +3179,7 @@ setlayout(const Arg *arg) {
 
     // if this check true, only then assign provided layout as current:
     //  TODO: here is exception, since NULL arg produces error in third expression:
- 	if(!arg || !arg->v || arg->v != selmon->lt[selmon->sellt^1]) // TODO: viimane check on if arg->v != ei ole eelmine? (eelmine on juba flipiga selekteeritud)
+	if(arg && arg->v && (arg->v != selmon->lt[selmon->sellt^1])) // TODO: viimane check on if arg->v != ei ole eelmine? (eelmine on juba flipiga selekteeritud)
                                                                  // point ehk selles, et kuna esimese rea peal nagunii flipiti, siis eelmine on juba selekteeritud?*/
 		selmon->lt[selmon->sellt] = selmon->lts[selmon->curtag] = (Layout *)arg->v;
     strncpy(selmon->ltsymbol, selmon->lt[selmon->sellt]->symbol, sizeof selmon->ltsymbol);
