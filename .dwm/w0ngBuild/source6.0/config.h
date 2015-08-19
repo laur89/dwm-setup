@@ -129,7 +129,7 @@ static const Rule rules[] = {
 	//{ "sun-awt-X11-XDialogPeer",		NULL,		NULL,	    1 << 1,	  	False,		False, 		-1 },
 
 	{ "Spring Tool Suite",		NULL,		NULL,	    1 << 1,	  	False,		False, 		-1 },
-	{ "Java",		NULL,		"Spring - Spring Tool Suite ",	    1 << 1,	  	False,		False, 		-1 },
+	{ NULL,		NULL,		"Spring - Spring Tool Suite ",	    1 << 1,	  	False,		False, 		-1 },
     // Eclipse'i splash:
 	{ "Java",		NULL,		"Eclipse",	    1 << 1,	  	True,		False, 		-1 },
     // Android dev stuff:

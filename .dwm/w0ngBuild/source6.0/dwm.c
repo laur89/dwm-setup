@@ -4041,6 +4041,8 @@ updatetitle(Client *c) {
 		gettextprop(c->win, XA_WM_NAME, c->name, sizeof c->name);
 	if(c->name[0] == '\0') /* hack to mark broken clients */
 		strcpy(c->name, broken);
+    // TODO: debug:
+    /*fprintf(stderr, "    !updatetitle(): title \"%s\"\n", c->name);*/
 }
 
 void
@@ -4049,7 +4051,7 @@ updateClassName(Client *c) {
 	if(c->className[0] == '\0') /* hack to mark broken clients */
 		strcpy(c->className, broken);
     // TODO: debug:
-    fprintf(stderr, "    !updateClassName(): class \"%s\"\n", c->className);
+    /*fprintf(stderr, "    !updateClassName(): class \"%s\"\n", c->className);*/
 }
 
 void
