@@ -52,6 +52,8 @@ static const Bool topbar            = True;     /* False means bottom bar */
 static const unsigned int systrayspacing = 2;   /* systray spacing */
 static const Bool showsystray       = True;     /* False means no systray */
 static const Bool transfer_pointer  = True;     /* False means do not move pointer to another mon on monitor change (focusmon()) */
+static const Bool raise_client_on_hover = False;     /* whether floating client should be raised in relation to other floating ones on mouse-over */
+
 
 // these two cannot be both set to true!: (at least until focus() gets another param
 // to check wether enternotif walled it or not)
@@ -106,7 +108,7 @@ static const Tag tags[] = {
     { "\uE003",    &layouts[Tile], 	    -1,    	-1 },
     { "\uE006",    &layouts[Tile], 	    -1,    	-1 },
     { "\uE007",    &layouts[Tile], 	    -1,    	-1 },
-	{ "BG",	       &layouts[Tile],	    -1,		-1 },
+	{ "BG",	       &layouts[Tile],	    -1,		-1 }
 };
 
 static const Rule rules[] = {
@@ -387,7 +389,6 @@ static Button buttons[] = {
 	{ ClkClientWin,         MODKEY|ControlMask,  		wheel_scroll_up,	    focusstackwithoutrising,     {.i = +1 } },
 	{ ClkClientWin,         MODKEY|ControlMask,  		wheel_scroll_dn,	    focusstackwithoutrising,     {.i = -1 } },
 
-    //{ ClkClientWin,         0,         Button1,        raise_floating_client,      {0} },
     //{ ClkClientWin,         0,              Button1,        raiseSelectedWindowAndUnGrabB1,      NULL },
 
     { ClkStatusText,		MODKEY,		    wheel_tilt_left,		spawn,			{.v = statusbar_prev } },   // selects previous mode for statusbar (py_bar)
@@ -425,14 +426,16 @@ static Button buttons[] = {
  */
 const char client_class_idea[] = "sun-awt-X11-XFramePeer";
 const char client_class_notifyd[] = "xfce4-notifyd";
+const char client_class_gsimplecal[] = "gsimplecal";
 
 /*
  *List of window classes that should not be interactive, ie not be drawn onto tabbar,
  *not be selectable using meta+j/k keys...
  */
 const char *ignored_class_list[] = {
-    client_class_notifyd
+    client_class_notifyd,
+    client_class_gsimplecal
 };
 
-// synergy logfile location:
+// synergy logfile location: // TODO: delete
 const char synergy_log_file[] = "/var/log/custom_logs/synergy_server.log";

@@ -15,6 +15,7 @@ MAIL_PREFIXES=( \
     "ix" \
     "sb"  \
 )
+
 MAILDIRS_NEW=( \
     "$HOME/mail/work/Inbox/new" \
     "$HOME/mail/work/Inbox/.sb/new" \
@@ -34,7 +35,7 @@ colour_mag="\x0B" # colour_magenta on darkgrey
 colour_cyn="\x0C" # cyan on darkgrey
 
 # Icon glyphs from font xbmicons.pcf
-glyph_msc="\uE00E"
+glyph_msc="\uE00E" #music
 glyph_cpu="\uE00F"
 glyph_mem="\uE010"
 glyph_dl="\uE011"
@@ -127,6 +128,23 @@ convertTxRates() {
     fi
 }
 
+print_cpu_used() {
+    printf "%-14b" "${colour_dgry}${sep_solid}${colour_blu} ${glyph_cpu} ${cpu_used}%"
+}
+
+print_rx_rate() {
+    if [[ -n "$rx_rate" ]]; then
+        printf "%-15b" "${colour_blk}${sep_solid}${colour_grn} ${glyph_dl} ${rx_rate}"
+    fi
+}
+
+print_tx_rate() {
+    if [[ -n "$tx_rate" ]]; then
+        printf "%-14b" "${colour_gry}${sep_line}${colour_red} ${glyph_ul} ${tx_rate}"
+    fi
+}
+
+
 
 # import common:
 if [[ -f "$_SCRIPTS_COMMONS" && -r "$_SCRIPTS_COMMONS" ]]; then
@@ -140,8 +158,8 @@ fi
 # cpu (from: https://bbs.archlinux.org/viewtopic.php?pid=661641#p661641)
 nwInterfaceStats=$(find_connected_if_stats)
 if [[ -n "$nwInterfaceStats" ]]; then
-    rx_old=$(cat $nwInterfaceStats/rx_bytes)
-    tx_old=$(cat $nwInterfaceStats/tx_bytes)
+    rx_old="$(cat $nwInterfaceStats/rx_bytes)"
+    tx_old="$(cat $nwInterfaceStats/tx_bytes)"
 else
     rx_old=0
     tx_old=0
@@ -167,25 +185,10 @@ while true; do
   # get new cpu idle and total usage
   #eval "$(awk '/^cpu /{print "cpu_idle_now=" $5 "; cpu_total_now=" $2+$3+$4+$5 }' /proc/stat)"
   eval "$(awk '/^cpu /{printf "cpu_idle_now=%.0f; cpu_total_now=%.0f", $5, $2+$3+$4+$5 }' /proc/stat)" # printf removes the scientific notation;
-  cpu_interval=$((cpu_total_now-${cpu_total_old:-0}))
+  cpu_interval="$((cpu_total_now-${cpu_total_old:-0}))"
   # calculate cpu usage (%)
   let cpu_used="100 * ($cpu_interval - ($cpu_idle_now-${cpu_idle_old:-0})) / $cpu_interval"
 
-
-  # output vars
-  print_cpu_used() {
-    printf "%-14b" "${colour_dgry}${sep_solid}${colour_blu} ${glyph_cpu} ${cpu_used}%"
-  }
-  print_rx_rate() {
-    if [[ -n "$rx_rate" ]]; then
-        printf "%-15b" "${colour_blk}${sep_solid}${colour_grn} ${glyph_dl} ${rx_rate}"
-    fi
-  }
-  print_tx_rate() {
-    if [[ -n "$tx_rate" ]]; then
-        printf "%-14b" "${colour_gry}${sep_line}${colour_red} ${glyph_ul} ${tx_rate}"
-    fi
-  }
 
   # Pipe to status bar, not indented due to printing extra spaces/tabs
   xsetroot -name "$(print_song_info)\
