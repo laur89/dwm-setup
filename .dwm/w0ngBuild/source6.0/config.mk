@@ -15,6 +15,8 @@ XINERAMALIBS = -L${X11LIB} -lXinerama
 XINERAMAFLAGS = -DXINERAMA
 
 # includes and libs
+# if during installation gives "/usr/bin/ld: cannot find -lXtst", then
+# apt-get install libxtst-dev
 INCS = -I. -I/usr/include -I${X11INC}
 LIBS = -L/usr/lib -lc -L${X11LIB} -lX11 ${XINERAMALIBS} -lXtst -lX11 -lm
 
