@@ -51,8 +51,7 @@ static const Bool showbar           = True;     /* False means no bar */
 static const Bool topbar            = True;     /* False means bottom bar */
 static const unsigned int systrayspacing = 2;   /* systray spacing */
 static const Bool showsystray       = True;     /* False means no systray */
-static const Bool transfer_pointer  = True;     /* False means do not move pointer to another mon on monitor change (focusmon()) */
-static const Bool raise_client_on_hover = False;     /* whether floating client should be raised in relation to other floating ones on mouse-over */
+static const Bool transfer_pointer  = True;     /* False means do not move pointer to another mon on monitor change (focusmon() & altTab()) */
 
 
 // these two cannot be both set to true!: (at least until focus() gets another param
@@ -189,7 +188,7 @@ static const Rule rules[] = {
 	//{ "Sonata",			NULL,		NULL,		0,			True,		True,		-1 },
 	//{ "Dwb",			NULL,		NULL,		1 << 0,		False,		False,		-1 },
 	{ NULL,				NULL,		"dload",	1 << 5,		True,		True,  		-1 },
-	{ NULL,				NULL,		"tail",		1 << 5,		True,		True,  		-1 },
+	{ NULL,				NULL,		"tail",		1 << 5,		True,		True,  		-1 }
 };
 /*
  *static const Rule rules[] = {
