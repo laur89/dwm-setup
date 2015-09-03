@@ -222,15 +222,16 @@ initializeCursorResizePosition	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0
 instance	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	const char *instance;$/;"	m	language:C++	struct:__anon16	file:
 INTERSECT	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	49;"	d	language:C++	file:
 iscentred	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	Bool iscentred;$/;"	m	language:C++	struct:__anon16	file:
-iscentred	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	Bool isfixed, isfloating, isurgent, neverfocus, oldstate, isfullscreen, iscentred;$/;"	m	language:C++	struct:Client	file:
-isfixed	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	Bool isfixed, isfloating, isurgent, neverfocus, oldstate, isfullscreen, iscentred;$/;"	m	language:C++	struct:Client	file:
-isfloating	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	Bool isfixed, isfloating, isurgent, neverfocus, oldstate, isfullscreen, iscentred;$/;"	m	language:C++	struct:Client	file:
+iscentred	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	Bool isfixed, isfloating, isurgent, neverfocus, oldstate, isfullscreen, iscentred, isInSkipList;$/;"	m	language:C++	struct:Client	file:
+isfixed	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	Bool isfixed, isfloating, isurgent, neverfocus, oldstate, isfullscreen, iscentred, isInSkipList;$/;"	m	language:C++	struct:Client	file:
+isfloating	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	Bool isfixed, isfloating, isurgent, neverfocus, oldstate, isfullscreen, iscentred, isInSkipList;$/;"	m	language:C++	struct:Client	file:
 isfloating	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	Bool isfloating;$/;"	m	language:C++	struct:__anon16	file:
-isfullscreen	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	Bool isfixed, isfloating, isurgent, neverfocus, oldstate, isfullscreen, iscentred;$/;"	m	language:C++	struct:Client	file:
+isfullscreen	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	Bool isfixed, isfloating, isurgent, neverfocus, oldstate, isfullscreen, iscentred, isInSkipList;$/;"	m	language:C++	struct:Client	file:
 isInArea	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^isInArea( int wx, int wy, int ww, int wh, int px, int py ) {$/;"	f	language:C++
+isInSkipList	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	Bool isfixed, isfloating, isurgent, neverfocus, oldstate, isfullscreen, iscentred, isInSkipList;$/;"	m	language:C++	struct:Client	file:
 isInTriangle	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^isInTriangle( int x1, int y1, int x2, int y2, int x3, int y3, int x, int y ) {$/;"	f	language:C++
 isuniquegeom	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^isuniquegeom(XineramaScreenInfo *unique, size_t n, XineramaScreenInfo *info) {$/;"	f	language:C++	file:
-isurgent	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	Bool isfixed, isfloating, isurgent, neverfocus, oldstate, isfullscreen, iscentred;$/;"	m	language:C++	struct:Client	file:
+isurgent	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	Bool isfixed, isfloating, isurgent, neverfocus, oldstate, isfullscreen, iscentred, isInSkipList;$/;"	m	language:C++	struct:Client	file:
 ISVISIBLE	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	51;"	d	language:C++	file:
 isWindowClass	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^Bool isWindowClass(Client *c, const char *class) {$/;"	f	language:C++
 isWindowClassByWin	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^Bool isWindowClassByWin(Window w, char *class) {$/;"	f	language:C++
@@ -319,7 +320,7 @@ NetWMName	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm
 NetWMState	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^      NetWMName, NetWMState, NetWMFullscreen, NetActiveWindow, NetWMWindowType,$/;"	e	language:C++	enum:__anon4	file:
 NetWMWindowType	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^      NetWMName, NetWMState, NetWMFullscreen, NetActiveWindow, NetWMWindowType,$/;"	e	language:C++	enum:__anon4	file:
 NetWMWindowTypeDialog	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^      NetWMWindowTypeDialog, NetLast }; \/* EWMH atoms *\/$/;"	e	language:C++	enum:__anon4	file:
-neverfocus	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	Bool isfixed, isfloating, isurgent, neverfocus, oldstate, isfullscreen, iscentred;$/;"	m	language:C++	struct:Client	file:
+neverfocus	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	Bool isfixed, isfloating, isurgent, neverfocus, oldstate, isfullscreen, iscentred, isInSkipList;$/;"	m	language:C++	struct:Client	file:
 next	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	Client *next;$/;"	m	language:C++	struct:Client	file:
 next	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	Monitor *next;$/;"	m	language:C++	struct:Monitor	file:
 nexttiled	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^nexttiled(Client *c) {$/;"	f	language:C++
@@ -335,7 +336,7 @@ NumTags	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c
 occupiedColorIndex	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	56;"	d	language:C++	file:
 oldbw	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	int bw, oldbw; \/\/ bar geomentry$/;"	m	language:C++	struct:Client	file:
 oldh	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	int oldx, oldy, oldw, oldh;$/;"	m	language:C++	struct:Client	file:
-oldstate	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	Bool isfixed, isfloating, isurgent, neverfocus, oldstate, isfullscreen, iscentred;$/;"	m	language:C++	struct:Client	file:
+oldstate	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	Bool isfixed, isfloating, isurgent, neverfocus, oldstate, isfullscreen, iscentred, isInSkipList;$/;"	m	language:C++	struct:Client	file:
 oldw	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	int oldx, oldy, oldw, oldh;$/;"	m	language:C++	struct:Client	file:
 oldx	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	int oldx, oldy, oldw, oldh;$/;"	m	language:C++	struct:Client	file:
 oldy	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	int oldx, oldy, oldw, oldh;$/;"	m	language:C++	struct:Client	file:

@@ -123,7 +123,7 @@ struct Client {
 	int basew, baseh, incw, inch, maxw, maxh, minw, minh;
 	int bw, oldbw; // bar geomentry
 	unsigned int tags;
-	Bool isfixed, isfloating, isurgent, neverfocus, oldstate, isfullscreen, iscentred;
+	Bool isfixed, isfloating, isurgent, neverfocus, oldstate, isfullscreen, iscentred, isInSkipList;
 	Client *next;
 	Client *snext;
 	Monitor *mon;
@@ -1381,7 +1381,7 @@ drawtab(Monitor *m) {
    /* Calculates number of labels and their width */
    m->ntabs = 0;
    for(c = m->clients; c; c = c->next){
-     if(!ISVISIBLE(c) || isWindowInSkipList(c)) continue;
+     if(!ISVISIBLE(c) || c->isInSkipList) continue;
      /*m->tab_widths[m->ntabs] = TEXTW(name);*/ // original
      m->tab_widths[m->ntabs] = tabWidth;
      tot_width += m->tab_widths[m->ntabs];
@@ -1409,7 +1409,7 @@ drawtab(Monitor *m) {
    }
 
    for( i = 0, c = m->clients; c; c = c->next ) {
-     if(!ISVISIBLE(c) || isWindowInSkipList(c)) continue;
+     if(!ISVISIBLE(c) || c->isInSkipList) continue;
      if(i >= m->ntabs) break;
      if(m->tab_widths[i] >  maxsize) m->tab_widths[i] = maxsize;
 
@@ -1929,7 +1929,7 @@ focusmon_(const Arg *arg) {
 	/*focus(NULL);*/
 /*}*/
 
-// same as focusstack, but doesn't raise the window essentially
+// same as focusstack, but doesn't raise the window
 // by not calling restack() after focus().
 void
 focusstackwithoutrising(const Arg *arg) {
@@ -1938,17 +1938,17 @@ focusstackwithoutrising(const Arg *arg) {
 	if(!selmon->sel)
 		return;
 	if(arg->i > 0) {
-		for(c = selmon->sel->next; c && (!ISVISIBLE(c) || isWindowInSkipList(c)); c = c->next);
+		for(c = selmon->sel->next; c && (!ISVISIBLE(c) || c->isInSkipList); c = c->next);
 		if(!c)
-			for(c = selmon->clients; c && (!ISVISIBLE(c) || isWindowInSkipList(c)); c = c->next);
+			for(c = selmon->clients; c && (!ISVISIBLE(c) || c->isInSkipList); c = c->next);
 	}
 	else {
 		for(i = selmon->clients; i != selmon->sel; i = i->next)
-			if(ISVISIBLE(i) && !isWindowInSkipList(i))
+			if(ISVISIBLE(i) && !i->isInSkipList)
 				c = i;
 		if(!c)
 			for(; i; i = i->next)
-                if(ISVISIBLE(i) && !isWindowInSkipList(i))
+                if(ISVISIBLE(i) && !i->isInSkipList)
 					c = i;
 	}
 	if(c) {
@@ -1967,17 +1967,17 @@ focusstack(const Arg *arg) {
     }
 
 	if(arg->i > 0) {
-		for(c = selmon->sel->next; c && (!ISVISIBLE(c) || isWindowInSkipList(c)); c = c->next);
+		for(c = selmon->sel->next; c && (!ISVISIBLE(c) || c->isInSkipList); c = c->next);
 		if(!c)
-			for(c = selmon->clients; c && (!ISVISIBLE(c) || isWindowInSkipList(c)); c = c->next);
+			for(c = selmon->clients; c && (!ISVISIBLE(c) || c->isInSkipList); c = c->next);
 	}
 	else {
 		for(i = selmon->clients; i != selmon->sel; i = i->next)
-			if(ISVISIBLE(i) && !isWindowInSkipList(i))
+			if(ISVISIBLE(i) && !i->isInSkipList)
 				c = i;
 		if(!c)
 			for(; i; i = i->next)
-                if(ISVISIBLE(i) && !isWindowInSkipList(i))
+                if(ISVISIBLE(i) && !i->isInSkipList)
 					c = i;
 	}
 
@@ -2003,12 +2003,11 @@ void
 focuswin(const Arg* arg){
   int iwin = arg->i;
   Client* c = NULL;
-  Bool isWinClassToBeSkipped; // store here so isWindowClass() shouldn't be called twice;
 
   // TODO: not quite sure why the tab-click hack is located here to be honest...:
   /*for(c = selmon->clients; c && (iwin || !ISVISIBLE(c)) ; c = c->next){*/ // original
-  for(c = selmon->clients, isWinClassToBeSkipped = isWindowInSkipList(c); c && (iwin || (!ISVISIBLE(c) || isWinClassToBeSkipped )) ; c = c->next, isWinClassToBeSkipped = isWindowInSkipList(c)) {
-    if(ISVISIBLE(c) && !isWinClassToBeSkipped) --iwin;
+  for(c = selmon->clients; c && (iwin || (!ISVISIBLE(c) || c->isInSkipList )) ; c = c->next) {
+    if(ISVISIBLE(c) && !c->isInSkipList) --iwin;
     /*if(ISVISIBLE(c)) --iwin;*/ // original
   };
   if(c) {
@@ -2359,6 +2358,10 @@ manage(Window w, XWindowAttributes *wa) {
 	c->win = w;
 	updatetitle(c);
     updateClassName(c);
+
+    // TODO: mystuff:
+    c->isInSkipList = isWindowInSkipList(c);
+
 	if(XGetTransientForHint(dpy, w, &trans) && (t = wintoclient(trans))) {
 		c->mon = t->mon;
 		c->tags = t->tags;
@@ -2422,7 +2425,7 @@ manage(Window w, XWindowAttributes *wa) {
 	attachstack(c);
 	XMoveResizeWindow(dpy, c->win, c->x + 2 * sw, c->y, c->w, c->h); /* some windows require this */
 	setclientstate(c, NormalState);
-    if(!isWindowInSkipList(c)) {
+    if(!c->isInSkipList) {
         if (c->mon == selmon)
             unfocus(selmon->sel, False);
         c->mon->sel = c;
@@ -2431,7 +2434,7 @@ manage(Window w, XWindowAttributes *wa) {
     arrange(c->mon);
 	XMapWindow(dpy, c->win);
 
-    if(!isWindowInSkipList(c)) {
+    if(!c->isInSkipList) {
         focus(NULL);
     }
 }
@@ -2665,6 +2668,8 @@ propertynotify(XEvent *e) {
 		}
 		if(ev->atom == XA_WM_NAME || ev->atom == netatom[NetWMName]) {
 			updatetitle(c);
+            // just in case, re-validate isInSkipList:
+            c->isInSkipList = isWindowInSkipList(c);
 			if(c == c->mon->sel)
 				drawbar(c->mon);
 			drawtab(c->mon);
@@ -3725,7 +3730,8 @@ unmanage(Client *c, Bool destroyed) {
 	}
     // TODO: is this required?
     // clean client from alttab stack, if present:
-    for (int i = 0; i < 2; i++) {
+    int arrLen = sizeof(clt) / sizeof(clt[0]);
+    for (int i = 0; i < arrLen; i++) {
         if (clt[i] == c) {
             clt[i] = NULL;
             /*break;*/
@@ -3772,7 +3778,6 @@ Bool isWindowClassByWin(Window w, char *class) {
     return False;
 }
 
-// TODO: better create client boolean isIgnored
 Bool isWindowInSkipList(Client *c) {
     if (!c || !c->win) return False;
     /*char w_class[256];*/
@@ -3915,7 +3920,7 @@ updatebarpos(Monitor *m) {
 	}
 
 	for(c = m->clients; c; c = c->next){
-	  if(ISVISIBLE(c) && !isWindowInSkipList(c)) ++nvis;
+	  if(ISVISIBLE(c) && !c->isInSkipList) ++nvis;
 	}
 
 	if(m->showtab == showtab_always
@@ -4508,6 +4513,7 @@ void altTab() {
         return;
     }
 
+    // reset:
  	selclt ^= 1;
     return;
 }
@@ -4688,7 +4694,7 @@ updateAndDrawAltTab(Monitor *m) {
 
    // Calculate total cell block height
    for( i = 0, c = m->clients; c; c = c->next, i++){
-     if(!ISVISIBLE(c) || isWindowInSkipList(c)) continue;
+     if(!ISVISIBLE(c) || c->isInSkipList) continue;
 
      totalCellHeight += singleCellHeight;
      if(i >= MAX_CLIENTS) break;
@@ -4779,7 +4785,7 @@ updateAndDrawAltTab(Monitor *m) {
     }
 
    for( i = 0, c = m->clients; c; c = c->next ) {
-     if(!ISVISIBLE(c) || isWindowInSkipList(c)) continue;
+     if(!ISVISIBLE(c) || c->isInSkipList) continue;
      if(i >= MAX_CLIENTS) break;
 
         clientIcon = getWindowIcon(c); // TODO
