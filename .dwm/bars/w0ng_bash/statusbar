@@ -99,10 +99,14 @@ print_last_msg() {
 }
 
 print_mem_used() {
+  local mem_used
+
   #mem_used="$(free -m | awk 'NR==3 {print $3}')" # used in MB
   #mem_used="$(free | awk '/buffers\/cache/{print $4/($3+$4) * 100.0;}')" # free in %
   #mem_used="$(free | awk '/buffers\/cache/{print $3/($3+$4) * 100.0;}')" # usage in %
-  local mem_used="$(free | awk '/buffers\/cache/{print int($3/($3+$4) * 100.0);}')" # usage in %, rounded
+  #mem_used="$(free | awk '/buffers\/cache/{print int($3/($3+$4) * 100.0);}')" # usage in %, rounded
+  mem_used="$(free | grep Mem | awk '{printf "%.0f", $3/$2 * 100.0}')"
+
   echo -ne "${sep_line} ${glyph_mem} ${mem_used}% "
 }
 
