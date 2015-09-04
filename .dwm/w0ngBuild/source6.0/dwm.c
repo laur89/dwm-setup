@@ -1206,9 +1206,9 @@ drawbar(Monitor *m) {
         drawtext(dc.drawable, tags[i].name, col, True);
 		drawsquare(m == selmon && selmon->sel && selmon->sel->tags & 1 << i,
 		           occ & 1 << i, col);
-        if (selmon->curtag == i+1)
+        if (m == selmon && selmon->curtag == i+1)
             drawpoint(True, dc.colors[1]);
-        else if(selmon->prevtag == i+1)
+        else if(m == selmon && selmon->prevtag == i+1)
             drawpoint(False, dc.colors[occupiedColorIndex]);
 		dc.x += dc.w;
 	}
