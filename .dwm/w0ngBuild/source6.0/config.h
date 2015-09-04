@@ -59,7 +59,7 @@ static const Bool transfer_pointer  = True;     /* False means do not move point
 static /*!const*/ Bool focus_follows_mouse     = True;         /* toggle focus-follows-mouse default */
 static /*!const*/ Bool mouse_follows_focus     = False;        /* again, default, since it's toggleable */
 
-static const unsigned int cellWidth = 300;      /* altTab's window width */
+static const unsigned int cellWidth = 300;      /* altTab's window width;  TODO: deleteme? */
 static const unsigned int tabWidth  = 200;      /* default tab width;
                                                    (if more tabs are added, width is
                                                    decreased so all tabs fit onto the bar) */
@@ -387,8 +387,6 @@ static Button buttons[] = {
 	{ ClkClientWin,         MODKEY,  		wheel_scroll_dn,	    focusstack,     {.i = -1 } },
 	{ ClkClientWin,         MODKEY|ControlMask,  		wheel_scroll_up,	    focusstackwithoutrising,     {.i = +1 } },
 	{ ClkClientWin,         MODKEY|ControlMask,  		wheel_scroll_dn,	    focusstackwithoutrising,     {.i = -1 } },
-
-    //{ ClkClientWin,         0,              Button1,        raiseSelectedWindowAndUnGrabB1,      NULL },
 
     { ClkStatusText,		MODKEY,		    wheel_tilt_left,		spawn,			{.v = statusbar_prev } },   // selects previous mode for statusbar (py_bar)
     { ClkStatusText,		MODKEY,		    wheel_tilt_right,		spawn,			{.v = statusbar_next } },

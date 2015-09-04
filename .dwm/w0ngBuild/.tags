@@ -43,7 +43,7 @@ calendar	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/conf
 cellDC	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^static DC cellDC;$/;"	v	language:C++	file:
 celldrawable	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	Drawable celldrawable; \/\/ TODO: leave it?$/;"	m	language:C++	struct:__anon11	file:
 cellFont	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/config.h	/^static const char cellFont[] = "-*-xbmicons-medium-r-*-*-12-*-*-*-*-*-*-*" ","$/;"	v	language:C++
-cellWidth	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/config.h	/^static const unsigned int cellWidth = 300;      \/* altTab's window width *\/$/;"	v	language:C++
+cellWidth	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/config.h	/^static const unsigned int cellWidth = 300;      \/* altTab's window width;  TODO: deleteme? *\/$/;"	v	language:C++
 cellwin	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	Window cellwin; \/\/ alt+tab window$/;"	m	language:C++	struct:Monitor	file:
 cfact	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	float cfact;$/;"	m	language:C++	struct:Client	file:
 checkotherwm	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^checkotherwm(void) {$/;"	f	language:C++
@@ -138,6 +138,8 @@ drawbars	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.
 drawCells	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^drawCells(Drawable drawable, const char *text, unsigned long col[ColLast], Bool pad) {$/;"	f	language:C++
 drawcoloredtext	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^drawcoloredtext(char *text) {$/;"	f	language:C++
 drawcoloredtext	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^static void drawcoloredtext(char *text);$/;"	p	language:C++	file:
+drawpoint	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^drawpoint(Bool filled, unsigned long col[ColLast]) {$/;"	f	language:C++
+drawpoint	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^static void drawpoint(Bool filled, unsigned long col[ColLast]);$/;"	p	language:C++	file:
 drawsquare	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^drawsquare(Bool filled, Bool empty, unsigned long col[ColLast]) {$/;"	f	language:C++
 drawsquare	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^static void drawsquare(Bool filled, Bool empty, unsigned long col[ColLast]);$/;"	p	language:C++	file:
 drawtab	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^drawtab(Monitor *m) {$/;"	f	language:C++
@@ -227,7 +229,7 @@ isfixed	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c
 isfloating	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	Bool isfixed, isfloating, isurgent, neverfocus, oldstate, isfullscreen, iscentred, isInSkipList;$/;"	m	language:C++	struct:Client	file:
 isfloating	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	Bool isfloating;$/;"	m	language:C++	struct:__anon16	file:
 isfullscreen	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	Bool isfixed, isfloating, isurgent, neverfocus, oldstate, isfullscreen, iscentred, isInSkipList;$/;"	m	language:C++	struct:Client	file:
-isInArea	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^isInArea( int wx, int wy, int ww, int wh, int px, int py ) {$/;"	f	language:C++
+isInRect	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^isInRect( int wx, int wy, int ww, int wh, int px, int py ) {$/;"	f	language:C++
 isInSkipList	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	Bool isfixed, isfloating, isurgent, neverfocus, oldstate, isfullscreen, iscentred, isInSkipList;$/;"	m	language:C++	struct:Client	file:
 isInTriangle	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^isInTriangle( int x1, int y1, int x2, int y2, int x3, int y3, int x, int y ) {$/;"	f	language:C++
 isuniquegeom	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^isuniquegeom(XineramaScreenInfo *unique, size_t n, XineramaScreenInfo *info) {$/;"	f	language:C++	file:
@@ -347,8 +349,6 @@ propertynotify	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.
 propertynotify	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^static void propertynotify(XEvent *e);$/;"	p	language:C++	file:
 quit	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^quit(const Arg *arg) {$/;"	f	language:C++
 quit	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^static void quit(const Arg *arg);$/;"	p	language:C++	file:
-raiseSelectedWindowAndUnGrabB1	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^static void raiseSelectedWindowAndUnGrabB1(void);$/;"	p	language:C++	file:
-raiseSelectedWindowAndUnGrabB1	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^void raiseSelectedWindowAndUnGrabB1() {$/;"	f	language:C++
 raise_floating_client	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^raise_floating_client(Client *c) {$/;"	f	language:C++
 raise_floating_client	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^static void raise_floating_client(Client *c);$/;"	p	language:C++	file:
 recttomon	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^recttomon(int x, int y, int w, int h) {$/;"	f	language:C++
