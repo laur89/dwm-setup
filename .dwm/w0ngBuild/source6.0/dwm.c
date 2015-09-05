@@ -250,6 +250,7 @@ static void drawtab(Monitor *m);
 static void drawtabs(void);
 static void drawcoloredtext(char *text);
 static void drawsquare(Bool filled, Bool empty, unsigned long col[ColLast]);
+static void drawpoint(Bool filled, unsigned long col[ColLast]);
 /*static void drawtext(const char *text, unsigned long col[ColLast], Bool pad);*/
 static void drawtext(Drawable drawable, const char *text, unsigned long col[ColLast], Bool pad);
 static void enternotify(XEvent *e);
@@ -350,7 +351,6 @@ static void zoom(const Arg *arg);
 static void raise_floating_client(Client *c);
 static void togglescratch(const Arg *arg);
 static void reload(const Arg *arg);
-static void raiseSelectedWindowAndUnGrabB1(void);
 
 /* variables */
 static Systray *systray = NULL;
@@ -712,49 +712,6 @@ void sendKeyEvent(KeySym key, unsigned int mask, unsigned int pressOrReleaseMask
     /*XSendEvent(dpy, w, True, KeyPressMask, (XEvent *)&e);*/
     /*XTestFakeKeyEvent(dpy, KeyPressMask, (XEvent *)&e);*/
     XSync (dpy, False);
-}
-
-// raise FLOATING window and propagate B1 event;
-// TODO: siin on bug: keypressi saada Button1'ga, mis on button mitte key!
-void raiseSelectedWindowAndUnGrabB1() {
-    Client *c = selmon->sel;
-    if (!c || !c->win) return;
-    /*Window w = selmon->sel->win;*/
-    /*XKeyEvent e;*/
-    /*int xx, yy; // cur pos relative to the selected windows point of origin;*/
-    /*int di; // dummie*/
-    /*unsigned int dui; // dummie*/
-    /*Window dummy;*/
-
-    /*// get the cursor location:*/
-	/*XQueryPointer(dpy, c->win, &dummy, &dummy, &di, &di, &xx, &yy, &dui);*/
-
-    /*// make pointer location absolute:*/
-    /*xx += c->x;*/
-    /*yy += c->y;*/
-
-	/*[>ce.type = ConfigureNotify;<]*/
-	/*e.display = dpy;*/
-	/*e.window = w;*/
-	/*e.x = xx;*/
-	/*e.y = yy;*/
-    /*e.type = KeyPress;*/
-    /*e.keycode = XKeysymToKeycode(dpy, Button1);*/
-    /*XSendEvent(dpy, w, True, KeyPressMask, (XEvent *)&e);*/
-    //////////////////////////////////////////////////////////
-
-    //TODO: depends on modification in grabbuttons()!
-    if (c && (c->isfloating || !selmon->lt[selmon->sellt]->arrange )) {
-        XRaiseWindow(dpy, c->win);
-    } else {
-        return;
-    }
-    // propagate button1 event:
-    /*XUngrabButton(dpy, Button1, None, selmon->sel->win);*/
-    XUngrabButton(dpy, AnyButton, AnyModifier, c->win);
-    sendKeyEvent(Button1, 0, ButtonPressMask);
-    grabbuttons(c, True);
-
 }
 
 void
@@ -1249,6 +1206,10 @@ drawbar(Monitor *m) {
         drawtext(dc.drawable, tags[i].name, col, True);
 		drawsquare(m == selmon && selmon->sel && selmon->sel->tags & 1 << i,
 		           occ & 1 << i, col);
+        if (m == selmon && selmon->curtag == i+1)
+            drawpoint(True, dc.colors[1]);
+        else if(m == selmon && selmon->prevtag == i+1)
+            drawpoint(False, dc.colors[occupiedColorIndex]);
 		dc.x += dc.w;
 	}
 	if(m->lt[m->sellt]->arrange == monocle) {
@@ -1447,6 +1408,20 @@ drawtab(Monitor *m) {
 
    XCopyArea(dpy, dc.tabdrawable, m->tabwin, dc.gc, 0, 0, m->ww, th, 0, 0);
    XSync(dpy, False);
+}
+
+void
+drawpoint(Bool filled, unsigned long col[ColLast]) {
+	int x;
+
+	XSetForeground(dpy, dc.gc, col[ColFG]);
+	x = (dc.font.ascent + dc.font.descent + 2) / 4;
+    /*XDrawPoint(dpy, dc.drawable, dc.gc, dc.x+1, dc.y+1+x*2);*/
+    /*XFillRectangle(dpy, dc.drawable, dc.gc, dc.x+1, dc.y+x*3, 2, 2);*/
+	if(filled)
+		XFillRectangle(dpy, dc.drawable, dc.gc, dc.x+1, dc.y+x*2, x+1, x+1);
+	else
+		XDrawRectangle(dpy, dc.drawable, dc.gc, dc.x+1, dc.y+x*2, x, x);
 }
 
 void
@@ -1804,10 +1779,13 @@ focusin(XEvent *e) { /* there are some broken focus acquiring clients */
 		setfocus(selmon->sel);
 }
 
+/**
+  * Note that this assumes monitors are side-by-side only.
+  */
 void
 transferPointerToNextMon(Monitor *prevMon) {
     Monitor *m;
-    int i, x, y, w, e;
+    int i, x, y, w, e; // w & e are prevMon & selmon x origins;
     i = x = y = w = e = 0;
     float cx, cy; //coefficients
     getrootptr(&x, &y);
@@ -2115,9 +2093,7 @@ grabbuttons(Client *c, Bool focused) {
 		unsigned int i, j;
 		unsigned int modifiers[] = { 0, LockMask, numlockmask, numlockmask|LockMask };
 		XUngrabButton(dpy, AnyButton, AnyModifier, c->win);
-		/*if(focused) {*/
-		/*}*/
-		/*else*/
+
         if(!focused)
 			XGrabButton(dpy, AnyButton, AnyModifier, c->win, False,
 					/*BUTTONMASK, GrabModeAsync, GrabModeSync, None, None);*/
@@ -2129,13 +2105,6 @@ grabbuttons(Client *c, Bool focused) {
                             buttons[i].mask | modifiers[j],
                             c->win, False, BUTTONMASK,
                             GrabModeAsync, GrabModeSync, None, None);
-
-        //TODO: still not a good solution: (used only with
-        // raiseSelectedWindowAndUnGrabB1():
-        // stop grabbing the B1 event without modifiers for floating windows:
-        /*if ( !c->isfloating ) {*/
-            /*XUngrabButton(dpy, Button1, None, c->win);*/
-        /*}*/
 	}
 }
 
@@ -2531,6 +2500,8 @@ movemouse(const Arg *arg) {
 
             // TODO: snap also along the axis? (when initial snapping has already
             // occurred);
+            // TODO: refactor!
+
             // win2win snapping:
             for( Client *cc = c->mon->clients; cc; cc = cc->next ) {
                 if ( cc == c || !ISVISIBLE(cc) ) continue;
@@ -2640,8 +2611,7 @@ propertynotify(XEvent *e) {
 		default: break;
 		case XA_WM_TRANSIENT_FOR:
 
-            // TODO: this mofo is the culprit!
-            /*if ( isWindowClass(c, client_class_idea) ) return;*/
+            // TODO: this mofo is the IDEA auto-floating culprit!
             if ( strstr( c->className, client_class_idea ) ) return;
 
 			if(!c->isfloating && (XGetTransientForHint(dpy, c->win, &trans)) &&
@@ -2737,7 +2707,7 @@ resizeclient(Client *c, int x, int y, int w, int h) {
 }
 
 Bool
-isInArea( int wx, int wy, int ww, int wh, int px, int py ) {
+isInRect( int wx, int wy, int ww, int wh, int px, int py ) {
     if( px >= wx && px <= wx + ww
             && py <= wy + wh && py >= wy) {
         return True;
@@ -2766,29 +2736,29 @@ findSector( Client *c ) {
     xx += c->x;
     yy += c->y;
 
-    if ( isInArea( c->x, c->y, cw, ch, xx, yy ) ) {
+    if ( isInRect( c->x, c->y, cw, ch, xx, yy ) ) {
         return UpCorLeft;
-    } else if ( isInArea( c->x + cw, c->y, cw, ch, xx, yy )
+    } else if ( isInRect( c->x + cw, c->y, cw, ch, xx, yy )
         || isInTriangle(c->x+cw, c->y+ch, c->x+2*cw, c->y+ch, c->x+c->w/2, c->y+c->h/2, xx, yy ) ) {
         return UpCenter;
-    } else if ( isInArea( c->x + 2*cw, c->y, cw, ch, xx, yy ) ) {
+    } else if ( isInRect( c->x + 2*cw, c->y, cw, ch, xx, yy ) ) {
         return UpCorRight;
-    } else if ( isInArea( c->x, c->y + ch, cw, ch, xx, yy )
+    } else if ( isInRect( c->x, c->y + ch, cw, ch, xx, yy )
         || isInTriangle(c->x+cw, c->y+ch, c->x+cw, c->y+2*ch, c->x+c->w/2, c->y+c->h/2, xx, yy ) ) {
         return MidSideLeft;
         // TODO: what to do with the middle section?: (currently have separated
         //       middle section to 4 triangles)
-    /*} else if ( isInArea( c->x + cw, c->y + ch, cw, ch, xx, yy ) ) {*/
+    /*} else if ( isInRect( c->x + cw, c->y + ch, cw, ch, xx, yy ) ) {*/
         /*return MidCenter;*/
-    } else if ( isInArea( c->x + 2*cw, c->y + ch, cw, ch, xx, yy )
+    } else if ( isInRect( c->x + 2*cw, c->y + ch, cw, ch, xx, yy )
         || isInTriangle( c->x+2*cw, c->y+ch, c->x+2*cw, c->y+2*ch, c->x+c->w/2, c->y+c->h/2, xx, yy ) ) {
         return MidSideRight;
-    } else if ( isInArea( c->x, c->y + 2*ch, cw, ch, xx, yy ) ) {
+    } else if ( isInRect( c->x, c->y + 2*ch, cw, ch, xx, yy ) ) {
         return DnCorLeft;
-    } else if ( isInArea( c->x + cw, c->y + 2*ch, cw, ch, xx, yy )
+    } else if ( isInRect( c->x + cw, c->y + 2*ch, cw, ch, xx, yy )
         || isInTriangle(c->x+cw, c->y+2*ch, c->x+2*cw, c->y+2*ch, c->x+c->w/2, c->y+c->h/2, xx, yy ) ) {
         return DnCenter;
-    } else if ( isInArea( c->x + 2*cw, c->y + 2*ch, cw, ch, xx, yy ) ) {
+    } else if ( isInRect( c->x + 2*cw, c->y + 2*ch, cw, ch, xx, yy ) ) {
         return DnCorRight;
     } else {
        //TODO else return error?
@@ -3066,6 +3036,7 @@ run(void) {
 	while(running && !XNextEvent(dpy, &ev)) {
         /*//TODO: deleteme:*/
         /*fprintf(stderr, "  @ run(): event type: %d\n", ev.type);*/
+        /*fprintf(stderr, "  @ run(): curview: %d\n", selmon->curtag);*/
         /*e = ev.xany;*/
         /*if ( e.window && (c = wintoclient(e.window)) ) {*/
             /*if ( isIntelliJ(c) ) continue;*/
