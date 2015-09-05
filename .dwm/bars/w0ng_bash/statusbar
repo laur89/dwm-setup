@@ -7,21 +7,37 @@
 # src from https://github.com/w0ng/bin
 # http://archlinux.me/w0ng/2012/05/01/dwm-a-pretty-statusbar/
 
+# import common:
+if ! type __COMMONS_LOADED_MARKER > /dev/null 2>&1; then
+    if [[ -r "$_SCRIPTS_COMMONS" ]]; then
+        source "$_SCRIPTS_COMMONS"
+    else
+        echo -e "\nError: common file \"$_SCRIPTS_COMMONS\" not found! Abort."
+        #echo dayum >> /tmp/w
+        exit 1
+    fi
+fi
+
 # nw interface & stats dir:
 nwInterfaceStats=""
 
 # mail constants:
-MAIL_PREFIXES=( \
-    "ix" \
-    "sb"  \
-)
+if is_work; then
+    MAIL_PREFIXES=( \
+        "ix" \
+        "sb"  \
+    )
 
-MAILDIRS_NEW=( \
-    "$HOME/mail/work/Inbox/new" \
-    "$HOME/mail/work/Inbox/.sb/new" \
-)
+    MAILDIRS_NEW=( \
+        "$HOME/mail/work/Inbox/new" \
+        "$HOME/mail/work/Inbox/.sb/new" \
+    )
+else
+    MAILDIRS_NEW=( \
+    )
+fi
 
-# Colour codes from dwm/config.h
+# Color codes from dwm/config.h
 colour_gry="\x01" # grey on black
 colour_wht="\x02" # white on black
 colour_dgry="\x04" # darkgrey on black
