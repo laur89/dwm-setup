@@ -1197,11 +1197,13 @@ drawbar(Monitor *m) {
     for(i = 0; i < (LENGTH(tags) - 1); i++) {
 		dc.w = TEXTW(tags[i].name);
         /*col = dc.colors[ (m->tagset[m->seltags] & 1 << i) ? 1 : (urg & 1 << i ? 2:(occ & 1 << i ? occupiedColorIndex:0)) ];*/
-        col = dc.colors[ (m->tagset[m->seltags] & 1 << i)
+        col = dc.colors[
+            (m->tagset[m->seltags] & 1 << i)
             /*? 1// tag is selected*/
             ? urg & 1 << i ? ColUrg : 1 // tag is selected
             // tag not selected:
-            : (urg & 1 << i ? ColUrg : /* not urg: */ (occ & 1 << i ? occupiedColorIndex : 0)) ];
+            : (urg & 1 << i ? ColUrg : /* not urg: */ (occ & 1 << i ? occupiedColorIndex : 0))
+                        ];
         /*drawtext(tags[i], col, True);*/
         drawtext(dc.drawable, tags[i].name, col, True);
 		drawsquare(m == selmon && selmon->sel && selmon->sel->tags & 1 << i,

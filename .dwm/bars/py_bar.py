@@ -21,7 +21,7 @@ import time
 
 modefile = '/tmp/DWM_statusbar_mode.dat'  # !!! Be careful with editing this - other programs might refer to that file !!!
 startmode = '1'   # Default mode to start in
-wx_log = "/data/.tmp/tartu_wx_log.txt"    # Be careful with editing this - another script manages this file !!!
+wx_log = "/data/tmp/tartu_wx_log.txt"    # Be careful with editing this - another script manages this file !!!
 interfaces_file = "/tmp/connected_interfaces.dat"  # Be careful with editing this - another script manages this file !!!
 
 cpudata_main = '/proc/stat'     # File containing processor info
