@@ -6,36 +6,12 @@
 # https://bitbucket.org/jasonwryan/eeepc/src/73dadb289dead8ef17ef29a9315ba8f1706927cb/Scripts/dwm-status
 # src from https://github.com/w0ng/bin
 # http://archlinux.me/w0ng/2012/05/01/dwm-a-pretty-statusbar/
-
-# import common:
-if ! type __COMMONS_LOADED_MARKER > /dev/null 2>&1; then
-    if [[ -r "$_SCRIPTS_COMMONS" ]]; then
-        source "$_SCRIPTS_COMMONS"
-    else
-        echo -e "\nError: common file \"$_SCRIPTS_COMMONS\" not found! Abort."
-        #echo dayum >> /tmp/w
-        exit 1
-    fi
-fi
+#
+# network logic (from: http://dzen.geekmode.org/dwiki/doku.php?id=dzen:network-meter)
+# cpu logic (from: https://bbs.archlinux.org/viewtopic.php?pid=661641#p661641)
 
 # nw interface & stats dir:
 nwInterfaceStats=""
-
-# mail constants:
-if is_work; then
-    MAIL_PREFIXES=( \
-        "ix" \
-        "sb"  \
-    )
-
-    MAILDIRS_NEW=( \
-        "$HOME/mail/work/Inbox/new" \
-        "$HOME/mail/work/Inbox/.sb/new" \
-    )
-else
-    MAILDIRS_NEW=( \
-    )
-fi
 
 # Color codes from dwm/config.h
 colour_gry="\x01" # grey on black
@@ -67,73 +43,65 @@ sep_bar="\uE020"
 
 
 print_song_info() {
-  local mpc_query="$(mpc current -f '[[[[%artist% \uE01B ]%title%]]|[%file%]]' | head -c 75)"
+    local mpc_query="$(mpc current -f '[[[[%artist% \uE01B ]%title%]]|[%file%]]' | head -c 75)"
 
-  if [[ -n "$mpc_query" ]]; then
-    #song_info="Off"
-    echo -ne "${colour_dgry}${sep_solid}${colour_cyn} ${glyph_msc} ${mpc_query} "
-  fi
-  #echo -ne "${colour_dgry}${sep_solid}${colour_cyn} ${glyph_msc} ${mpc_query} "
+    if [[ -n "$mpc_query" ]]; then
+        #song_info="Off"
+        echo -ne "${colour_dgry}${sep_solid}${colour_cyn} ${glyph_msc} ${mpc_query} "
+    fi
+    #echo -ne "${colour_dgry}${sep_solid}${colour_cyn} ${glyph_msc} ${mpc_query} "
 }
 
 print_torrent_status() {
-  local torrent_status="$(transmission-remote -l | awk -F "  +" '$5 ~ /^[0-9]/ {print $5}')"
+    local torrent_status="$(transmission-remote -l | awk -F "  +" '$5 ~ /^[0-9]/ {print $5}')"
 
-  if [[ ! $torrent_status ]]; then
-    torrent_status="Idle"
-  fi
-  echo -ne "${colour_blk}${sep_solid}${colour_dylw} ${glyph_tor} ${torrent_status} "
+    if [[ ! $torrent_status ]]; then
+        torrent_status="Idle"
+    fi
+    echo -ne "${colour_blk}${sep_solid}${colour_dylw} ${glyph_tor} ${torrent_status} "
 }
 
 print_email_unread() {
-  local counter=0
-  # inbox & scoreboards
-  local mailEcho=""
-  local maildir unread_count
+    local counter=0
+    # inbox & scoreboards
+    local mailEcho=""
+    local maildir unread_count
 
-  #echo -ne "${colour_dgry}${sep_solid}${colour_ylw} ${glyph_eml}"
-  #for maildir in $(find $HOME/mail/work/ \( -path "*Inbox/new" -o -path "*Inbox/.sb/new" \) -type d);do
-  #for maildir in $(find $HOME/mail/work/inbox/new -type d); do
-  for maildir in ${MAILDIRS_NEW[@]}; do
-    unread_count="$(ls "$maildir" | wc -l)"
-    if [[ "$unread_count" -gt 0 ]]; then
-        mailEcho+=" ${MAIL_PREFIXES[$counter]}:${unread_count}"
+    #echo -ne "${colour_dgry}${sep_solid}${colour_ylw} ${glyph_eml}"
+    #for maildir in $(find $HOME/mail/work/ \( -path "*Inbox/new" -o -path "*Inbox/.sb/new" \) -type d);do
+    #for maildir in $(find $HOME/mail/work/inbox/new -type d); do
+    for maildir in ${MAILDIRS_NEW[@]}; do
+        unread_count="$(ls "$maildir" | wc -l)"
+        if [[ "$unread_count" -gt 0 ]]; then
+            mailEcho+=" ${MAIL_PREFIXES[$counter]}:${unread_count}"
+        fi
+        let counter+=1
+    done
+
+    if [[ -n "$mailEcho" ]]; then
+        echo -en "${colour_dgry}${sep_solid}${colour_ylw} ${glyph_eml}$mailEcho"
     fi
-    let counter+=1
-    # alternative:
-    # let counter+=$(ls "${maildir}" | wc -l)
-  done
-
-  if [[ -n "$mailEcho" ]]; then
-    echo -en "${colour_dgry}${sep_solid}${colour_ylw} ${glyph_eml}$mailEcho"
-  fi
 }
 
 print_last_msg() {
-  local last_msg="$(cat $HOME/.logs/irssi_pipe)"
-  echo -ne "${colour_blk}${sep_solid}${colour_dylw} ${glyph_com} ${last_msg} "
+    local last_msg="$(cat $HOME/.logs/irssi_pipe)"
+    echo -ne "${colour_blk}${sep_solid}${colour_dylw} ${glyph_com} ${last_msg} "
 }
 
 print_mem_used() {
-  local mem_used
+    local mem_used="$(free | grep Mem | awk '{printf "%.0f", $3/$2 * 100.0}')"
 
-  #mem_used="$(free -m | awk 'NR==3 {print $3}')" # used in MB
-  #mem_used="$(free | awk '/buffers\/cache/{print $4/($3+$4) * 100.0;}')" # free in %
-  #mem_used="$(free | awk '/buffers\/cache/{print $3/($3+$4) * 100.0;}')" # usage in %
-  #mem_used="$(free | awk '/buffers\/cache/{print int($3/($3+$4) * 100.0);}')" # usage in %, rounded
-  mem_used="$(free | grep Mem | awk '{printf "%.0f", $3/$2 * 100.0}')"
-
-  echo -ne "${sep_line} ${glyph_mem} ${mem_used}% "
+    echo -ne "${sep_line} ${glyph_mem} ${mem_used}% "
 }
 
 print_volume() {
-  local volume="$(amixer get Master | tail -n1 | sed -r 's/.*\[(.*)%\].*/\1/')"
-  echo -ne "${colour_dgry}${sep_solid}${colour_mag} ${glyph_vol} ${volume}% "
+    local volume="$(get_vol)"
+    echo -ne "${colour_dgry}${sep_solid}${colour_mag} ${glyph_vol} ${volume}% "
 }
 
 print_datetime() {
-  local datetime="$(date "+%a %d ${sep_line} %H:%M")"
-  echo -ne "${colour_blk}${sep_solid}${colour_wht} ${glyph_tim} ${datetime} "
+    local datetime="$(date "+%a %d ${sep_line} %H:%M")"
+    echo -ne "${colour_blk}${sep_solid}${colour_wht} ${glyph_tim} ${datetime} "
 }
 
 convertTxRates() {
@@ -164,18 +132,21 @@ print_tx_rate() {
     fi
 }
 
-
-
+## ENTRY:
+#####################
 # import common:
-if [[ -f "$_SCRIPTS_COMMONS" && -r "$_SCRIPTS_COMMONS" ]]; then
-    source "$_SCRIPTS_COMMONS"
-else
-    echo -e "\nError: common file \"$_SCRIPTS_COMMONS\" not found. Abort."
-    exit 1
+if ! type __COMMONS_LOADED_MARKER > /dev/null 2>&1; then
+    if [[ -r "$_SCRIPTS_COMMONS" ]]; then
+        source "$_SCRIPTS_COMMONS"
+    else
+        echo -e "\nError: common file \"$_SCRIPTS_COMMONS\" not found! Abort."
+        exit 1
+    fi
 fi
 
-# network (from: http://dzen.geekmode.org/dwiki/doku.php?id=dzen:network-meter)
-# cpu (from: https://bbs.archlinux.org/viewtopic.php?pid=661641#p661641)
+lock_process dwm_statusbar
+
+# setup:
 nwInterfaceStats=$(find_connected_if_stats)
 if [[ -n "$nwInterfaceStats" ]]; then
     rx_old="$(cat $nwInterfaceStats/rx_bytes)"
@@ -185,53 +156,74 @@ else
     tx_old=0
 fi
 
+# mail constants:
+if is_work; then
+    MAIL_PREFIXES=( \
+        "ix" \
+        "sb"  \
+        )
+
+    MAILDIRS_NEW=( \
+        "$HOME/mail/work/Inbox/new" \
+        "$HOME/mail/work/Inbox/.sb/new" \
+        )
+else
+    MAILDIRS_NEW=( \
+        )
+fi
+
 
 while true; do
-  nwInterfaceStats="$(find_connected_if_stats)"
-  if [[ -n "$nwInterfaceStats" ]]; then
-    # get new rx/tx counts
-    rx_now=$(cat $nwInterfaceStats/rx_bytes)
-    tx_now=$(cat $nwInterfaceStats/tx_bytes)
-    # calculate the rate (K) and total (M)
-    rx_rate=$(convertTxRates $(($rx_now-$rx_old)))
-    tx_rate=$(convertTxRates $(($tx_now-$tx_old)))
-    #  let rx_total=$rx_now/1048576
-    #  let tx_total=$tx_now/1048576
-  else
-    rx_rate=""
-    tx_rate=""
-  fi
+    nwInterfaceStats="$(find_connected_if_stats)"  # keep within the loop!
+    if [[ -n "$nwInterfaceStats" ]]; then
+        # get new rx/tx counts
+        rx_now=$(cat $nwInterfaceStats/rx_bytes)
+        tx_now=$(cat $nwInterfaceStats/tx_bytes)
 
-  # get new cpu idle and total usage
-  #eval "$(awk '/^cpu /{print "cpu_idle_now=" $5 "; cpu_total_now=" $2+$3+$4+$5 }' /proc/stat)"
-  eval "$(awk '/^cpu /{printf "cpu_idle_now=%.0f; cpu_total_now=%.0f", $5, $2+$3+$4+$5 }' /proc/stat)" # printf removes the scientific notation;
-  cpu_interval="$((cpu_total_now-${cpu_total_old:-0}))"
-  # calculate cpu usage (%)
-  let cpu_used="100 * ($cpu_interval - ($cpu_idle_now-${cpu_idle_old:-0})) / $cpu_interval"
+        # calculate the rate (K) and total (M)
+        rx_rate=$(convertTxRates $((rx_now-rx_old)))
+        tx_rate=$(convertTxRates $((tx_now-tx_old)))
+        #  let rx_total=$rx_now/1048576
+        #  let tx_total=$tx_now/1048576
+    else
+        rx_rate=""
+        tx_rate=""
+    fi
+
+    # get new cpu idle and total usage
+    #eval "$(awk '/^cpu /{print "cpu_idle_now=" $5 "; cpu_total_now=" $2+$3+$4+$5 }' /proc/stat)"
+    eval "$(awk '/^cpu /{printf "cpu_idle_now=%.0f; cpu_total_now=%.0f", $5, $2+$3+$4+$5 }' /proc/stat)" # printf removes the scientific notation;
+    cpu_interval="$((cpu_total_now-${cpu_total_old:-0}))"
+    # calculate cpu usage (%)
+    let cpu_used="100 * ($cpu_interval - ($cpu_idle_now-${cpu_idle_old:-0})) / $cpu_interval"
 
 
-  # Pipe to status bar, not indented due to printing extra spaces/tabs
-  xsetroot -name "$(print_song_info)\
+    # Pipe to status bar, not indented due to printing extra spaces/tabs
+    # do not change formatting of xsetroot command!
+    xsetroot -name "$(print_song_info)\
 $(print_email_unread)\
 $(print_cpu_used)$(print_mem_used)\
 $(print_rx_rate)$(print_tx_rate)\
 $(print_volume)\
 $(print_datetime)"
-  # orig:
+    # orig:
     # xsetroot -name "$(print_song_info)\
-    #$(print_torrent_status)\
-    #$(print_email_unread)\
-    #$(print_last_msg)\
-    #$(print_cpu_used)$(print_mem_used)\
-    #$(print_rx_rate)$(print_tx_rate)\
-    #$(print_volume)\
-    #$(print_datetime)"
+        #$(print_torrent_status)\
+        #$(print_email_unread)\
+        #$(print_last_msg)\
+        #$(print_cpu_used)$(print_mem_used)\
+        #$(print_rx_rate)$(print_tx_rate)\
+        #$(print_volume)\
+        #$(print_datetime)"
 
-  # reset old rates:
-  rx_old=$rx_now
-  tx_old=$tx_now
-  cpu_idle_old=$cpu_idle_now
-  cpu_total_old=$cpu_total_now
-  # loop stats every 1 second:
-  sleep 1
+    # reset old network & cpu rates:
+    rx_old=$rx_now
+    tx_old=$tx_now
+    cpu_idle_old=$cpu_idle_now
+    cpu_total_old=$cpu_total_now
+
+    # loop stats every 1 second:
+    sleep 1
 done
+
+exit 0
