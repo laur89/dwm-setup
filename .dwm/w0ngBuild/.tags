@@ -455,7 +455,7 @@ sfx	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	
 sfy	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	int sfx, sfy, sfw, sfh; \/* stored float geometry, used on mode revert *\/$/;"	m	language:C++	struct:Client	file:
 sh	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^static int sw, sh;           \/* X display screen geometry width, height *\/$/;"	v	language:C++	file:
 SHCMD	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/config.h	82;"	d	language:C++
-SHCMD	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/config.h	231;"	d	language:C++
+SHCMD	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/config.h	232;"	d	language:C++
 showbar	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/config.h	/^static const Bool showbar           = True;     \/* False means no bar *\/$/;"	v	language:C++
 showbar	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/config.h	/^static const Bool showbar           = True;     \/* False means no bar *\/$/;"	v	language:C++
 showbar	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	Bool showbar;$/;"	m	language:C++	struct:Monitor	file:
@@ -506,7 +506,7 @@ tag	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^t
 Tag	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^} Tag;$/;"	t	language:C++	typeref:struct:__anon15	file:
 tagcycle	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^tagcycle(const Arg *arg) {$/;"	f	language:C++
 TAGKEYS	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/config.h	75;"	d	language:C++
-TAGKEYS	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/config.h	224;"	d	language:C++
+TAGKEYS	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/config.h	225;"	d	language:C++
 TAGMASK	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	60;"	d	language:C++	file:
 tagmon	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^static void tagmon(const Arg *arg);$/;"	p	language:C++	file:
 tagmon	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^tagmon(const Arg *arg) {$/;"	f	language:C++

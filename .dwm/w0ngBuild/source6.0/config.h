@@ -171,6 +171,7 @@ static const Rule rules[] = {
 	{ "Keepassx",		NULL,		"Auto-Type",		NULL,			True,		True,		-1 },
 	{ "Keepassx",		NULL,		"pass",		1 << 8,			True,		True,		-1 },
 	//{ "Keepassx",		NULL,		"passwd_db.kdbx - KeePassX",		1 << 8,			True,		True,		-1 },
+	{ "keepassx",		NULL,		NULL,		1 << 8,			True,		True,		-1 },
 	{ "Truecrypt",		NULL,		NULL,		1 << 8,			True,		True,		-1 },
 	{ "Deluge",		NULL,		NULL,		1 << 8,			True,		True,		-1 },
 	{ "Transmission-gtk",		NULL,		NULL,		1 << 8,			True,		True,		-1 },
