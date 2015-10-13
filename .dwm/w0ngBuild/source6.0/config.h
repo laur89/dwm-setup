@@ -14,7 +14,7 @@
 #define wheel_scroll_up 4 // wheel scroll up
 #define wheel_scroll_dn 5 // wheel scroll down
 
-#define NUMCOLORS 17 // needs to be re-defined in dwm.c.MAXCOLORS!
+#define NUMCOLORS 18 // needs to be re-defined in dwm.c.MAXCOLORS!
 /* appearance */
 static const char font[] = "-*-xbmicons-medium-r-*-*-12-*-*-*-*-*-*-*" ","
                            "-*-terminus-medium-r-*-*-12-*-*-*-*-*-*-*";
@@ -41,8 +41,9 @@ static const char colors[NUMCOLORS][ColLast][9] = {
   { "#FFFFFF", "#c5c8c6", "#5f6267" }, // E = used for selected title in tab bar
   //{ "#f0c674", "#b5bd68", "#FFFFFF" }, // F = for float client borders; index 0 is selected, 1 is normal, 2 unused
   { "#00A3CC", "#CCFFFF", "#FFFFFF" }, // F = for float client borders; index 0 is selected, 1 is normal, 2 unused
-  { "#FFFFFF", "#999A9D", "#616264" }, // G = non-selected master client tab (if > 1 nmast)
+  { "#FFFFFF", "#1d1f21", "#87777C" }, // G = non-selected master client tab (if > 1 nmast)
   { "#FFFFFF", "#E2E4E2", "#9F9195" }, // H = selected master client tab (if > 1 nmast)
+  { "#FFFFFF", "#808080", "#2F3133" }, // I = non-selected tab
 };
 
 static const unsigned int borderpx  = 2;        /* border pixel of windows */

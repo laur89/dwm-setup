@@ -52,7 +52,7 @@
 #define LENGTH(X)               (sizeof X / sizeof X[0])
 #define MAX(A, B)               ((A) > (B) ? (A) : (B))
 #define MIN(A, B)               ((A) < (B) ? (A) : (B))
-#define MAXCOLORS 17            // avoid circular reference to NUMCOLORS
+#define MAXCOLORS 18            // avoid circular reference to NUMCOLORS
 #define occupiedColorIndex 12   // as in tag/tab is occupied, but NOT selected
 #define MOUSEMASK               (BUTTONMASK|PointerMotionMask)
 #define WIDTH(X)                ((X)->w + 2 * (X)->bw)
@@ -1391,7 +1391,7 @@ drawtab(Monitor *m) {
         // color masters differently:
         col = (c == m->sel) ? dc.colors[16] : dc.colors[15];
      else // single master client
-        col = (c == m->sel) ? dc.colors[13] : dc.colors[12];
+        col = (c == m->sel) ? dc.colors[13] : dc.colors[17];
         /*
          *col = dc.colors[ (m->tagset[m->seltags] & 1 << i) ?
          *1 : (urg & 1 << i ? 2:0) ]
