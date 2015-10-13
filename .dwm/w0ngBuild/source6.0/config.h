@@ -164,6 +164,8 @@ static const Rule rules[] = {
 //	{ "Gimp",     		"Layers - Brushes",       NULL,       1 << 6,     True,      False,		-1 },
 //	{ "Gimp",     		"Toolbox - Tool Options",       NULL,       1 << 6,     True,      False,		-1 },
 	{ "Gimp",     		NULL,       NULL,       1 << 6,     True,      False,		-1 },
+	{ "Steam",		NULL,		NULL,	    1 << 6,	  	False,		False, 		-1 },
+
 	{ "SWT",     		NULL,       "CollabNet GitEye",       1 << 7,     False,      False,		-1 },
 
 	{ "Keepassx",		NULL,		"Auto-Type",		NULL,			True,		True,		-1 },
