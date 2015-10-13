@@ -247,12 +247,12 @@ static const char *lock_screen[]			=	{ "xscreensaver-command", "--lock", NULL };
 
 static const char *history_back[]			=	{ "python", "/usr/local/bin/dynamic_button_remap.py", "history_back", NULL };
 static const char *history_forward[]			=	{ "python", "/usr/local/bin/dynamic_button_remap.py", "history_forward", NULL };
-static const char *tab_back[]			=	{ "python", "/usr/local/bin/dynamic_button_remap.py", "tab_back", NULL };
-static const char *tab_forward[]			=	{ "python", "/usr/local/bin/dynamic_button_remap.py", "tab_forward", NULL };
-static const char *FF_tabgroup_back[]			=	{ "python", "/usr/local/bin/dynamic_button_remap.py", "FF_tabgroup_back", NULL };
-static const char *FF_tabgroup_fwd[]			=	{ "python", "/usr/local/bin/dynamic_button_remap.py", "FF_tabgroup_fwd", NULL };
-static const char *statusbar_prev[]			=	{ "python3", "/home/laur/.dwm/bars/py_bar.py", "prev", NULL };
-static const char *statusbar_next[]			=	{ "python3", "/home/laur/.dwm/bars/py_bar.py", "next", NULL };
+static const char *py_tab_back[]			=	{ "python", "/usr/local/bin/dynamic_button_remap.py", "tab_back", NULL };
+static const char *py_tab_forward[]			=	{ "python", "/usr/local/bin/dynamic_button_remap.py", "tab_forward", NULL };
+static const char *py_FF_tabgroup_back[]			=	{ "python", "/usr/local/bin/dynamic_button_remap.py", "FF_tabgroup_back", NULL };
+static const char *py_FF_tabgroup_fwd[]			=	{ "python", "/usr/local/bin/dynamic_button_remap.py", "FF_tabgroup_fwd", NULL };
+static const char *py_statusbar_prev[]			=	{ "python3", "/home/laur/.dwm/bars/py_bar.py", "prev", NULL };
+static const char *py_statusbar_next[]			=	{ "python3", "/home/laur/.dwm/bars/py_bar.py", "next", NULL };
 
 // runorraise compliant:
 static const char *keepassx[] = { "keepassx", NULL, NULL, NULL, "Keepassx" };
@@ -372,12 +372,16 @@ static Button buttons[] = {
 	{ ClkTagBar,            MODKEY,         Button3,        toggletag,      {0} },
 	{ ClkTabBar,            0,              Button1,        focuswin,      {0} },
     // Custom mouse wheel tilt&scroll commands:
-    { ClkClientWin,         AltMask,         wheel_tilt_left,        spawn,      {.v = history_back } },
-    { ClkClientWin,         AltMask,         wheel_tilt_right,        spawn,      {.v = history_forward} },
-    { ClkClientWin,         ControlMask,        wheel_tilt_left,        spawn,      {.v = tab_back } },
-    { ClkClientWin,         ControlMask,        wheel_tilt_right,        spawn,      {.v = tab_forward} },
-    { ClkClientWin,         ControlMask|ShiftMask,         wheel_tilt_left,        spawn,      {.v = FF_tabgroup_back } },
-    { ClkClientWin,         ControlMask|ShiftMask,         wheel_tilt_right,        spawn,      {.v = FF_tabgroup_fwd} },
+    { ClkClientWin,         AltMask,         wheel_tilt_left,        hist_back,      {0} },
+    { ClkClientWin,         AltMask,         wheel_tilt_right,        hist_fwd,      {0} },
+    { ClkClientWin,         ControlMask,        wheel_tilt_left,        tab_back,      {0} },
+    { ClkClientWin,         ControlMask,        wheel_tilt_right,        tab_fwd,      {0} },
+    //{ ClkClientWin,         ControlMask,        wheel_tilt_left,        spawn,      {.v = py_tab_back } },
+    //{ ClkClientWin,         ControlMask,        wheel_tilt_right,        spawn,      {.v = py_tab_forward} },
+    //{ ClkClientWin,         AltMask,         wheel_tilt_left,        spawn,      {.v = history_back } },
+    //{ ClkClientWin,         AltMask,         wheel_tilt_right,        spawn,      {.v = history_forward} },
+    { ClkClientWin,         ControlMask|ShiftMask,         wheel_tilt_left,        spawn,      {.v = py_FF_tabgroup_back } },
+    { ClkClientWin,         ControlMask|ShiftMask,         wheel_tilt_right,        spawn,      {.v = py_FF_tabgroup_fwd} },
     { ClkClientWin,         MODKEY,         wheel_tilt_left,        setmfact,      {.f = -0.05} },
     { ClkClientWin,         MODKEY,         wheel_tilt_right,        setmfact,      {.f = +0.05} },
     { ClkWinTitle,          MODKEY,         wheel_tilt_right,        incnmaster,      {.i = -1 } },
@@ -388,8 +392,8 @@ static Button buttons[] = {
 	{ ClkClientWin,         MODKEY|ControlMask,  		wheel_scroll_up,	    focusstackwithoutrising,     {.i = +1 } },
 	{ ClkClientWin,         MODKEY|ControlMask,  		wheel_scroll_dn,	    focusstackwithoutrising,     {.i = -1 } },
 
-    { ClkStatusText,		MODKEY,		    wheel_tilt_left,		spawn,			{.v = statusbar_prev } },   // selects previous mode for statusbar (py_bar)
-    { ClkStatusText,		MODKEY,		    wheel_tilt_right,		spawn,			{.v = statusbar_next } },
+    { ClkStatusText,		MODKEY,		    wheel_tilt_left,		spawn,			{.v = py_statusbar_prev } },   // selects previous mode for statusbar (py_bar)
+    { ClkStatusText,		MODKEY,		    wheel_tilt_right,		spawn,			{.v = py_statusbar_next } },
     { ClkStatusText,        0,              wheel_scroll_up,      spawn,          {.v = volupcmd } },
     { ClkStatusText,        0,              wheel_scroll_dn,      spawn,          {.v = voldncmd } },
 

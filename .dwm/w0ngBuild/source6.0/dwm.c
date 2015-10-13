@@ -263,6 +263,10 @@ static void focuswin(const Arg* arg);
 static void focusin(XEvent *e);
 /*static void altTab(const Arg *arg);*/
 static void altTab(void);
+static void hist_back(void);
+static void hist_fwd(void);
+static void tab_back(void);
+static void tab_fwd(void);
 static void focusmon(const Arg *arg);
 static void focusstack(const Arg *arg);
 static void focusstackwithoutrising(const Arg *arg);
@@ -4488,6 +4492,26 @@ void altTab() {
 
     // reset:
  	selclt ^= 1;
+    return;
+}
+
+void hist_fwd(void) {
+    sendKeyEvent(XK_Right, AltMask, KeyPress);
+    return;
+}
+
+void hist_back(void) {
+    sendKeyEvent(XK_Left, AltMask, KeyPress);
+    return;
+}
+
+void tab_fwd(void) {
+    sendKeyEvent(XK_Tab, ControlMask, KeyPress);
+    return;
+}
+
+void tab_back(void) {
+    sendKeyEvent(XK_Tab, ControlMask|ShiftMask, KeyPress);
     return;
 }
 

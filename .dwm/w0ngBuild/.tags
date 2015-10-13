@@ -165,8 +165,6 @@ enternotify_ffm	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6
 expose	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^expose(XEvent *e) {$/;"	f	language:C++
 expose	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^static void expose(XEvent *e);$/;"	p	language:C++	file:
 f	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	float f;$/;"	m	language:C++	union:__anon9	file:
-FF_tabgroup_back	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/config.h	/^static const char *FF_tabgroup_back[]			=	{ "python", "\/usr\/local\/bin\/dynamic_button_remap.py", "FF_tabgroup_back", NULL };$/;"	v	language:C++
-FF_tabgroup_fwd	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/config.h	/^static const char *FF_tabgroup_fwd[]			=	{ "python", "\/usr\/local\/bin\/dynamic_button_remap.py", "FF_tabgroup_fwd", NULL };$/;"	v	language:C++
 fgetsr	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^char* fgetsr(char* buf, int n, FILE* binaryStream) {$/;"	f	language:C++
 findSector	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^findSector( Client *c ) {$/;"	f	language:C++
 Float	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/config.h	/^enum lyts { Tile, Float, Monocle, Bstack, Grid, Deck };$/;"	e	language:C++	enum:lyts
@@ -220,6 +218,10 @@ height	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	
 HEIGHT	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	59;"	d	language:C++	file:
 history_back	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/config.h	/^static const char *history_back[]			=	{ "python", "\/usr\/local\/bin\/dynamic_button_remap.py", "history_back", NULL };$/;"	v	language:C++
 history_forward	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/config.h	/^static const char *history_forward[]			=	{ "python", "\/usr\/local\/bin\/dynamic_button_remap.py", "history_forward", NULL };$/;"	v	language:C++
+hist_back	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^static void hist_back(void);$/;"	p	language:C++	file:
+hist_back	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^void hist_back(void) {$/;"	f	language:C++
+hist_fwd	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^static void hist_fwd(void);$/;"	p	language:C++	file:
+hist_fwd	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^void hist_fwd(void) {$/;"	f	language:C++
 i	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	int i;$/;"	m	language:C++	union:__anon9	file:
 icons	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^   Client *icons;$/;"	m	language:C++	struct:Systray	file:
 ignored_class_list	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/config.h	/^const char *ignored_class_list[] = {$/;"	v	language:C++
@@ -365,6 +367,12 @@ pop	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^s
 prevtag	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	int prevtag;$/;"	m	language:C++	struct:Monitor	file:
 propertynotify	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^propertynotify(XEvent *e) {$/;"	f	language:C++
 propertynotify	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^static void propertynotify(XEvent *e);$/;"	p	language:C++	file:
+py_FF_tabgroup_back	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/config.h	/^static const char *py_FF_tabgroup_back[]			=	{ "python", "\/usr\/local\/bin\/dynamic_button_remap.py", "FF_tabgroup_back", NULL };$/;"	v	language:C++
+py_FF_tabgroup_fwd	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/config.h	/^static const char *py_FF_tabgroup_fwd[]			=	{ "python", "\/usr\/local\/bin\/dynamic_button_remap.py", "FF_tabgroup_fwd", NULL };$/;"	v	language:C++
+py_statusbar_next	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/config.h	/^static const char *py_statusbar_next[]			=	{ "python3", "\/home\/laur\/.dwm\/bars\/py_bar.py", "next", NULL };$/;"	v	language:C++
+py_statusbar_prev	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/config.h	/^static const char *py_statusbar_prev[]			=	{ "python3", "\/home\/laur\/.dwm\/bars\/py_bar.py", "prev", NULL };$/;"	v	language:C++
+py_tab_back	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/config.h	/^static const char *py_tab_back[]			=	{ "python", "\/usr\/local\/bin\/dynamic_button_remap.py", "tab_back", NULL };$/;"	v	language:C++
+py_tab_forward	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/config.h	/^static const char *py_tab_forward[]			=	{ "python", "\/usr\/local\/bin\/dynamic_button_remap.py", "tab_forward", NULL };$/;"	v	language:C++
 quit	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^quit(const Arg *arg) {$/;"	f	language:C++
 quit	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^static void quit(const Arg *arg);$/;"	p	language:C++	file:
 raise_floating_client	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^raise_floating_client(Client *c) {$/;"	f	language:C++
@@ -469,8 +477,6 @@ snext	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/
 spawn	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^spawn(const Arg *arg) {$/;"	f	language:C++
 spawn	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^static void spawn(const Arg *arg);$/;"	p	language:C++	file:
 stack	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	Client *stack;$/;"	m	language:C++	struct:Monitor	file:
-statusbar_next	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/config.h	/^static const char *statusbar_next[]			=	{ "python3", "\/home\/laur\/.dwm\/bars\/py_bar.py", "next", NULL };$/;"	v	language:C++
-statusbar_prev	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/config.h	/^static const char *statusbar_prev[]			=	{ "python3", "\/home\/laur\/.dwm\/bars\/py_bar.py", "prev", NULL };$/;"	v	language:C++
 STDIN	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	75;"	d	language:C++	file:
 STDOUT	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	76;"	d	language:C++	file:
 stext	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^static char stext[256];$/;"	v	language:C++	file:
@@ -490,8 +496,10 @@ tabmode	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c
 tabmode	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^tabmode(const Arg *arg) {$/;"	f	language:C++
 tabWidth	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/config.h	/^static const unsigned int tabWidth  = 200;      \/* default tab width;$/;"	v	language:C++
 tabwin	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	Window tabwin;$/;"	m	language:C++	struct:Monitor	file:
-tab_back	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/config.h	/^static const char *tab_back[]			=	{ "python", "\/usr\/local\/bin\/dynamic_button_remap.py", "tab_back", NULL };$/;"	v	language:C++
-tab_forward	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/config.h	/^static const char *tab_forward[]			=	{ "python", "\/usr\/local\/bin\/dynamic_button_remap.py", "tab_forward", NULL };$/;"	v	language:C++
+tab_back	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^static void tab_back(void);$/;"	p	language:C++	file:
+tab_back	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^void tab_back(void) {$/;"	f	language:C++
+tab_fwd	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^static void tab_fwd(void);$/;"	p	language:C++	file:
+tab_fwd	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^void tab_fwd(void) {$/;"	f	language:C++
 tab_widths	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	int tab_widths[MAXTABS]; \/\/TODO remove, as now all the tabs are of uniform width; \/\/ TODO: will be deprecated$/;"	m	language:C++	struct:Monitor	file:
 tag	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^static void tag(const Arg *arg);$/;"	p	language:C++	file:
 tag	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^tag(const Arg *arg) {$/;"	f	language:C++
