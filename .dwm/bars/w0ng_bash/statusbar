@@ -64,8 +64,7 @@ print_torrent_status() {
 print_email_unread() {
     local counter=0
     # inbox & scoreboards
-    local mailEcho=""
-    local maildir unread_count
+    local maildir unread_count mailEcho
 
     #echo -ne "${colour_dgry}${sep_solid}${colour_ylw} ${glyph_eml}"
     #for maildir in $(find $HOME/mail/work/ \( -path "*Inbox/new" -o -path "*Inbox/.sb/new" \) -type d);do
@@ -110,9 +109,9 @@ convertTxRates() {
     if [[ "$value" -lt 1024 ]]; then
         echo -ne "${value}B"
     elif [[ "$value" -ge 1048576 ]]; then
-        echo -ne "$(( $value / 1048576 ))M"
+        echo -ne "$(( value / 1048576 ))M"
     else
-        echo -ne "$(( $value / 1024 ))K"
+        echo -ne "$(( value / 1024 ))K"
     fi
 }
 
@@ -132,6 +131,33 @@ print_tx_rate() {
     fi
 }
 
+init() {
+    nwInterfaceStats="$(find_connected_if_stats)"
+    if [[ -n "$nwInterfaceStats" ]]; then
+        rx_old="$(cat -- $nwInterfaceStats/rx_bytes)"
+        tx_old="$(cat -- $nwInterfaceStats/tx_bytes)"
+    else
+        rx_old=0
+        tx_old=0
+    fi
+
+    # mail constants:
+    if is_work; then
+        MAIL_PREFIXES=( \
+            "ix" \
+            "sb"  \
+            )
+
+        MAILDIRS_NEW=( \
+            "$HOME/mail/work/Inbox/new" \
+            "$HOME/mail/work/Inbox/.sb/new" \
+            )
+    else
+        MAILDIRS_NEW=( \
+            )
+    fi
+}
+
 ## ENTRY:
 #####################
 # import common:
@@ -147,38 +173,15 @@ fi
 lock_process dwm_statusbar
 
 # setup:
-nwInterfaceStats=$(find_connected_if_stats)
-if [[ -n "$nwInterfaceStats" ]]; then
-    rx_old="$(cat $nwInterfaceStats/rx_bytes)"
-    tx_old="$(cat $nwInterfaceStats/tx_bytes)"
-else
-    rx_old=0
-    tx_old=0
-fi
-
-# mail constants:
-if is_work; then
-    MAIL_PREFIXES=( \
-        "ix" \
-        "sb"  \
-        )
-
-    MAILDIRS_NEW=( \
-        "$HOME/mail/work/Inbox/new" \
-        "$HOME/mail/work/Inbox/.sb/new" \
-        )
-else
-    MAILDIRS_NEW=( \
-        )
-fi
+init  # we don't want that shit in the loop
 
 
 while true; do
     nwInterfaceStats="$(find_connected_if_stats)"  # keep within the loop!
     if [[ -n "$nwInterfaceStats" ]]; then
         # get new rx/tx counts
-        rx_now=$(cat $nwInterfaceStats/rx_bytes)
-        tx_now=$(cat $nwInterfaceStats/tx_bytes)
+        rx_now=$(cat -- $nwInterfaceStats/rx_bytes)
+        tx_now=$(cat -- $nwInterfaceStats/tx_bytes)
 
         # calculate the rate (K) and total (M)
         rx_rate=$(convertTxRates $((rx_now-rx_old)))
