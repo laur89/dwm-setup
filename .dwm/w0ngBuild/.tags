@@ -46,12 +46,14 @@ bw	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	i
 by	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	int by;               \/* bar y location*\/$/;"	m	language:C++	struct:Monitor	file:
 calculateTriangleArea	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^calculateTriangleArea(int x1, int y1, int x2, int y2, int x3, int y3) {$/;"	f	language:C++
 calendar	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/config.h	/^static const char *calendar[]  		= 	{ "gsimplecal", NULL };$/;"	v	language:C++
+CC	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/config.mk	/^CC = cc$/;"	m	language:Make
 cellDC	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^static DC cellDC;$/;"	v	language:C++	file:
 celldrawable	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	Drawable celldrawable; \/\/ TODO: leave it?$/;"	m	language:C++	struct:__anon11	file:
 cellFont	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/config.h	/^static const char cellFont[] = "-*-xbmicons-medium-r-*-*-12-*-*-*-*-*-*-*" ","$/;"	v	language:C++
 cellWidth	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/config.h	/^static const unsigned int cellWidth = 300;      \/* altTab's window width;  TODO: deleteme? *\/$/;"	v	language:C++
 cellwin	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	Window cellwin; \/\/ alt+tab window$/;"	m	language:C++	struct:Monitor	file:
 cfact	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	float cfact;$/;"	m	language:C++	struct:Client	file:
+CFLAGS	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/config.mk	/^CFLAGS = -std=c99 -pedantic -Wall -Os ${INCS} ${CPPFLAGS}$/;"	m	language:Make
 checkotherwm	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^checkotherwm(void) {$/;"	f	language:C++
 checkotherwm	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^static void checkotherwm(void);$/;"	p	language:C++	file:
 className	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^    char className[256];$/;"	m	language:C++	struct:Client	file:
@@ -99,6 +101,7 @@ configurenotify	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6
 configurerequest	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^configurerequest(XEvent *e) {$/;"	f	language:C++
 configurerequest	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^static void configurerequest(XEvent *e);$/;"	p	language:C++	file:
 countvisiblenonfloatingclients	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^int countvisiblenonfloatingclients(Client *c) {$/;"	f	language:C++
+CPPFLAGS	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/config.mk	/^CPPFLAGS = -DVERSION=\\"${VERSION}\\" ${XINERAMAFLAGS}$/;"	m	language:Make
 createmon	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^createmon(void) {$/;"	f	language:C++
 createmon	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^static Monitor *createmon(void);$/;"	p	language:C++	file:
 CurLast	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^      CurRzDnCorRight, CurRzMidUp, CurRzMidRight, CurRzMidDn, CurRzMidLeft, CurLast };        \/* cursors *\/$/;"	e	language:C++	enum:__anon1	file:
@@ -228,6 +231,7 @@ ignored_class_list	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/sour
 inch	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	int basew, baseh, incw, inch, maxw, maxh, minw, minh;$/;"	m	language:C++	struct:Client	file:
 incnmaster	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^incnmaster(const Arg *arg) {$/;"	f	language:C++
 incnmaster	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^static void incnmaster(const Arg *arg);$/;"	p	language:C++	file:
+INCS	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/config.mk	/^INCS = -I. -I\/usr\/include -I${X11INC}$/;"	m	language:Make
 incw	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	int basew, baseh, incw, inch, maxw, maxh, minw, minh;$/;"	m	language:C++	struct:Client	file:
 initfont	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^static void initfont(const char *fontstr);$/;"	p	language:C++	file:
 initfont2	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^initfont2(const char *fontstr, DC *dc) {$/;"	f	language:C++
@@ -265,7 +269,9 @@ layout	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	
 Layout	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^} Layout;$/;"	t	language:C++	typeref:struct:__anon14	file:
 layouts	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/config.h	/^static const Layout layouts[] = {$/;"	v	language:C++
 layouts	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/config.h	/^static const Layout layouts[] = {$/;"	v	language:C++
+LDFLAGS	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/config.mk	/^LDFLAGS = -s ${LIBS}$/;"	m	language:Make
 LENGTH	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	52;"	d	language:C++	file:
+LIBS	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/config.mk	/^LIBS = -L\/usr\/lib -lc -L${X11LIB} -lX11 ${XINERAMALIBS} -lXtst -lX11 -lm$/;"	m	language:Make
 limitexceeded	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^struct NumTags { char limitexceeded[LENGTH(tags) > 31 ? -1 : 1]; };$/;"	m	language:C++	struct:NumTags	file:
 lock_screen	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/config.h	/^static const char *lock_screen[]			=	{ "xscreensaver-command", "--lock", NULL };$/;"	v	language:C++
 lt	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	const Layout *lt[2]; \/\/ TODO: contains current and previous layout???$/;"	m	language:C++	struct:Monitor	file:
@@ -276,6 +282,7 @@ main	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^
 manage	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^manage(Window w, XWindowAttributes *wa) {$/;"	f	language:C++
 manage	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^static void manage(Window w, XWindowAttributes *wa);$/;"	p	language:C++	file:
 Manager	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^enum { Manager, Xembed, XembedInfo, XLast }; \/* Xembed atoms *\/$/;"	e	language:C++	enum:__anon5	file:
+MANPREFIX	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/config.mk	/^MANPREFIX = ${PREFIX}\/share\/man$/;"	m	language:Make
 mappingnotify	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^mappingnotify(XEvent *e) {$/;"	f	language:C++
 mappingnotify	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^static void mappingnotify(XEvent *e);$/;"	p	language:C++	file:
 maprequest	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^maprequest(XEvent *e) {$/;"	f	language:C++
@@ -364,6 +371,7 @@ oldx	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^
 oldy	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	int oldx, oldy, oldw, oldh;$/;"	m	language:C++	struct:Client	file:
 pop	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^pop(Client *c) {$/;"	f	language:C++
 pop	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^static void pop(Client *);$/;"	p	language:C++	file:
+PREFIX	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/config.mk	/^PREFIX = \/usr\/local$/;"	m	language:Make
 prevtag	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	int prevtag;$/;"	m	language:C++	struct:Monitor	file:
 propertynotify	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^propertynotify(XEvent *e) {$/;"	f	language:C++
 propertynotify	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^static void propertynotify(XEvent *e);$/;"	p	language:C++	file:
@@ -587,6 +595,7 @@ updatewindowtype	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source
 updatewmhints	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^static void updatewmhints(Client *c);$/;"	p	language:C++	file:
 updatewmhints	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^updatewmhints(Client *c) {$/;"	f	language:C++
 v	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	const void *v;$/;"	m	language:C++	union:__anon9	file:
+VERSION	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/config.mk	/^VERSION = 6.0$/;"	m	language:Make
 VERSION_MAJOR	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	78;"	d	language:C++	file:
 VERSION_MINOR	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	79;"	d	language:C++	file:
 view	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^static void view(const Arg *arg);$/;"	p	language:C++	file:
@@ -625,6 +634,8 @@ wx	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	i
 wy	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	int wx, wy, ww, wh;   \/* window area, ie where windows can be drawn  *\/$/;"	m	language:C++	struct:Monitor	file:
 x	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	int x, y, w, h;$/;"	m	language:C++	struct:Client	file:
 x	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	int x, y, w, h;$/;"	m	language:C++	struct:__anon11	file:
+X11INC	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/config.mk	/^X11INC = \/usr\/X11R6\/include$/;"	m	language:Make
+X11LIB	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/config.mk	/^X11LIB = \/usr\/X11R6\/lib$/;"	m	language:Make
 xatom	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^static Atom wmatom[WMLast], netatom[NetLast], xatom[XLast];$/;"	v	language:C++	file:
 Xembed	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^enum { Manager, Xembed, XembedInfo, XLast }; \/* Xembed atoms *\/$/;"	e	language:C++	enum:__anon5	file:
 XembedInfo	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^enum { Manager, Xembed, XembedInfo, XLast }; \/* Xembed atoms *\/$/;"	e	language:C++	enum:__anon5	file:
@@ -644,6 +655,8 @@ xerrorstart	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/d
 xerrorstart	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^xerrorstart(Display *dpy, XErrorEvent *ee) {$/;"	f	language:C++
 xerrorxlib	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^static int (*xerrorxlib)(Display *, XErrorEvent *);$/;"	v	language:C++	file:
 xfont	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^		XFontStruct *xfont;$/;"	m	language:C++	struct:__anon11::__anon12	file:
+XINERAMAFLAGS	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/config.mk	/^XINERAMAFLAGS = -DXINERAMA$/;"	m	language:Make
+XINERAMALIBS	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/config.mk	/^XINERAMALIBS = -L${X11LIB} -lXinerama$/;"	m	language:Make
 XLast	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^enum { Manager, Xembed, XembedInfo, XLast }; \/* Xembed atoms *\/$/;"	e	language:C++	enum:__anon5	file:
 y	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	int x, y, w, h;$/;"	m	language:C++	struct:Client	file:
 y	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	int x, y, w, h;$/;"	m	language:C++	struct:__anon11	file:
