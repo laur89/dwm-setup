@@ -41,16 +41,25 @@ sep_solid="\uE01A"
 sep_line="\uE01B"
 sep_bar="\uE020"
 
+declare -A MAILDIRS  # maps maildir location to its prefix to be used on the bar
+
 
 print_song_info() {
-    local mpc_query="$(mpc current -f '[[[[%artist% \uE01B ]%title%]]|[%file%]]' | head -c 75)"
+    local mpc_query title playing
 
-    if [[ -n "$mpc_query" ]]; then
+    #mpc_query="$(mpc current -f '[[[[%artist% \uE01B ]%title%]]|[%file%]]' | head -c 75)"
+    #mpc_query="$(mpc)"
+    #title="$(echo "$mpc_query" | sed -n 1p)"
+    playing="$(mpc | grep '\[playing\]')"
+
+    if [[ -n "$playing" ]]; then
         #song_info="Off"
+        mpc_query="$(mpc current -f '[[[[%artist% \uE01B ]%title%]]|[%file%]]' | head -c 75)"
         echo -ne "${colour_dgry}${sep_solid}${colour_cyn} ${glyph_msc} ${mpc_query} "
     fi
     #echo -ne "${colour_dgry}${sep_solid}${colour_cyn} ${glyph_msc} ${mpc_query} "
 }
+
 
 print_torrent_status() {
     local torrent_status="$(transmission-remote -l | awk -F "  +" '$5 ~ /^[0-9]/ {print $5}')"
@@ -61,20 +70,19 @@ print_torrent_status() {
     echo -ne "${colour_blk}${sep_solid}${colour_dylw} ${glyph_tor} ${torrent_status} "
 }
 
+
 print_email_unread() {
-    local counter=0
     # inbox & scoreboards
     local maildir unread_count mailEcho
 
     #echo -ne "${colour_dgry}${sep_solid}${colour_ylw} ${glyph_eml}"
     #for maildir in $(find $HOME/mail/work/ \( -path "*Inbox/new" -o -path "*Inbox/.sb/new" \) -type d);do
     #for maildir in $(find $HOME/mail/work/inbox/new -type d); do
-    for maildir in ${MAILDIRS_NEW[@]}; do
+    for maildir in "${!MAILDIRS[@]}"; do
         unread_count="$(ls "$maildir" | wc -l)"
         if [[ "$unread_count" -gt 0 ]]; then
-            mailEcho+=" ${MAIL_PREFIXES[$counter]}:${unread_count}"
+            mailEcho+=" ${MAILDIRS[$maildir]}:${unread_count}"
         fi
-        let counter+=1
     done
 
     if [[ -n "$mailEcho" ]]; then
@@ -82,10 +90,12 @@ print_email_unread() {
     fi
 }
 
+
 print_last_msg() {
     local last_msg="$(cat $HOME/.logs/irssi_pipe)"
     echo -ne "${colour_blk}${sep_solid}${colour_dylw} ${glyph_com} ${last_msg} "
 }
+
 
 print_mem_used() {
     local mem_used="$(free | grep Mem | awk '{printf "%.0f", $3/$2 * 100.0}')"
@@ -93,15 +103,18 @@ print_mem_used() {
     echo -ne "${sep_line} ${glyph_mem} ${mem_used}% "
 }
 
+
 print_volume() {
     local volume="$(get_vol)"
     echo -ne "${colour_dgry}${sep_solid}${colour_mag} ${glyph_vol} ${volume}% "
 }
 
+
 print_datetime() {
     local datetime="$(date "+%a %d ${sep_line} %H:%M")"
     echo -ne "${colour_blk}${sep_solid}${colour_wht} ${glyph_tim} ${datetime} "
 }
+
 
 convertTxRates() {
     local value="$1"
@@ -115,9 +128,11 @@ convertTxRates() {
     fi
 }
 
+
 print_cpu_used() {
     printf "%-14b" "${colour_dgry}${sep_solid}${colour_blu} ${glyph_cpu} ${cpu_used}%"
 }
+
 
 print_rx_rate() {
     if [[ -n "$rx_rate" ]]; then
@@ -125,15 +140,17 @@ print_rx_rate() {
     fi
 }
 
+
 print_tx_rate() {
     if [[ -n "$tx_rate" ]]; then
         printf "%-14b" "${colour_gry}${sep_line}${colour_red} ${glyph_ul} ${tx_rate}"
     fi
 }
 
+
 init() {
     nwInterfaceStats="$(find_connected_if_stats)"
-    if [[ -n "$nwInterfaceStats" ]]; then
+    if [[ $? -eq 0 && -n "$nwInterfaceStats" ]]; then
         rx_old="$(cat -- $nwInterfaceStats/rx_bytes)"
         tx_old="$(cat -- $nwInterfaceStats/tx_bytes)"
     else
@@ -143,23 +160,32 @@ init() {
 
     # mail constants:
     if is_work; then
-        MAIL_PREFIXES=( \
-            "ix" \
-            "sb"  \
-            )
 
-        MAILDIRS_NEW=( \
-            "$HOME/mail/work/Inbox/new" \
-            "$HOME/mail/work/Inbox/.sb/new" \
-            )
+        MAILDIRS=(
+            [$HOME/mail/work/Inbox/new]='ix'
+            [$HOME/mail/work/Inbox/.sb/new]='sb'
+        )
     else
-        MAILDIRS_NEW=( \
-            )
+        MAILDIRS=(
+        )
     fi
 }
 
+
 ## ENTRY:
 #####################
+# env vars import has to be the first thing:
+if [[ "$__ENV_VARS_LOADED_MARKER_VAR" != "loaded" ]]; then
+    _global_env_var_loc='/etc/.bash_env_vars'
+
+    if [[ -r "$_global_env_var_loc" ]]; then
+        source "$_global_env_var_loc"
+    else
+        echo -e "\nError: env vars file \"$_global_env_var_loc\" not found! Abort."
+        exit 1
+    fi
+fi
+####
 # import common:
 if ! type __COMMONS_LOADED_MARKER > /dev/null 2>&1; then
     if [[ -r "$_SCRIPTS_COMMONS" ]]; then
@@ -178,7 +204,8 @@ init  # we don't want that shit in the loop
 
 while true; do
     nwInterfaceStats="$(find_connected_if_stats)"  # keep within the loop!
-    if [[ -n "$nwInterfaceStats" ]]; then
+
+    if [[ $? -eq 0 && -n "$nwInterfaceStats" ]]; then
         # get new rx/tx counts
         rx_now=$(cat -- $nwInterfaceStats/rx_bytes)
         tx_now=$(cat -- $nwInterfaceStats/tx_bytes)
@@ -226,7 +253,7 @@ $(print_datetime)"
     cpu_total_old=$cpu_total_now
 
     # loop stats every 1 second:
-    sleep 1
+    sleep 1.5
 done
 
 exit 0
