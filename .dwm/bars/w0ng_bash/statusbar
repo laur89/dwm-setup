@@ -42,7 +42,7 @@ sep_line="\uE01B"
 sep_bar="\uE020"
 
 declare -A MAILDIRS  # maps maildir location to its prefix to be used on the bar
-
+SELF="$(basename "$0")"
 
 print_song_info() {
     local mpc_query title playing
@@ -98,7 +98,8 @@ print_last_msg() {
 
 
 print_mem_used() {
-    local mem_used="$(free | grep Mem | awk '{printf "%.0f", $3/$2 * 100.0}')"
+    #local mem_used="$(free | grep Mem | awk '{printf "%.0f", $3/$2 * 100.0}')"
+    local mem_used="$(free | awk '/Mem/ {printf "%.0f", $3/$2 * 100.0}')"
 
     echo -ne "${sep_line} ${glyph_mem} ${mem_used}% "
 }
@@ -196,7 +197,8 @@ if ! type __COMMONS_LOADED_MARKER > /dev/null 2>&1; then
     fi
 fi
 
-lock_process dwm_statusbar
+lock_process "$SELF"
+check_progs_installed xsetroot mpc || exit 1
 
 # setup:
 init  # we don't want that shit in the loop
@@ -223,7 +225,7 @@ while true; do
     # get new cpu idle and total usage
     #eval "$(awk '/^cpu /{print "cpu_idle_now=" $5 "; cpu_total_now=" $2+$3+$4+$5 }' /proc/stat)"
     eval "$(awk '/^cpu /{printf "cpu_idle_now=%.0f; cpu_total_now=%.0f", $5, $2+$3+$4+$5 }' /proc/stat)" # printf removes the scientific notation;
-    cpu_interval="$((cpu_total_now-${cpu_total_old:-0}))"
+    cpu_interval="$(( cpu_total_now - ${cpu_total_old:-0} ))"
     # calculate cpu usage (%)
     let cpu_used="100 * ($cpu_interval - ($cpu_idle_now-${cpu_idle_old:-0})) / $cpu_interval"
 
