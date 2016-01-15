@@ -428,7 +428,7 @@ scratchpadname	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/config.h
 scratchpadname	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/config.h	/^static const char scratchpadname[] = "scratchpad";$/;"	v	language:C++
 scratchtag	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^static unsigned int scratchtag = 1 << LENGTH(tags);$/;"	v	language:C++	file:
 screen	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^static int screen;$/;"	v	language:C++	file:
-screenshot	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/config.h	/^static const char *screenshot[]		=	{ "\/data\/dev\/scripts\/system\/screenshot.sh", NULL };$/;"	v	language:C++
+screenshot	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/config.h	/^static const char *screenshot[]		=	{ "\/data\/dev\/scripts\/system\/screenshot.sh", "--auto", NULL };$/;"	v	language:C++
 sel	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	Client *sel; \/\/ != focused!$/;"	m	language:C++	struct:Monitor	file:
 selclt	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^unsigned int selclt;$/;"	v	language:C++
 sellt	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	unsigned int sellt; \/\/ TODO: selected layout? saab olla 0 või 1$/;"	m	language:C++	struct:Monitor	file:

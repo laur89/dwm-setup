@@ -246,7 +246,7 @@ static const char *mpcprev[]       = { "mpc", "-q", "prev", NULL };
 static const char *mpcnext[]       = { "mpc", "-q", "next", NULL };
 
 // siit minu omad:
-static const char *screenshot[]		=	{ "/data/dev/scripts/system/screenshot.sh", NULL };
+static const char *screenshot[]		=	{ "/data/dev/scripts/system/screenshot.sh", "--auto", NULL };
 static const char *calendar[]  		= 	{ "gsimplecal", NULL };
 static const char *lock_screen[]			=	{ "xscreensaver-command", "--lock", NULL };
 
