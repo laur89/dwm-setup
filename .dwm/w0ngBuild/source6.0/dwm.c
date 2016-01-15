@@ -3034,18 +3034,14 @@ restack(Monitor *m) {
 void
 run(void) {
 	XEvent ev;
-    /*XAnyEvent e;*/
-    /*Client *c;*/
 
 	/* main event loop */
 	XSync(dpy, False);
 	while(running && !XNextEvent(dpy, &ev)) {
         /*//TODO: deleteme:*/
-        /*fprintf(stderr, "  @ run(): event type: %d\n", ev.type);*/
-        /*fprintf(stderr, "  @ run(): curview: %d\n", selmon->curtag);*/
-        /*e = ev.xany;*/
-        /*if ( e.window && (c = wintoclient(e.window)) ) {*/
-            /*if ( isIntelliJ(c) ) continue;*/
+        /*if (ev.type != 6 ) {*/
+            /*fprintf(stderr, "  @ run(): event type: %d\n", ev.type);*/
+            /*fprintf(stderr, "  @ run(): curview: %d\n", selmon->curtag);*/
         /*}*/
 		if(handler[ev.type])
 			handler[ev.type](&ev); /* call handler */
