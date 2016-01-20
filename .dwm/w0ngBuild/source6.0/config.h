@@ -338,6 +338,7 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask|ControlMask,	    XK_m,      				toggle_mff, 	    NULL },          // toggle mouse follows focus
     { MODKEY,                           XK_z,                   toggleview,         {.ui = 1 << 8} },
     { MODKEY|ShiftMask,                  XK_z,                   tag,                {.ui = 1 << 8} },
+  { MODKEY|AltMask,       XK_F12,             updatesystray,         {0} },
     TAGKEYS(                  XK_1,                             0)
     TAGKEYS(                  XK_2,                             1)
     TAGKEYS(                  XK_3,                             2)
