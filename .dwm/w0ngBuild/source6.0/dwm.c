@@ -1936,6 +1936,11 @@ focusstackwithoutrising(const Arg *arg) {
 					c = i;
 	}
 	if(c) {
+        if ( c != clt[selclt] ) {
+            // note in focusstackwihtoutrising() we only change the non-selected client:
+			clt[selclt^1] = c;
+		}
+
 		focus(c);
         // do not call:
 		/*restack(selmon);*/
@@ -4464,36 +4469,24 @@ getWindowIcon (Client *c) {
 }
 
 void altTab() {
-     /*selmon->selclt ^= 1;*/
-
-	/*if(selmon->clt[selmon->selclt]) {*/
-        /*focus(selmon->clt[selmon->selclt]);*/
-		/*restack(selmon);*/
-        /*return;*/
-    /*}*/
-
-     /*selmon->selclt ^= 1;*/
-    /*return;*/
-
-
-    Monitor *newMon, *prevMon;
+    Monitor *prevMon;
     prevMon = selmon;
+    Client *clientToJumpTo;
 
- 	selclt ^= 1;
-	if(clt[selclt]) {
-        focus(clt[selclt]);
-        newMon = wintomon(clt[selclt]->win);
-        restack(newMon);
-        if (newMon != prevMon) {
-            if (mouse_follows_focus || !transfer_pointer) return; // no point in moving cursor, if it's already following focus;
+    if ((clientToJumpTo = clt[selclt^1]) != selmon->sel && clientToJumpTo) {
+        selclt ^= 1;
+
+        focus(clientToJumpTo);
+        restack(selmon);
+        if (selmon != prevMon && !(mouse_follows_focus || !transfer_pointer)) {
             transferPointerToNextMon(prevMon);
         }
-
-        return;
+    } else if ((clientToJumpTo = clt[selclt]) != selmon->sel && clientToJumpTo) {
+        // this state is if stack was moved via focusstackwithoutraising
+        focus(clientToJumpTo);
+        restack(selmon);
     }
 
-    // reset:
- 	selclt ^= 1;
     return;
 }
 
