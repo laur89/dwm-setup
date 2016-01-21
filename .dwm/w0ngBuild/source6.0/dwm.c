@@ -3935,7 +3935,7 @@ updategeom(void) {
 		nn = j;
 
         //  TODO: without this, adding/removing monitor will leave systray blank on one scrn;
-        if (showsystray && nn != n) {
+        if (showsystray && systray && systray->win && nn != n) {
             XMapRaised(dpy, systray->win);
         }
 
