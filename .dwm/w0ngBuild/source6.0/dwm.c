@@ -3933,6 +3933,12 @@ updategeom(void) {
 				memcpy(&unique[j++], &info[i], sizeof(XineramaScreenInfo));
 		XFree(info);
 		nn = j;
+
+        //  TODO: without this, adding/removing monitor will leave systray blank on one scrn;
+        if (showsystray && nn != n) {
+            XMapRaised(dpy, systray->win);
+        }
+
 		if(n <= nn) {
 			for(i = 0; i < (nn - n); i++) { /* new monitors available */
 				for(m = mons; m && m->next; m = m->next);
@@ -4183,7 +4189,6 @@ updatesystray(void) {
    /* redraw background */
    XSetForeground(dpy, dc.gc, dc.colors[0][ColBG]);
    XFillRectangle(dpy, systray->win, dc.gc, 0, 0, w, bh);
-   XMapRaised(dpy, systray->win);  //  TODO: without this, adding/removing monitor will leave systray blank on one scrn;
    XSync(dpy, False);
 }
 
