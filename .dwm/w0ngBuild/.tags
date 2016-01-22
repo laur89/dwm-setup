@@ -369,6 +369,7 @@ oldstate	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.
 oldw	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	int oldx, oldy, oldw, oldh;$/;"	m	language:C++	struct:Client	file:
 oldx	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	int oldx, oldy, oldw, oldh;$/;"	m	language:C++	struct:Client	file:
 oldy	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	int oldx, oldy, oldw, oldh;$/;"	m	language:C++	struct:Client	file:
+passthru_keystroke	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^void passthru_keystroke(Display * dpy, XEvent * ev)$/;"	f	language:C++
 pop	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^pop(Client *c) {$/;"	f	language:C++
 pop	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^static void pop(Client *);$/;"	p	language:C++	file:
 PREFIX	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/config.mk	/^PREFIX = \/usr\/local$/;"	m	language:Make
@@ -491,6 +492,7 @@ stext	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/
 storeFloats	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^static void storeFloats(Client *c);$/;"	p	language:C++	file:
 storeFloats	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^void storeFloats(Client *c) {$/;"	f	language:C++
 sw	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^static int sw, sh;           \/* X display screen geometry width, height *\/$/;"	v	language:C++	file:
+swallow_keystroke	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^void swallow_keystroke(Display * dpy, XEvent * ev)$/;"	f	language:C++
 symbol	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^	const char *symbol;$/;"	m	language:C++	struct:__anon14	file:
 synergy_log_file	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/config.h	/^const char synergy_log_file[] = "\/var\/log\/custom_logs\/synergy_server.log";$/;"	v	language:C++
 SYSTEM_TRAY_REQUEST_DOCK	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	62;"	d	language:C++	file:

@@ -4468,7 +4468,7 @@ getWindowIcon (Client *c) {
     return pxmp;
 }
 
-void altTab() {
+void altTab_2() {
     Monitor *prevMon = selmon;
     Client *clientToJumpTo;
 
@@ -4509,15 +4509,29 @@ void tab_back(void) {
     return;
 }
 
-void altTab_2() {
+void swallow_keystroke(Display * dpy, XEvent * ev)
+{
+    fprintf(stderr, "intercepted keys\n");
+    XAllowEvents(dpy, AsyncKeyboard, ev->xkey.time);
+    /* burp */
+}
+
+void passthru_keystroke(Display * dpy, XEvent * ev)
+{
+    /* pass it through to the app, as if we never intercepted it */
+    XAllowEvents(dpy, ReplayKeyboard, ev->xkey.time);
+    XFlush(dpy); /* don't forget! */
+}
+
+void altTab() {
    fprintf(stderr, "\nsending mod-alt-c-s-ü:\n\n");
 
 
     /*writeToClipBoard("leeeeelbawks");*/
 
     /*sendKeyEvent(XK_F7, ControlMask|AltMask|ShiftMask, KeyPress);*/
-    sendKeyEvent(XK_f, Mod4Mask, KeyPress);
-    return;
+    /*sendKeyEvent(XK_f, Mod4Mask, KeyPress);*/
+    /*return;*/
 
 
 
@@ -4574,15 +4588,49 @@ void altTab_2() {
 
     int c = 0; // TODO deleteme
     do {
-        fprintf(stderr, "new cycle of do-loop.\n");
+        if (c > 9) {
+            fprintf(stderr, "     exiting because of safety counter count %d\n ", c);
+            break;
+        }
+
+        fprintf(stderr, "new cycle of do-loop, waiting for event.\n");
+        XNextEvent(dpy, &ev);
+
         /*XMaskEvent(dpy, MOUSEMASK|ExposureMask|SubstructureRedirectMask, &ev);*/
         /*XMaskEvent(dpy, AltMask|Mod1Mask|ExposureMask|SubstructureRedirectMask|KeyPressMask|KeyReleaseMask, &ev);*/
-        XMaskEvent(dpy, KeyPressMask|KeyReleaseMask, &ev);
+
+
+        if(!(ev.type == KeyPress || ev.type == KeyRelease)) {
+            fprintf(stderr, "no keypressnorrelease detected; eventtype: %d\n", ev.type);
+            c++;
+            continue;
+        }
 
         keySym = XKeycodeToKeysym(dpy, ev.xkey.keycode, 0);
         keyMod = ev.xkey.state;
 
         fprintf(stderr, "detected key: %d\n", keySym);
+
+        if(ev.type == KeyPress) {
+            fprintf(stderr, "detected keypress: %d\n", keySym);
+        } else if(ev.type == KeyRelease) {
+            fprintf(stderr, "detected key release: %d\n", keySym);
+        }
+
+            if(keySym == XK_Tab && keyMod & Mod1Mask)
+            {
+
+                fprintf(stderr, "tab + alt detected, swallow\n");
+                swallow_keystroke(dpy, &ev);
+            }
+            else
+            {
+                fprintf(stderr, "NO tab + alt detected, passing thorugh; keysym: %d, state: %d\n", keySym, keyMod);
+                passthru_keystroke(dpy, &ev);
+            }
+        c++;
+        continue;
+
         switch (ev.type) {
             /*case ConfigureRequest:*/
             /*case Expose:*/
