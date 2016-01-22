@@ -4469,8 +4469,7 @@ getWindowIcon (Client *c) {
 }
 
 void altTab() {
-    Monitor *prevMon;
-    prevMon = selmon;
+    Monitor *prevMon = selmon;
     Client *clientToJumpTo;
 
     if ((clientToJumpTo = clt[selclt^1]) != selmon->sel && clientToJumpTo) {
