@@ -270,6 +270,7 @@ static void tab_fwd(void);
 static void focusmon(const Arg *arg);
 static void focusstack(const Arg *arg);
 static void focusstackwithoutrising(const Arg *arg);
+static void focusstackfloatingonly(const Arg *arg);
 static Atom getatomprop(Client *c, Atom prop);
 static unsigned int getsystraywidth();
 static void removesystrayicon(Client *i);
@@ -1948,6 +1949,39 @@ focusstackwithoutrising(const Arg *arg) {
 }
 
 void
+focusstackfloatingonly(const Arg *arg) {
+	Client *c = NULL, *i;
+
+	if(!selmon->sel)
+		return;
+	if(arg->i > 0) {
+		for(c = selmon->sel->next; c && (!ISVISIBLE(c) || c->isInSkipList || !c->isfloating); c = c->next);
+		if(!c)
+			for(c = selmon->clients; c && (!ISVISIBLE(c) || c->isInSkipList || !c->isfloating); c = c->next);
+	}
+	else {
+		for(i = selmon->clients; i != selmon->sel; i = i->next)
+			if(ISVISIBLE(i) && !i->isInSkipList && i->isfloating)
+				c = i;
+		if(!c)
+			for(; i; i = i->next)
+                if(ISVISIBLE(i) && !i->isInSkipList && i->isfloating)
+					c = i;
+	}
+	if(c) {
+        if ( c != clt[selclt] ) {
+            // note in focusstackwihtoutrising() we only change the non-selected client:
+			clt[selclt^1] = c;
+		}
+
+		focus(c);
+        // do not call:
+		/*restack(selmon);*/
+	}
+}
+
+// TODO: now this one is avoiding floating clients, if NOT in floating mode
+void
 focusstack(const Arg *arg) {
 	Client *c = NULL, *i;
 
@@ -1956,17 +1990,17 @@ focusstack(const Arg *arg) {
     }
 
 	if(arg->i > 0) {
-		for(c = selmon->sel->next; c && (!ISVISIBLE(c) || c->isInSkipList); c = c->next);
+		for(c = selmon->sel->next; c && (!ISVISIBLE(c) || c->isInSkipList || (selmon->lt[selmon->sellt]->arrange && c->isfloating)); c = c->next);
 		if(!c)
-			for(c = selmon->clients; c && (!ISVISIBLE(c) || c->isInSkipList); c = c->next);
+			for(c = selmon->clients; c && (!ISVISIBLE(c) || c->isInSkipList || (selmon->lt[selmon->sellt]->arrange && c->isfloating)); c = c->next);
 	}
 	else {
 		for(i = selmon->clients; i != selmon->sel; i = i->next)
-			if(ISVISIBLE(i) && !i->isInSkipList)
+			if(ISVISIBLE(i) && !i->isInSkipList && (selmon->lt[selmon->sellt]->arrange && c->isfloating))
 				c = i;
 		if(!c)
 			for(; i; i = i->next)
-                if(ISVISIBLE(i) && !i->isInSkipList)
+                if(ISVISIBLE(i) && !i->isInSkipList && (selmon->lt[selmon->sellt]->arrange && c->isfloating))
 					c = i;
 	}
 
@@ -2415,7 +2449,12 @@ manage(Window w, XWindowAttributes *wa) {
 	XMapWindow(dpy, c->win);
 
     if(!c->isInSkipList) {
-        focus(NULL);
+        // TODO: focus, if the new window is floating
+        if(c->isfloating) {
+            focus(c);
+        } else {
+            focus(NULL);  // TODO: why NULL?
+        }
     }
 }
 

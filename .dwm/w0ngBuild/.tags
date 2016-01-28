@@ -180,6 +180,8 @@ focusmon	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.
 focusmon_	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^focusmon_(const Arg *arg) {$/;"	f	language:C++
 focusstack	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^focusstack(const Arg *arg) {$/;"	f	language:C++
 focusstack	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^static void focusstack(const Arg *arg);$/;"	p	language:C++	file:
+focusstackfloatingonly	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^focusstackfloatingonly(const Arg *arg) {$/;"	f	language:C++
+focusstackfloatingonly	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^static void focusstackfloatingonly(const Arg *arg);$/;"	p	language:C++	file:
 focusstackwithoutrising	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^focusstackwithoutrising(const Arg *arg) {$/;"	f	language:C++
 focusstackwithoutrising	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^static void focusstackwithoutrising(const Arg *arg);$/;"	p	language:C++	file:
 focuswin	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^focuswin(const Arg* arg){$/;"	f	language:C++
