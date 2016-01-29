@@ -1955,17 +1955,17 @@ focusstackfloatingonly(const Arg *arg) {
 	if(!selmon->sel)
 		return;
 	if(arg->i > 0) {
-		for(c = selmon->sel->next; c && (!ISVISIBLE(c) || c->isInSkipList || !c->isfloating); c = c->next);
+		for(c = selmon->sel->next; c && (!ISVISIBLE(c) || c->isInSkipList || (selmon->lt[selmon->sellt]->arrange && !c->isfloating)); c = c->next);
 		if(!c)
-			for(c = selmon->clients; c && (!ISVISIBLE(c) || c->isInSkipList || !c->isfloating); c = c->next);
+			for(c = selmon->clients; c && (!ISVISIBLE(c) || c->isInSkipList || (selmon->lt[selmon->sellt]->arrange && !c->isfloating)); c = c->next);
 	}
 	else {
 		for(i = selmon->clients; i != selmon->sel; i = i->next)
-			if(ISVISIBLE(i) && !i->isInSkipList && i->isfloating)
+			if(ISVISIBLE(i) && !i->isInSkipList && (!selmon->lt[selmon->sellt]->arrange || i->isfloating))
 				c = i;
 		if(!c)
 			for(; i; i = i->next)
-                if(ISVISIBLE(i) && !i->isInSkipList && i->isfloating)
+                if(ISVISIBLE(i) && !i->isInSkipList && (!selmon->lt[selmon->sellt]->arrange || i->isfloating))
 					c = i;
 	}
 	if(c) {
@@ -1996,11 +1996,11 @@ focusstack(const Arg *arg) {
 	}
 	else {
 		for(i = selmon->clients; i != selmon->sel; i = i->next)
-			if(ISVISIBLE(i) && !i->isInSkipList && (selmon->lt[selmon->sellt]->arrange && c->isfloating))
+			if(ISVISIBLE(i) && !i->isInSkipList && (!selmon->lt[selmon->sellt]->arrange || !i->isfloating))
 				c = i;
 		if(!c)
 			for(; i; i = i->next)
-                if(ISVISIBLE(i) && !i->isInSkipList && (selmon->lt[selmon->sellt]->arrange && c->isfloating))
+                if(ISVISIBLE(i) && !i->isInSkipList && (!selmon->lt[selmon->sellt]->arrange || !i->isfloating))
 					c = i;
 	}
 
