@@ -281,10 +281,10 @@ static Key keys[] = {
   { MODKEY|ShiftMask,       XK_b,             togglebar,      {0} },
   { MODKEY,                 XK_j,             focusstack,     {.i = +1 } },
   { MODKEY,                 XK_k,             focusstack,     {.i = -1 } },
-  { MODKEY|ControlMask,                 XK_j,             focusstackwithoutrising,     {.i = +1 } },
-  { MODKEY|ControlMask,                 XK_k,             focusstackwithoutrising,     {.i = -1 } },
-  { MODKEY|ControlMask|ShiftMask,                 XK_j,             focusstackfloatingonly,     {.i = +1 } },
-  { MODKEY|ControlMask|ShiftMask,                 XK_k,             focusstackfloatingonly,     {.i = -1 } },
+  { MODKEY|ControlMask|ShiftMask,                 XK_j,             focusstackwithoutrising,     {.i = +1 } },
+  { MODKEY|ControlMask|ShiftMask,                 XK_k,             focusstackwithoutrising,     {.i = -1 } },
+  { MODKEY|ControlMask,                 XK_j,             focusstackfloatingonly,     {.i = +1 } },
+  { MODKEY|ControlMask,                 XK_k,             focusstackfloatingonly,     {.i = -1 } },
   // support exists, simply not using:
     /*
 	 *{ Modkey,           			    XK_h,   				cycle,  			{.i = -1} },
