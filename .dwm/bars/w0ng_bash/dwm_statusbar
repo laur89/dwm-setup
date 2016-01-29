@@ -43,6 +43,7 @@ sep_bar="\uE020"
 
 declare -A MAILDIRS  # maps maildir location to its prefix to be used on the bar
 SELF="$(basename "$0")"
+INTERVAL=1.5
 
 print_song_info() {
     local mpc_query title playing
@@ -254,8 +255,8 @@ $(print_datetime)"
     cpu_idle_old=$cpu_idle_now
     cpu_total_old=$cpu_total_now
 
-    # loop stats every 1 second:
-    sleep 1.5
+    # loop stats every INTERVAL:
+    sleep $INTERVAL
 done
 
 exit 0
