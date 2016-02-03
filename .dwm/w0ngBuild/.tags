@@ -100,7 +100,7 @@ configurenotify	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6
 configurenotify	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^static void configurenotify(XEvent *e);$/;"	p	language:C++	file:
 configurerequest	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^configurerequest(XEvent *e) {$/;"	f	language:C++
 configurerequest	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^static void configurerequest(XEvent *e);$/;"	p	language:C++	file:
-countvisiblenonfloatingclients	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^int countvisiblenonfloatingclients(Client *c) {$/;"	f	language:C++
+countvisiblenonfloatingclients	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^int countvisiblenonfloatingclients() {$/;"	f	language:C++
 CPPFLAGS	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/config.mk	/^CPPFLAGS = -DVERSION=\\"${VERSION}\\" ${XINERAMAFLAGS}$/;"	m	language:Make
 createmon	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^createmon(void) {$/;"	f	language:C++
 createmon	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^static Monitor *createmon(void);$/;"	p	language:C++	file:

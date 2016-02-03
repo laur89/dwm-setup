@@ -2181,11 +2181,11 @@ incnmaster(const Arg *arg) {
     int j;
     // skip if in monocle, grid or float layout:
     if( selmon->lt[selmon->sellt]->arrange == monocle
-            || selmon->lt[selmon->sellt]->arrange == NULL
+            || !selmon->lt[selmon->sellt]->arrange
             || selmon->lt[selmon->sellt]->arrange == gaplessgrid)
         return;
 
-    j = countvisiblenonfloatingclients(selmon->clients);
+    j = countvisiblenonfloatingclients();
     // don't allow increasing nmasters above the nr of current clients:
     if (arg->i > 0 && selmon->nmasters[selmon->curtag] == j)
         return;
@@ -3312,9 +3312,11 @@ void restoreFloats(Client *c) {
     restoreFloats(c->snext);
 }
 
-int countvisiblenonfloatingclients(Client *c) {
-    int i = 0;
-    for(; c; i += (ISVISIBLE(c) && !c->isfloating) ? 1 : 0, c = c->next);
+int countvisiblenonfloatingclients() {
+    int i;
+    Client *c;
+
+    for(i = 0, c = selmon->clients; c; i += (ISVISIBLE(c) && !c->isfloating) ? 1 : 0, c = c->next);
     return i;
 }
 
@@ -3322,7 +3324,7 @@ void setcfact(const Arg *arg) {
     Client *c;
     int i, j;
     // count visible non-floating clients:
-    j = countvisiblenonfloatingclients(selmon->clients);
+    j = countvisiblenonfloatingclients();
 
     // block cfact modifications if result isn't instantaneously observable:
     if ( j < 2 || !selmon->sel
@@ -3376,7 +3378,7 @@ void
 setmfact(const Arg *arg) {
 	float f;
     int j;
-    j = countvisiblenonfloatingclients(selmon->clients);
+    j = countvisiblenonfloatingclients();
 
     // block mfact modifications if result isn't instantaneously observable:
     if(!arg || j < 2
