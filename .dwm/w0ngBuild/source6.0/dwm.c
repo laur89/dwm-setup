@@ -1969,6 +1969,7 @@ focusstackfloatingonly(const Arg *arg) {
 					c = i;
 	}
 	if(c) {
+        // TODO: do we want to keep the alt-tab window logic the same as in focusstackwithoutrising()?
         if ( c != clt[selclt] ) {
             // note in focusstackwihtoutrising() we only change the non-selected client:
 			clt[selclt^1] = c;
@@ -3324,13 +3325,12 @@ void setcfact(const Arg *arg) {
     j = countvisiblenonfloatingclients(selmon->clients);
 
     // block cfact modifications if result isn't instantaneously observable:
-    if ( j < 2 || !selmon->sel ) return;
-    if( selmon->lt[selmon->sellt]->arrange == monocle/* || selmon->lt[selmon->sellt]->arrange == NULL*/
+    if ( j < 2 || !selmon->sel
+            || selmon->lt[selmon->sellt]->arrange == monocle/* || selmon->lt[selmon->sellt]->arrange == NULL*/
             || selmon->lt[selmon->sellt]->arrange == gaplessgrid)
         return;
 
-    for( i = 0, c = selmon->clients; c; c = c->next ) {
-        if(!ISVISIBLE(c)) continue;
+    for( i = 0, c = selmon->clients; c && ISVISIBLE(c); c = c->next ) {
         if (c == selmon->sel) {
             // check whether master or slave client selected:
             if ( (i < selmon->nmasters[selmon->curtag] && selmon->nmasters[selmon->curtag] < 2) // ie we're processing master area client and there's less than 2 clients;
