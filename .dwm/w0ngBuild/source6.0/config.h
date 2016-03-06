@@ -169,10 +169,10 @@ static const Rule rules[] = {
 
 	{ "SWT",     		NULL,       "CollabNet GitEye",       1 << 7,     False,      False,		-1 },
 
-	{ "Keepassx",		NULL,		"Auto-Type",		NULL,			True,		True,		-1 },
-	{ "Keepassx",		NULL,		"pass",		1 << 8,			True,		True,		-1 },
-	//{ "Keepassx",		NULL,		"passwd_db.kdbx - KeePassX",		1 << 8,			True,		True,		-1 },
-	{ "keepassx",		NULL,		NULL,		1 << 8,			True,		True,		-1 },
+	//{ "keepassx",		NULL,		NULL,		1 << 8,			True,		True,		-1 },
+	{ "keepassx",		"keepassx",		"passwd_db.kdbx",		1 << 8,			True,		True,		-1 },
+	{ "keepassx",		"keepassx",		"Laur's passes",		1 << 8,			True,		True,		-1 },
+	{ "keepassx",		"keepassx",		"Auto-Type - KeePassX",		NULL,			True,		True,		-1 },
 	{ "Truecrypt",		NULL,		NULL,		1 << 8,			True,		True,		-1 },
 	{ "Deluge",		NULL,		NULL,		1 << 8,			True,		True,		-1 },
 	{ "Transmission-gtk",		NULL,		NULL,		1 << 8,			True,		True,		-1 },
@@ -185,7 +185,6 @@ static const Rule rules[] = {
 	{ "Gsimplecal",		NULL,		NULL,		0,			True,		False,		-1 },
 	{ "XCalc",		NULL,		NULL,		0,			True,		False,		-1 },
 
-	//{ NULL,		NULL,		"Sidewise",	    0,	  	True,		False, 		-1 },   // set Sidewise (chromium extension) floating
 	//{ "Google-chrome",	NULL,		NULL,		1 << 0,		False,		False,		-1 },
 	//{ "Qpaeq",			NULL,		NULL,		0,			True,		True,		-1 },
 	//{ "Pavucontrol",	NULL,		NULL,		0,			True,		True,		-1 },
@@ -435,6 +434,7 @@ static Button buttons[] = {
 const char client_class_idea[] = "sun-awt-X11-XFramePeer";
 const char client_class_notifyd[] = "xfce4-notifyd";
 const char client_class_gsimplecal[] = "gsimplecal";
+const char client_class_copyq[] = "copyq";
 
 /*
  *List of window classes that should not be interactive, ie not be drawn onto tabbar,
@@ -442,7 +442,8 @@ const char client_class_gsimplecal[] = "gsimplecal";
  */
 const char *ignored_class_list[] = {
     client_class_notifyd,
-    client_class_gsimplecal
+    client_class_gsimplecal,
+    client_class_copyq
 };
 
 // synergy logfile location: // TODO: delete

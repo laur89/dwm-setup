@@ -432,6 +432,10 @@ applyrules(Client *c) {
 			c->isfloating = r->isfloating;
 			c->iscentred = r->iscentred;
 			c->tags |= r->tags;
+
+            // TODO: debug:
+            /*fprintf(stderr, "\"%d\" rule index: \n", i);*/
+
 			for(m = mons; m && m->num != r->monitor; m = m->next);
 			if(m)
 				c->mon = m;
@@ -444,9 +448,13 @@ applyrules(Client *c) {
     }
 
 	if(ch.res_name) {
-        /*fprintf(stderr, "    !applyrule: name \"%s\"\n", ch.res_name);*/
+        /*fprintf(stderr, "    !applyrule: instance \"%s\"\n", ch.res_name);*/
 		XFree(ch.res_name);
     }
+
+	/*if(c->name) {*/
+        /*fprintf(stderr, "    !applyrule: title \"%s\"\n", c->name);*/
+    /*}*/
 	c->tags = c->tags & TAGMASK ? c->tags & TAGMASK : c->mon->tagset[c->mon->seltags];
 }
 
