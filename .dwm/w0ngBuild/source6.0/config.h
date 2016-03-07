@@ -178,6 +178,7 @@ static const Rule rules[] = {
 	{ "Transmission-gtk",		NULL,		NULL,		1 << 8,			True,		True,		-1 },
 	{ "Copyq",		NULL,		NULL,		NULL,			True,		False,		-1 },
 	{ "Shutter",		NULL,		NULL,		NULL,			True,		False,		-1 },
+	{ "Main.py",		"guake",		"Guake!",		NULL,			True,		False,		-1 },
 
 	{ "Galculator",		NULL,		NULL,		0,			True,		True,		-1 },
 	{ NULL,		NULL,		"MonoDevelop External Console",		1 << 1,			True,		False,		-1 },
