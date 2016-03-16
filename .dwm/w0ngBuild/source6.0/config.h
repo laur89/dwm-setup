@@ -443,8 +443,7 @@ const char client_class_copyq[] = "copyq";
  */
 const char *ignored_class_list[] = {
     client_class_notifyd,
-    client_class_gsimplecal,
-    client_class_copyq
+    client_class_gsimplecal
 };
 
 // synergy logfile location: // TODO: delete
