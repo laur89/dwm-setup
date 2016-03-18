@@ -185,6 +185,7 @@ static const Rule rules[] = {
 
 	{ "Gsimplecal",		NULL,		NULL,		0,			True,		False,		-1 },
 	{ "XCalc",		NULL,		NULL,		0,			True,		False,		-1 },
+	{ "Screenkey",		"screenkey",		"screenkey",		NULL,			True,		False,		-1 },
 
 	//{ "Google-chrome",	NULL,		NULL,		1 << 0,		False,		False,		-1 },
 	//{ "Qpaeq",			NULL,		NULL,		0,			True,		True,		-1 },
@@ -435,6 +436,7 @@ static Button buttons[] = {
 const char client_class_idea[] = "sun-awt-X11-XFramePeer";
 const char client_class_notifyd[] = "xfce4-notifyd";
 const char client_class_gsimplecal[] = "gsimplecal";
+const char client_class_screenkey[] = "screenkey";
 const char client_class_copyq[] = "copyq";
 
 /*
@@ -443,7 +445,8 @@ const char client_class_copyq[] = "copyq";
  */
 const char *ignored_class_list[] = {
     client_class_notifyd,
-    client_class_gsimplecal
+    client_class_gsimplecal,
+    client_class_screenkey
 };
 
 // synergy logfile location: // TODO: delete
