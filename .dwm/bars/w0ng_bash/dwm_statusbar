@@ -100,7 +100,12 @@ print_last_msg() {
 
 print_mem_used() {
     #local mem_used="$(free | grep Mem | awk '{printf "%.0f", $3/$2 * 100.0}')"
-    local mem_used="$(free | awk '/Mem/ {printf "%.0f", $3/$2 * 100.0}')"
+    #local mem_used="$(free | awk '/Mem/ {printf "%.0f", $3/$2 * 100.0}')"
+
+    # From newer kernels, we can use MemAvailable instead of adding cache+buffers
+    # to free; so MemTotal/MemAvailable relation from /proc/meminfo
+    #local free_mem="$(free | awk '/Mem/ {printf "%.0f", $7/$2 * 100.0}')"
+    local mem_used="$(free | awk '/Mem/ {printf "%.0f", 100  - ($7/$2 * 100.0)}')"
 
     echo -ne "${sep_line} ${glyph_mem} ${mem_used}% "
 }
