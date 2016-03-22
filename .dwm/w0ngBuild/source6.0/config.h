@@ -172,20 +172,11 @@ static const Rule rules[] = {
 	//{ "keepassx",		NULL,		NULL,		1 << 8,			True,		True,		-1 },
 	{ "keepassx",		"keepassx",		"passwd_db.kdbx",		1 << 8,			True,		True,		-1 },
 	{ "keepassx",		"keepassx",		"Laur's passes",		1 << 8,			True,		True,		-1 },
-	{ "keepassx",		"keepassx",		"Auto-Type - KeePassX",		NULL,			True,		True,		-1 },
 	{ "Truecrypt",		NULL,		NULL,		1 << 8,			True,		True,		-1 },
 	{ "Deluge",		NULL,		NULL,		1 << 8,			True,		True,		-1 },
 	{ "Transmission-gtk",		NULL,		NULL,		1 << 8,			True,		True,		-1 },
-	{ "Copyq",		NULL,		NULL,		NULL,			True,		False,		-1 },
-	{ "Shutter",		NULL,		NULL,		NULL,			True,		False,		-1 },
-	{ "Main.py",		"guake",		"Guake!",		NULL,			True,		False,		-1 },
-
-	{ "Galculator",		NULL,		NULL,		0,			True,		True,		-1 },
 	{ NULL,		NULL,		"MonoDevelop External Console",		1 << 1,			True,		False,		-1 },
 
-	{ "Gsimplecal",		NULL,		NULL,		0,			True,		False,		-1 },
-	{ "XCalc",		NULL,		NULL,		0,			True,		False,		-1 },
-	{ "Screenkey",		"screenkey",		"screenkey",		NULL,			True,		False,		-1 },
 
 	//{ "Google-chrome",	NULL,		NULL,		1 << 0,		False,		False,		-1 },
 	//{ "Qpaeq",			NULL,		NULL,		0,			True,		True,		-1 },
@@ -194,7 +185,16 @@ static const Rule rules[] = {
 	//{ "Sonata",			NULL,		NULL,		0,			True,		True,		-1 },
 	//{ "Dwb",			NULL,		NULL,		1 << 0,		False,		False,		-1 },
 	{ NULL,				NULL,		"dload",	1 << 5,		True,		True,  		-1 },
-	{ NULL,				NULL,		"tail",		1 << 5,		True,		True,  		-1 }
+	{ NULL,				NULL,		"tail",		1 << 5,		True,		True,  		-1 },
+	{ "Copyq",		NULL,		NULL,		NULL,			True,		False,		-1 },
+	{ "Shutter",		NULL,		NULL,		NULL,			True,		False,		-1 },
+	{ "Main.py",		"guake",		"Guake!",		NULL,			True,		False,		-1 },
+
+	{ "Galculator",		NULL,		NULL,		0,			True,		True,		-1 },
+	{ "Gsimplecal",		NULL,		NULL,		0,			True,		False,		-1 },
+	{ "XCalc",		NULL,		NULL,		0,			True,		True,		-1 },
+	{ "keepassx",		"keepassx",		"Auto-Type - KeePassX",		NULL,			True,		True,		-1 },
+	{ "Screenkey",		"screenkey",		"screenkey",		NULL,			True,		False,		-1 }
 };
 /*
  *static const Rule rules[] = {
