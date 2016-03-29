@@ -3951,7 +3951,7 @@ updatebarpos(Monitor *m) {
 	}
 
 	if(m->showtab == showtab_always
-        || ((m->showtab == showtab_auto) &&
+        || (m->showtab == showtab_auto &&
                 ((nvis > 1 && (m->lt[m->sellt]->arrange == monocle || !m->lt[m->sellt]->arrange)) ||
                 (nvis > 2 && m->lt[m->sellt]->arrange == deck))
            )
