@@ -167,6 +167,7 @@ static const Rule rules[] = {
 	{ "Gimp",     		NULL,       NULL,       1 << 6,     True,      False,		-1 },
 	{ "Steam",		NULL,		NULL,	    1 << 6,	  	False,		False, 		-1 },
 
+    { "GitKraken",          NULL,       NULL,       1 << 7,     False,      False,      -1 },
 	{ "SWT",     		NULL,       "CollabNet GitEye",       1 << 7,     False,      False,		-1 },
 
 	//{ "keepassx",		NULL,		NULL,		1 << 8,			True,		True,		-1 },
