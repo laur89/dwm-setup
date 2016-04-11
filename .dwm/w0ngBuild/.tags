@@ -73,6 +73,7 @@ clients	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c
 client_class_copyq	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/config.h	/^const char client_class_copyq[] = "copyq";$/;"	v	language:C++
 client_class_gsimplecal	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/config.h	/^const char client_class_gsimplecal[] = "gsimplecal";$/;"	v	language:C++
 client_class_idea	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/config.h	/^const char client_class_idea[] = "sun-awt-X11-XFramePeer";$/;"	v	language:C++
+client_class_idea_loading_dialog	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/config.h	/^const char client_class_idea_loading_dialog[] = "sun-awt-X11-XDialogPeer";$/;"	v	language:C++
 client_class_notifyd	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/config.h	/^const char client_class_notifyd[] = "xfce4-notifyd";$/;"	v	language:C++
 client_class_screenkey	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/config.h	/^const char client_class_screenkey[] = "screenkey";$/;"	v	language:C++
 ClkClientWin	/data/progs/deps/homesick/repos/dwm-setup/.dwm/w0ngBuild/source6.0/dwm.c	/^       ClkClientWin, ClkRootWin, ClkLast };             \/* clicks *\/$/;"	e	language:C++	enum:__anon7	file:
