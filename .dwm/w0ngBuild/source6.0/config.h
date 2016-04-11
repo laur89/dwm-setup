@@ -435,7 +435,7 @@ static Button buttons[] = {
  *Window class definitions:
  */
 const char client_class_idea[] = "sun-awt-X11-XFramePeer";
-const char client_class_idea_loading_dialog[] = "sun-awt-X11-XDialogPeer";
+const char client_class_idea_dialog[] = "sun-awt-X11-XDialogPeer";
 const char client_class_notifyd[] = "xfce4-notifyd";
 const char client_class_gsimplecal[] = "gsimplecal";
 const char client_class_screenkey[] = "screenkey";
@@ -449,7 +449,7 @@ const char *ignored_class_list[] = {
     client_class_notifyd,
     client_class_gsimplecal,
     client_class_screenkey,
-    client_class_idea_loading_dialog
+    client_class_idea_dialog
 };
 
 // synergy logfile location: // TODO: delete
