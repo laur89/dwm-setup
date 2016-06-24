@@ -117,6 +117,8 @@ static const Rule rules[] = {
 
 	{ "Chromium",		NULL,		NULL,	    1 << 0,	  	False,		False, 		-1 },
 	{ "Iceweasel",		NULL,		NULL,	    1 << 0,	  	False,		False, 		-1 },
+	{ "Firefox",		NULL,		NULL,	    1 << 0,	  	False,		False, 		-1 },
+
 	{ "Icedove",		NULL,		"Write:",	    1 << 0,	  	True,		False, 		-1 },
 	//{ "Icedove",		NULL,		"New Event",	    1 << 0,	  	True,		False, 		-1 },
 	{ "Geany",		NULL,		NULL,	    1 << 1,	  	False,		False, 		-1 },
