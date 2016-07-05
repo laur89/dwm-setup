@@ -143,6 +143,7 @@ static const Rule rules[] = {
 	{ "FocusProxy",		NULL,		NULL,	    1 << 1,	  	False,		False, 		-1 },
 	{ "VirtualBox",		NULL,		NULL,		1 << 1,		False,		False,		-1 },
 	{ "Skype",		NULL,		NULL,	    1 << 2,	  	False,		False, 		-1 },
+	{ "Slack",		NULL,		NULL,	    1 << 2,	  	False,		False, 		-1 },
 	{ "Pidgin",		NULL,		NULL,	    1 << 2,	  	False,		False, 		-1 },
 	{ "URxvt",		NULL,		NULL,	    1 << 3,	  	False,		False, 		-1 },
 	{ "Spacefm",		NULL,		NULL,	    1 << 4,	  	False,		False, 		-1 },
