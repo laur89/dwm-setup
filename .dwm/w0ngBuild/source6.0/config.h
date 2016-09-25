@@ -163,7 +163,7 @@ static const Rule rules[] = {
 	{ "Ario",		NULL,		NULL,	    1 << 6,	  	False,		False, 		-1 },
 	{ "Smplayer",		NULL,		NULL,	    1 << 6,	  	False,		False, 		-1 },
 	{ "mplayer",		NULL,		NULL,	    1 << 6,	  	False,		False, 		-1 },
-	{ "Vlc",		NULL,		NULL,	    1 << 6,	  	False,		False, 		-1 },
+	{ "vlc",		NULL,		NULL,	    1 << 6,	  	False,		False, 		-1 },
 	{ "Spotify",		NULL,		NULL,	    1 << 6,	  	False,		False, 		-1 },
 	{ "Clementine",		NULL,		NULL,	    1 << 6,	  	False,		False, 		-1 },
 //	{ "Gimp",     		"Layers - Brushes",       NULL,       1 << 6,     True,      False,		-1 },
