@@ -42,7 +42,7 @@ sep_line="\uE01B"
 sep_bar="\uE020"
 
 declare -A MAILDIRS  # maps maildir location to its prefix to be used on the bar
-SELF="$(basename "$0")"
+SELF="$(basename -- "$0")"
 INTERVAL=1.5
 
 print_song_info() {
@@ -188,7 +188,7 @@ if [[ "$__ENV_VARS_LOADED_MARKER_VAR" != "loaded" ]]; then
     if [[ -r "$_global_env_var_loc" ]]; then
         source "$_global_env_var_loc"
     else
-        echo -e "\nError: env vars file \"$_global_env_var_loc\" not found! Abort."
+        echo -e "\n    ERROR: env vars file [$_global_env_var_loc] not found! Abort."
         exit 1
     fi
 fi
@@ -198,7 +198,7 @@ if ! type __COMMONS_LOADED_MARKER > /dev/null 2>&1; then
     if [[ -r "$_SCRIPTS_COMMONS" ]]; then
         source "$_SCRIPTS_COMMONS"
     else
-        echo -e "\nError: common file \"$_SCRIPTS_COMMONS\" not found! Abort."
+        echo -e "\n    ERROR: common file [$_SCRIPTS_COMMONS] not found! Abort."
         exit 1
     fi
 fi
