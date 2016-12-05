@@ -100,106 +100,106 @@ static const Layout layouts[] = {
 //static const char *tags[] = { "/u011a", "ä", "ä", "ä", "ä", "BG"};
 static const Tag tags[] = {
     /* name          layout            mfact   nmaster*/
-    { "\uE000",    &layouts[Tile],     	-1,    	-1 },
-    { "\uE008",    &layouts[Bstack], 	0.63,  	-1 },
-    { "\uE001",    &layouts[Tile],     	-1,    	-1 },
-    { "\uE002",    &layouts[Tile],     	-1,    	-1 },
-    { "\uE005",    &layouts[Tile], 	    -1,    	-1 },
-    { "\uE003",    &layouts[Tile], 	    -1,    	-1 },
-    { "\uE006",    &layouts[Tile], 	    -1,    	-1 },
-    { "\uE007",    &layouts[Tile], 	    -1,    	-1 },
-	{ "BG",	       &layouts[Tile],	    -1,		-1 }
+    { "\uE000",    &layouts[Tile],         -1,        -1 },
+    { "\uE008",    &layouts[Bstack],     0.63,      -1 },
+    { "\uE001",    &layouts[Tile],         -1,        -1 },
+    { "\uE002",    &layouts[Tile],         -1,        -1 },
+    { "\uE005",    &layouts[Tile],         -1,        -1 },
+    { "\uE003",    &layouts[Tile],         -1,        -1 },
+    { "\uE006",    &layouts[Tile],         -1,        -1 },
+    { "\uE007",    &layouts[Tile],         -1,        -1 },
+    { "BG",           &layouts[Tile],        -1,        -1 }
 };
 
 static const Rule rules[] = {
-	/* class      		instance	title		tags mask	isfloating 	iscenterd	monitor */
-//	{ NULL,		NULL,		"Private Browsing - Vimperator (Private Browsing)",	    1 << 7,	  	False,		False, 		-1 },
+    /* class              instance    title        tags mask    isfloating     iscenterd    monitor */
+//    { NULL,        NULL,        "Private Browsing - Vimperator (Private Browsing)",        1 << 7,          False,        False,         -1 },
 
-	{ "Chromium",		NULL,		NULL,	    1 << 0,	  	False,		False, 		-1 },
-	{ "Iceweasel",		NULL,		NULL,	    1 << 0,	  	False,		False, 		-1 },
-	{ "Firefox",		NULL,		NULL,	    1 << 0,	  	False,		False, 		-1 },
+    { "Chromium",        NULL,        NULL,        1 << 0,          False,        False,         -1 },
+    { "Iceweasel",        NULL,        NULL,        1 << 0,          False,        False,         -1 },
+    { "Firefox",        NULL,        NULL,        1 << 0,          False,        False,         -1 },
 
-	{ "Icedove",		NULL,		"Write:",	    1 << 0,	  	True,		False, 		-1 },
-	//{ "Icedove",		NULL,		"New Event",	    1 << 0,	  	True,		False, 		-1 },
-	{ "Geany",		NULL,		NULL,	    1 << 1,	  	False,		False, 		-1 },
-	{ "Gvim",		NULL,		NULL,	    1 << 1,	  	False,		False, 		-1 },
-	{ "Eclipse",		NULL,		NULL,	    1 << 1,	  	False,		False, 		-1 },
+    { "Icedove",        NULL,        "Write:",        1 << 0,          True,        False,         -1 },
+    //{ "Icedove",        NULL,        "New Event",        1 << 0,          True,        False,         -1 },
+    { "Geany",        NULL,        NULL,        1 << 1,          False,        False,         -1 },
+    { "Gvim",        NULL,        NULL,        1 << 1,          False,        False,         -1 },
+    { "Eclipse",        NULL,        NULL,        1 << 1,          False,        False,         -1 },
 
     // IDEA:
-    { "jetbrains-idea",		NULL,		NULL,	    1 << 1,	  	False,		False, 		-1 },
-	//{ "sun-awt-X11-XFramePeer",		NULL,		NULL,	    1 << 1,	  	False,		False, 		-1 },
-	//{ "sun-awt-X11-XDialogPeer",		NULL,		NULL,	    1 << 1,	  	False,		False, 		-1 },
+    { "jetbrains-idea",        NULL,        NULL,        1 << 1,          False,        False,         -1 },
+    //{ "sun-awt-X11-XFramePeer",        NULL,        NULL,        1 << 1,          False,        False,         -1 },
+    //{ "sun-awt-X11-XDialogPeer",        NULL,        NULL,        1 << 1,          False,        False,         -1 },
 
-	{ "Spring Tool Suite",		NULL,		NULL,	    1 << 1,	  	False,		False, 		-1 },
-	{ NULL,		NULL,		"Spring - Spring Tool Suite ",	    1 << 1,	  	False,		False, 		-1 },
+    { "Spring Tool Suite",        NULL,        NULL,        1 << 1,          False,        False,         -1 },
+    { NULL,        NULL,        "Spring - Spring Tool Suite ",        1 << 1,          False,        False,         -1 },
     // Eclipse'i splash:
-	{ "Java",		NULL,		"Eclipse",	    1 << 1,	  	True,		False, 		-1 },
+    { "Java",        NULL,        "Eclipse",        1 << 1,          True,        False,         -1 },
     // Android dev stuff:
-	{ "Android SDK Manager",		NULL,		NULL,	    1 << 1,	  	True,		False, 		-1 },
-	{ "emulator64-arm",		NULL,		NULL,	    1 << 1,	  	True,		False, 		-1 },
+    { "Android SDK Manager",        NULL,        NULL,        1 << 1,          True,        False,         -1 },
+    { "emulator64-arm",        NULL,        NULL,        1 << 1,          True,        False,         -1 },
     //
-	{ "MonoDevelop",		NULL,		NULL,	    1 << 1,	  	False,		False, 		-1 },
+    { "MonoDevelop",        NULL,        NULL,        1 << 1,          False,        False,         -1 },
     // SoapUI:
-	{ "FocusProxy",		NULL,		NULL,	    1 << 1,	  	False,		False, 		-1 },
-	{ "VirtualBox",		NULL,		NULL,		1 << 1,		False,		False,		-1 },
-	{ "Skype",		NULL,		NULL,	    1 << 2,	  	False,		False, 		-1 },
-	{ "Slack",		NULL,		NULL,	    1 << 2,	  	False,		False, 		-1 },
-	{ "Franz",		NULL,		NULL,	    1 << 2,	  	False,		False, 		-1 },
-	{ "Pidgin",		NULL,		NULL,	    1 << 2,	  	False,		False, 		-1 },
-	{ "URxvt",		NULL,		NULL,	    1 << 3,	  	False,		False, 		-1 },
-	{ "Spacefm",		NULL,		NULL,	    1 << 4,	  	False,		False, 		-1 },
-    { "libreoffice",		NULL,		NULL,	    1 << 5,	  	False,		False, 		-1 },
-    { "LibreOffice",		NULL,		NULL,	    1 << 5,	  	False,		False, 		-1 },
-    //{ "libreoffice-calc",		NULL,		NULL,	    1 << 5,	  	False,		False, 		-1 },
-    //{ "libreoffice-startcenter",		NULL,		NULL,	    1 << 5,	  	False,		False, 		-1 },
-    { "Evince",		NULL,		NULL,	    1 << 5,	  	False,		False, 		-1 },
-    { "Zathura",		NULL,		NULL,	    1 << 5,	  	False,		False, 		-1 },
-    { "Xpdf",		NULL,		NULL,	    1 << 5,	  	False,		False, 		-1 },
-    //{ NULL,		"calibre - || calibre_library ||",		NULL,	    1 << 5,	  	False,		False, 		-1 },
-    //{ "Calibre-gui",		NULL,		NULL,	    1 << 5,	  	False,		False, 		-1 },
+    { "FocusProxy",        NULL,        NULL,        1 << 1,          False,        False,         -1 },
+    { "VirtualBox",        NULL,        NULL,        1 << 1,        False,        False,        -1 },
+    { "Skype",        NULL,        NULL,        1 << 2,          False,        False,         -1 },
+    { "Slack",        NULL,        NULL,        1 << 2,          False,        False,         -1 },
+    { "Franz",        NULL,        NULL,        1 << 2,          False,        False,         -1 },
+    { "Pidgin",        NULL,        NULL,        1 << 2,          False,        False,         -1 },
+    { "URxvt",        NULL,        NULL,        1 << 3,          False,        False,         -1 },
+    { "Spacefm",        NULL,        NULL,        1 << 4,          False,        False,         -1 },
+    { "libreoffice",        NULL,        NULL,        1 << 5,          False,        False,         -1 },
+    { "LibreOffice",        NULL,        NULL,        1 << 5,          False,        False,         -1 },
+    //{ "libreoffice-calc",        NULL,        NULL,        1 << 5,          False,        False,         -1 },
+    //{ "libreoffice-startcenter",        NULL,        NULL,        1 << 5,          False,        False,         -1 },
+    { "Evince",        NULL,        NULL,        1 << 5,          False,        False,         -1 },
+    { "Zathura",        NULL,        NULL,        1 << 5,          False,        False,         -1 },
+    { "Xpdf",        NULL,        NULL,        1 << 5,          False,        False,         -1 },
+    //{ NULL,        "calibre - || calibre_library ||",        NULL,        1 << 5,          False,        False,         -1 },
+    //{ "Calibre-gui",        NULL,        NULL,        1 << 5,          False,        False,         -1 },
     // libprs500 is calibre; for some reason title matching is not working:
-    { "libprs500",		NULL,		NULL,    1 << 5,	  	False,		False, 		-1 },
-    //{ "Calibre-ebook-viewer",		NULL,		NULL,	    1 << 5,	  	False,		False, 		-1 },
-	{ "Ario",		NULL,		NULL,	    1 << 6,	  	False,		False, 		-1 },
-	{ "Smplayer",		NULL,		NULL,	    1 << 6,	  	False,		False, 		-1 },
-	{ "mplayer",		NULL,		NULL,	    1 << 6,	  	False,		False, 		-1 },
-	{ "vlc",		NULL,		NULL,	    1 << 6,	  	False,		False, 		-1 },
-	{ "Spotify",		NULL,		NULL,	    1 << 6,	  	False,		False, 		-1 },
-	{ "Clementine",		NULL,		NULL,	    1 << 6,	  	False,		False, 		-1 },
-//	{ "Gimp",     		"Layers - Brushes",       NULL,       1 << 6,     True,      False,		-1 },
-//	{ "Gimp",     		"Toolbox - Tool Options",       NULL,       1 << 6,     True,      False,		-1 },
-	{ "Gimp",     		NULL,       NULL,       1 << 6,     True,      False,		-1 },
-	{ "Steam",		NULL,		NULL,	    1 << 6,	  	False,		False, 		-1 },
+    { "libprs500",        NULL,        NULL,    1 << 5,          False,        False,         -1 },
+    //{ "Calibre-ebook-viewer",        NULL,        NULL,        1 << 5,          False,        False,         -1 },
+    { "Ario",        NULL,        NULL,        1 << 6,          False,        False,         -1 },
+    { "Smplayer",        NULL,        NULL,        1 << 6,          False,        False,         -1 },
+    { "mplayer",        NULL,        NULL,        1 << 6,          False,        False,         -1 },
+    { "vlc",        NULL,        NULL,        1 << 6,          False,        False,         -1 },
+    { "Spotify",        NULL,        NULL,        1 << 6,          False,        False,         -1 },
+    { "Clementine",        NULL,        NULL,        1 << 6,          False,        False,         -1 },
+//    { "Gimp",             "Layers - Brushes",       NULL,       1 << 6,     True,      False,        -1 },
+//    { "Gimp",             "Toolbox - Tool Options",       NULL,       1 << 6,     True,      False,        -1 },
+    { "Gimp",             NULL,       NULL,       1 << 6,     True,      False,        -1 },
+    { "Steam",        NULL,        NULL,        1 << 6,          False,        False,         -1 },
 
     { "GitKraken",          NULL,       NULL,       1 << 7,     False,      False,      -1 },
-	{ "SWT",     		NULL,       "CollabNet GitEye",       1 << 7,     False,      False,		-1 },
+    { "SWT",             NULL,       "CollabNet GitEye",       1 << 7,     False,      False,        -1 },
 
-	//{ "keepassx",		NULL,		NULL,		1 << 8,			True,		True,		-1 },
-	{ "keepassx",		"keepassx",		"passwd_db.kdbx",		1 << 8,			True,		True,		-1 },
-	{ "keepassx",		"keepassx",		"Laur's passes",		1 << 8,			True,		True,		-1 },
-	{ "Truecrypt",		NULL,		NULL,		1 << 8,			True,		True,		-1 },
-	{ "Deluge",		NULL,		NULL,		1 << 8,			True,		True,		-1 },
-	{ "Transmission-gtk",		NULL,		NULL,		1 << 8,			True,		True,		-1 },
-	{ NULL,		NULL,		"MonoDevelop External Console",		1 << 1,			True,		False,		-1 },
+    //{ "keepassx",        NULL,        NULL,        1 << 8,            True,        True,        -1 },
+    { "keepassx",        "keepassx",        "passwd_db.kdbx",        1 << 8,            True,        True,        -1 },
+    { "keepassx",        "keepassx",        "Laur's passes",        1 << 8,            True,        True,        -1 },
+    { "Truecrypt",        NULL,        NULL,        1 << 8,            True,        True,        -1 },
+    { "Deluge",        NULL,        NULL,        1 << 8,            True,        True,        -1 },
+    { "Transmission-gtk",        NULL,        NULL,        1 << 8,            True,        True,        -1 },
+    { NULL,        NULL,        "MonoDevelop External Console",        1 << 1,            True,        False,        -1 },
 
 
-	//{ "Google-chrome",	NULL,		NULL,		1 << 0,		False,		False,		-1 },
-	//{ "Qpaeq",			NULL,		NULL,		0,			True,		True,		-1 },
-	//{ "Pavucontrol",	NULL,		NULL,		0,			True,		True,		-1 },
-	//{ "Wxcam",			NULL,		NULL,		0,			True,		True,		-1 },
-	//{ "Sonata",			NULL,		NULL,		0,			True,		True,		-1 },
-	//{ "Dwb",			NULL,		NULL,		1 << 0,		False,		False,		-1 },
-	{ NULL,				NULL,		"dload",	1 << 5,		True,		True,  		-1 },
-	{ NULL,				NULL,		"tail",		1 << 5,		True,		True,  		-1 },
-	{ "Copyq",		NULL,		NULL,		NULL,			True,		False,		-1 },
-	{ "Shutter",		NULL,		NULL,		NULL,			True,		False,		-1 },
-	{ "Main.py",		"guake",		"Guake!",		NULL,			True,		False,		-1 },
+    //{ "Google-chrome",    NULL,        NULL,        1 << 0,        False,        False,        -1 },
+    //{ "Qpaeq",            NULL,        NULL,        0,            True,        True,        -1 },
+    //{ "Pavucontrol",    NULL,        NULL,        0,            True,        True,        -1 },
+    //{ "Wxcam",            NULL,        NULL,        0,            True,        True,        -1 },
+    //{ "Sonata",            NULL,        NULL,        0,            True,        True,        -1 },
+    //{ "Dwb",            NULL,        NULL,        1 << 0,        False,        False,        -1 },
+    { NULL,                NULL,        "dload",    1 << 5,        True,        True,          -1 },
+    { NULL,                NULL,        "tail",        1 << 5,        True,        True,          -1 },
+    { "Copyq",        NULL,        NULL,        NULL,            True,        False,        -1 },
+    { "Shutter",        NULL,        NULL,        NULL,            True,        False,        -1 },
+    { "Main.py",        "guake",        "Guake!",        NULL,            True,        False,        -1 },
 
-	{ "Galculator",		NULL,		NULL,		0,			True,		True,		-1 },
-	{ "Gsimplecal",		NULL,		NULL,		0,			True,		False,		-1 },
-	{ "XCalc",		NULL,		NULL,		0,			True,		True,		-1 },
-	{ "keepassx",		"keepassx",		"Auto-Type - KeePassX",		NULL,			True,		True,		-1 },
-	{ "Screenkey",		"screenkey",		"screenkey",		NULL,			True,		False,		-1 }
+    { "Galculator",        NULL,        NULL,        0,            True,        True,        -1 },
+    { "Gsimplecal",        NULL,        NULL,        0,            True,        False,        -1 },
+    { "XCalc",        NULL,        NULL,        0,            True,        True,        -1 },
+    { "keepassx",        "keepassx",        "Auto-Type - KeePassX",        NULL,            True,        True,        -1 },
+    { "Screenkey",        "screenkey",        "screenkey",        NULL,            True,        False,        -1 }
 };
 /*
  *static const Rule rules[] = {
@@ -231,10 +231,10 @@ static const Rule rules[] = {
 
 
 #define TAGKEYS(KEY,TAG) \
-	{ MODKEY,                       KEY,      toggleview, {.ui = 1 << TAG} }, \
-	{ MODKEY|ShiftMask,           	KEY,      view,       {.ui = 1 << TAG} }, \
-	{ MODKEY|ControlMask,          	KEY,      tag,        {.ui = 1 << TAG} }, \
-	{ MODKEY|ControlMask|ShiftMask,	KEY,      toggletag,  {.ui = 1 << TAG} },
+    { MODKEY,                       KEY,      toggleview, {.ui = 1 << TAG} }, \
+    { MODKEY|ShiftMask,               KEY,      view,       {.ui = 1 << TAG} }, \
+    { MODKEY|ControlMask,              KEY,      tag,        {.ui = 1 << TAG} }, \
+    { MODKEY|ControlMask|ShiftMask,    KEY,      toggletag,  {.ui = 1 << TAG} },
 
 /* helper for spawning shell commands in the pre dwm-5.0 fashion */
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
@@ -252,18 +252,18 @@ static const char *mpcprev[]       = { "mpc", "-q", "prev", NULL };
 static const char *mpcnext[]       = { "mpc", "-q", "next", NULL };
 
 // siit minu omad:
-static const char *screenshot[]		=	{ "/data/dev/scripts/system/screenshot.sh", "--auto", NULL };
-static const char *calendar[]  		= 	{ "gsimplecal", NULL };
-static const char *lock_screen[]			=	{ "xscreensaver-command", "--lock", NULL };
+static const char *screenshot[]        =    { "/data/dev/scripts/system/screenshot.sh", "--auto", NULL };
+static const char *calendar[]          =     { "gsimplecal", NULL };
+static const char *lock_screen[]            =    { "xscreensaver-command", "--lock", NULL };
 
-static const char *history_back[]			=	{ "python", "/usr/local/bin/dynamic_button_remap.py", "history_back", NULL };
-static const char *history_forward[]			=	{ "python", "/usr/local/bin/dynamic_button_remap.py", "history_forward", NULL };
-static const char *py_tab_back[]			=	{ "python", "/usr/local/bin/dynamic_button_remap.py", "tab_back", NULL };
-static const char *py_tab_forward[]			=	{ "python", "/usr/local/bin/dynamic_button_remap.py", "tab_forward", NULL };
-static const char *py_FF_tabgroup_back[]			=	{ "python", "/usr/local/bin/dynamic_button_remap.py", "FF_tabgroup_back", NULL };
-static const char *py_FF_tabgroup_fwd[]			=	{ "python", "/usr/local/bin/dynamic_button_remap.py", "FF_tabgroup_fwd", NULL };
-static const char *py_statusbar_prev[]			=	{ "python3", "/home/laur/.dwm/bars/py_bar.py", "prev", NULL };
-static const char *py_statusbar_next[]			=	{ "python3", "/home/laur/.dwm/bars/py_bar.py", "next", NULL };
+static const char *history_back[]            =    { "python", "/usr/local/bin/dynamic_button_remap.py", "history_back", NULL };
+static const char *history_forward[]            =    { "python", "/usr/local/bin/dynamic_button_remap.py", "history_forward", NULL };
+static const char *py_tab_back[]            =    { "python", "/usr/local/bin/dynamic_button_remap.py", "tab_back", NULL };
+static const char *py_tab_forward[]            =    { "python", "/usr/local/bin/dynamic_button_remap.py", "tab_forward", NULL };
+static const char *py_FF_tabgroup_back[]            =    { "python", "/usr/local/bin/dynamic_button_remap.py", "FF_tabgroup_back", NULL };
+static const char *py_FF_tabgroup_fwd[]            =    { "python", "/usr/local/bin/dynamic_button_remap.py", "FF_tabgroup_fwd", NULL };
+static const char *py_statusbar_prev[]            =    { "python3", "/home/laur/.dwm/bars/py_bar.py", "prev", NULL };
+static const char *py_statusbar_next[]            =    { "python3", "/home/laur/.dwm/bars/py_bar.py", "next", NULL };
 
 // runorraise compliant:
 static const char *keepassx[] = { "keepassx", NULL, NULL, NULL, "Keepassx" };
@@ -275,7 +275,7 @@ static Key keys[] = {
   { MODKEY|ShiftMask,       XK_Return,        spawn,          {.v = termcmd } },
   { MODKEY,                 XK_s,             togglescratch,  {.v = scratchpadcmd} },
   { 0,                      XK_Print,         spawn,          {.v = screenshot}},
-  { AltMask|ControlMask,	XK_Delete,        spawn,          {.v = lock_screen } },
+  { AltMask|ControlMask,    XK_Delete,        spawn,          {.v = lock_screen } },
   { MODKEY,                 XK_KP_Add,        spawn,          {.v = volupcmd } }, // numpad +
   { MODKEY,                 XK_plus,          spawn,          {.v = volupcmd } }, // numpad +
   { MODKEY,                 XK_KP_Subtract,   spawn,          {.v = voldncmd } }, // numpad -
@@ -293,10 +293,10 @@ static Key keys[] = {
   { MODKEY|ControlMask,                 XK_k,             focusstackfloatingonly,     {.i = -1 } },
   // support exists, simply not using:
     /*
-	 *{ Modkey,           			    XK_h,   				cycle,  			{.i = -1} },
-	 *{ Modkey,           			    XK_l,  					cycle,  			{.i = +1} },
-	 *{ Modkey|Shiftkey,					XK_h,					tagcycle,			{.i = -1} },
-	 *{ Modkey|Shiftkey,					XK_l,					tagcycle,			{.i = +1} },
+     *{ Modkey,                           XK_h,                   cycle,              {.i = -1} },
+     *{ Modkey,                           XK_l,                      cycle,              {.i = +1} },
+     *{ Modkey|Shiftkey,                    XK_h,                    tagcycle,            {.i = -1} },
+     *{ Modkey|Shiftkey,                    XK_l,                    tagcycle,            {.i = +1} },
      */
   { MODKEY|ShiftMask,       XK_j,             pushdown,       {0} },
   { MODKEY|ShiftMask,       XK_k,             pushup,         {0} },
@@ -311,8 +311,8 @@ static Key keys[] = {
   { MODKEY,                 XK_Return,        zoom,           {0} },
   { MODKEY,                 XK_Tab,           view,           {0} },
   { AltMask,                XK_Tab,           altTab,           {0} },
-  { MODKEY,           	  	XK_c,             killclient,     {0} },
-  { AltMask,               	XK_F4,            killclient,     {0} },
+  { MODKEY,                     XK_c,             killclient,     {0} },
+  { AltMask,                   XK_F4,            killclient,     {0} },
   { MODKEY,                 XK_t,             setlayout,      {.v = &layouts[Tile]} },
   { MODKEY,                 XK_f,             setlayout,      {.v = &layouts[Float]} },
   { MODKEY,                 XK_x,             setlayout,      {.v = &layouts[Monocle]} },
@@ -342,8 +342,8 @@ static Key keys[] = {
   { MODKEY|ShiftMask,       XK_period,        tagmon,         {.i = +1 } },
   { MODKEY|ShiftMask,       XK_r,             reload,         {0} },
 //{ MODKEY,                       XK_e,      runorraise,     {.v = keepassx } },
-	{ MODKEY|ShiftMask,  			    XK_m,      				toggle_ffm, 	    NULL },          // toggle focus follows mouse
-	{ MODKEY|ShiftMask|ControlMask,	    XK_m,      				toggle_mff, 	    NULL },          // toggle mouse follows focus
+    { MODKEY|ShiftMask,                  XK_m,                      toggle_ffm,         NULL },          // toggle focus follows mouse
+    { MODKEY|ShiftMask|ControlMask,        XK_m,                      toggle_mff,         NULL },          // toggle mouse follows focus
     { MODKEY,                           XK_z,                   toggleview,         {.ui = 1 << 8} },
     { MODKEY|ControlMask,               XK_z,                tag,                {.ui = 1 << 8} },
     TAGKEYS(                  XK_1,                             0)
@@ -364,26 +364,26 @@ static Key keys[] = {
 /* click can be ClkLtSymbol, ClkStatusText, ClkWinTitle, ClkClientWin, or ClkRootWin */
 static Button buttons[] = {
   /* click                event mask      button          function        argument */
-	{ ClkLtSymbol,          0,              Button1,        setlayout,      {0} },                         // Swaps between previous and current
-	{ ClkLtSymbol,          0,              Button3,        setlayout,      {.v = &layouts[Float]} },   // Right click = monocle and previous, monocle and previous...
-	/* --------------------------------------menu-----------------------------------------*/
-	{ ClkRootWin,			0,				Button3,		spawn,			{.v = calendar } },         // root win == desktop nt
-	{ ClkWinTitle,			0,				Button2,		killclient,		{0} },
-	{ ClkWinTitle,          0,  		   	Button1,	    focusstack,     {.i = +1 } },
-	{ ClkWinTitle,          0,  		    Button3,	    focusstack,     {.i = -1 } },
-	{ ClkStatusText,		0,				Button3,		spawn,			{.v = calendar } },
-	/*====================================================================================*/
-	{ ClkClientWin,         AltMask,         Button1,        movemouse,      {0} },
-	//{ ClkClientWin,         Altkey,         Button2,        togglefloating, {0} },
+    { ClkLtSymbol,          0,              Button1,        setlayout,      {0} },                         // Swaps between previous and current
+    { ClkLtSymbol,          0,              Button3,        setlayout,      {.v = &layouts[Float]} },   // Right click = monocle and previous, monocle and previous...
+    /* --------------------------------------menu-----------------------------------------*/
+    { ClkRootWin,            0,                Button3,        spawn,            {.v = calendar } },         // root win == desktop nt
+    { ClkWinTitle,            0,                Button2,        killclient,        {0} },
+    { ClkWinTitle,          0,                 Button1,        focusstack,     {.i = +1 } },
+    { ClkWinTitle,          0,              Button3,        focusstack,     {.i = -1 } },
+    { ClkStatusText,        0,                Button3,        spawn,            {.v = calendar } },
+    /*====================================================================================*/
+    { ClkClientWin,         AltMask,         Button1,        movemouse,      {0} },
+    //{ ClkClientWin,         Altkey,         Button2,        togglefloating, {0} },
     //{ ClkClientWin,         Altkey,         Button2,        setlayout, {.v = &layouts[1]} },
     { ClkClientWin,         AltMask,         Button2,        killclient,      {0} },
-	{ ClkClientWin,         AltMask,         Button3,        resizemouse,    {0} },
-	{ ClkTagBar,            0,              Button3,        view,           {0} },
-	{ ClkTagBar,            0,              Button1,        toggleview,     {0} },
-	{ ClkTagBar,            MODKEY,         Button1,        tag,            {0} },
-	{ ClkClientWin,         MODKEY|ShiftMask,         Button1,        tilemovemouse,  {0} },
-	{ ClkTagBar,            MODKEY,         Button3,        toggletag,      {0} },
-	{ ClkTabBar,            0,              Button1,        focuswin,      {0} },
+    { ClkClientWin,         AltMask,         Button3,        resizemouse,    {0} },
+    { ClkTagBar,            0,              Button3,        view,           {0} },
+    { ClkTagBar,            0,              Button1,        toggleview,     {0} },
+    { ClkTagBar,            MODKEY,         Button1,        tag,            {0} },
+    { ClkClientWin,         MODKEY|ShiftMask,         Button1,        tilemovemouse,  {0} },
+    { ClkTagBar,            MODKEY,         Button3,        toggletag,      {0} },
+    { ClkTabBar,            0,              Button1,        focuswin,      {0} },
     // Custom mouse wheel tilt&scroll commands:
     { ClkClientWin,         AltMask,         wheel_tilt_left,        hist_back,      {0} },
     { ClkClientWin,         AltMask,         wheel_tilt_right,        hist_fwd,      {0} },
@@ -400,13 +400,13 @@ static Button buttons[] = {
     { ClkWinTitle,          MODKEY,         wheel_tilt_right,        incnmaster,      {.i = -1 } },
     { ClkWinTitle,          MODKEY,         wheel_tilt_left,        incnmaster,      {.i = +1 } },
     { ClkClientWin,         MODKEY,         Button1,        zoom,      {0} },
-	{ ClkClientWin,         MODKEY,  		wheel_scroll_up,	    focusstack,     {.i = +1 } },
-	{ ClkClientWin,         MODKEY,  		wheel_scroll_dn,	    focusstack,     {.i = -1 } },
-	{ ClkClientWin,         MODKEY|ControlMask,  		wheel_scroll_up,	    focusstackwithoutrising,     {.i = +1 } },
-	{ ClkClientWin,         MODKEY|ControlMask,  		wheel_scroll_dn,	    focusstackwithoutrising,     {.i = -1 } },
+    { ClkClientWin,         MODKEY,          wheel_scroll_up,        focusstack,     {.i = +1 } },
+    { ClkClientWin,         MODKEY,          wheel_scroll_dn,        focusstack,     {.i = -1 } },
+    { ClkClientWin,         MODKEY|ControlMask,          wheel_scroll_up,        focusstackwithoutrising,     {.i = +1 } },
+    { ClkClientWin,         MODKEY|ControlMask,          wheel_scroll_dn,        focusstackwithoutrising,     {.i = -1 } },
 
-    { ClkStatusText,		MODKEY,		    wheel_tilt_left,		spawn,			{.v = py_statusbar_prev } },   // selects previous mode for statusbar (py_bar)
-    { ClkStatusText,		MODKEY,		    wheel_tilt_right,		spawn,			{.v = py_statusbar_next } },
+    { ClkStatusText,        MODKEY,            wheel_tilt_left,        spawn,            {.v = py_statusbar_prev } },   // selects previous mode for statusbar (py_bar)
+    { ClkStatusText,        MODKEY,            wheel_tilt_right,        spawn,            {.v = py_statusbar_next } },
     { ClkStatusText,        0,              wheel_scroll_up,      spawn,          {.v = volupcmd } },
     { ClkStatusText,        0,              wheel_scroll_dn,      spawn,          {.v = voldncmd } },
 
@@ -417,11 +417,11 @@ static Button buttons[] = {
  *  //{ ClkLtSymbol,          0,              Button1,        setlayout,      {0} },
  *  //{ ClkLtSymbol,          0,              Button3,        setlayout,      {.v = &layouts[2]} },
  *  [> --------------------------------------menu-----------------------------------------<]
- *  { ClkRootWin,           0,              Button3,		spawn,			{.v = calendar } },         // root win == desktop nt
- *  { ClkWinTitle,		  0,              Button2,		killclient,		{0} },
- *  { ClkWinTitle,          0,              Button1,	    focusstack,     {.i = +1 } },
- *  { ClkWinTitle,          0,              Button3,	    focusstack,     {.i = -1 } },
- *  { ClkStatusText,		  0,              Button3,      spawn,			{.v = calendar } },
+ *  { ClkRootWin,           0,              Button3,        spawn,            {.v = calendar } },         // root win == desktop nt
+ *  { ClkWinTitle,          0,              Button2,        killclient,        {0} },
+ *  { ClkWinTitle,          0,              Button1,        focusstack,     {.i = +1 } },
+ *  { ClkWinTitle,          0,              Button3,        focusstack,     {.i = -1 } },
+ *  { ClkStatusText,          0,              Button3,      spawn,            {.v = calendar } },
  *  { ClkStatusText,        0,              Button2,      spawn,          {.v = termcmd } },
  *  [>====================================================================================<]
  *  //{ ClkWinTitle,          0,              Button2,        zoom,           {0} },
