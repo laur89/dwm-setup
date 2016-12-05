@@ -174,7 +174,7 @@ static const Rule rules[] = {
     { "GitKraken",          NULL,       NULL,       1 << 7,     False,      False,      -1 },
     { "SWT",             NULL,       "CollabNet GitEye",       1 << 7,     False,      False,        -1 },
 
-    //{ "keepassx",        NULL,        NULL,        1 << 8,            True,        True,        -1 },
+    //{ "keepassx",        "keepassx",        "KeePassX",        1 << 8,            True,        True,        -1 },
     { "keepassx",        "keepassx",        "passwd_db.kdbx",        1 << 8,            True,        True,        -1 },
     { "keepassx",        "keepassx",        "Laur's passes",        1 << 8,            True,        True,        -1 },
     { "Truecrypt",        NULL,        NULL,        1 << 8,            True,        True,        -1 },
@@ -195,6 +195,7 @@ static const Rule rules[] = {
     // qpaeq is pulseaudio-equalizer front end:
     { "Qpaeq",        NULL,        NULL,        NULL,            True,        True,        -1 },
     { "Pavucontrol",        NULL,        NULL,        NULL,            True,        True,        -1 },
+    { "vokoscreen",        NULL,        NULL,        NULL,            True,        True,        -1 },
     { "Shutter",        NULL,        NULL,        NULL,            True,        False,        -1 },
     { "Main.py",        "guake",        "Guake!",        NULL,            True,        False,        -1 },
 
