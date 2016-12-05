@@ -192,6 +192,9 @@ static const Rule rules[] = {
     { NULL,                NULL,        "dload",    1 << 5,        True,        True,          -1 },
     { NULL,                NULL,        "tail",        1 << 5,        True,        True,          -1 },
     { "Copyq",        NULL,        NULL,        NULL,            True,        False,        -1 },
+    // qpaeq is pulseaudio-equalizer front end:
+    { "Qpaeq",        NULL,        NULL,        NULL,            True,        True,        -1 },
+    { "Pavucontrol",        NULL,        NULL,        NULL,            True,        True,        -1 },
     { "Shutter",        NULL,        NULL,        NULL,            True,        False,        -1 },
     { "Main.py",        "guake",        "Guake!",        NULL,            True,        False,        -1 },
 
