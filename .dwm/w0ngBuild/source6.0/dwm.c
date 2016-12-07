@@ -2135,9 +2135,9 @@ grabkeys(void) {
 					XGrabKey(dpy, code, keys[i].mod | modifiers[j], root,
 						 True, GrabModeAsync, GrabModeAsync);
 
-        // TODO:! (alttab hackeroo)
-        /*XGrabKey(dpy, altKeyCode, 0, root,*/
-                /*True, GrabModeAsync, GrabModeAsync);*/
+        // TODO:! (altTab hackeroo)
+        XGrabKey(dpy, altKeyCode, 0, root,
+                True, GrabModeAsync, GrabModeAsync);
 	}
 }
 
@@ -2295,6 +2295,12 @@ keypress(XEvent *e) {
 		&& CLEANMASK(keys[i].mod) == CLEANMASK(ev->state)
 		&& keys[i].func)
                 keys[i].func(&(keys[i].arg));
+
+    // TODO: (altTab hack):
+    if ( keysym == XK_Alt_L || CLEANMASK(AltMask) == CLEANMASK(ev->state)) {
+        fprintf(stderr, "   alt_l keypress detected\n", keysym);
+        passthru_keystroke(dpy, &ev);
+    }
 
     //TODO: ???
     // ungrab Alt so it could be sent...
@@ -4588,21 +4594,18 @@ void altTab() {
 
     int c = 0; // TODO deleteme
     do {
-        if (c > 9) {
-            fprintf(stderr, "     exiting because of safety counter count %d\n ", c);
-            break;
-        }
+        /*if (c > 9) {*/
+            /*fprintf(stderr, "     exiting because of safety counter count %d\n ", c);*/
+            /*break;*/
+        /*}*/
 
-        fprintf(stderr, "new cycle of do-loop, waiting for event.\n");
+        /*fprintf(stderr, "new cycle of do-loop, waiting for event.\n");*/
+        fprintf(stderr, ">");
         XNextEvent(dpy, &ev);
 
-        /*XMaskEvent(dpy, MOUSEMASK|ExposureMask|SubstructureRedirectMask, &ev);*/
-        /*XMaskEvent(dpy, AltMask|Mod1Mask|ExposureMask|SubstructureRedirectMask|KeyPressMask|KeyReleaseMask, &ev);*/
-
-
         if(!(ev.type == KeyPress || ev.type == KeyRelease)) {
-            fprintf(stderr, "no keypressnorrelease detected; eventtype: %d\n", ev.type);
-            c++;
+            /*fprintf(stderr, "no keypressnorrelease detected; eventtype: %d\n", ev.type);*/
+            /*c++;*/
             continue;
         }
 
@@ -4611,25 +4614,23 @@ void altTab() {
 
         fprintf(stderr, "detected key: %d\n", keySym);
 
+        // TODO: logging
         if(ev.type == KeyPress) {
-            fprintf(stderr, "detected keypress: %d\n", keySym);
+            fprintf(stderr, "    -> detected keypress: %d\n", keySym);
         } else if(ev.type == KeyRelease) {
-            fprintf(stderr, "detected key release: %d\n", keySym);
+            fprintf(stderr, "    -> detected key release: %d\n", keySym);
         }
 
-            if(keySym == XK_Tab && keyMod & Mod1Mask)
-            {
+            if(keySym == XK_Tab && keyMod & Mod1Mask) {
+            fprintf(stderr, "tab + alt detected, swallow\n");
+            swallow_keystroke(dpy, &ev);
+        } else {
+            fprintf(stderr, "NO tab + alt detected, passing thorugh; keysym: %d, state: %d\n", keySym, keyMod);
+            passthru_keystroke(dpy, &ev);
+        }
 
-                fprintf(stderr, "tab + alt detected, swallow\n");
-                swallow_keystroke(dpy, &ev);
-            }
-            else
-            {
-                fprintf(stderr, "NO tab + alt detected, passing thorugh; keysym: %d, state: %d\n", keySym, keyMod);
-                passthru_keystroke(dpy, &ev);
-            }
         c++;
-        continue;
+        /*continue;*/
 
         switch (ev.type) {
             /*case ConfigureRequest:*/
@@ -4640,7 +4641,6 @@ void altTab() {
                 /*break;*/
             case KeyPress:
                 fprintf(stderr, "keypress event detected\n");
-                //TODO siia loogika?
                 if ( keySym == XK_Tab ) {
                     fprintf(stderr, "keypress, tab, launching updateAndDrawAltTab...\n");
                     updateAndDrawAltTab(selmon);
@@ -4650,12 +4650,15 @@ void altTab() {
             // TODO: KeyRelease is only for debugging purposes:
             case KeyRelease:
                 fprintf(stderr, " keyrelease event detected\n");
-                if ( keySym == XK_Alt_L ) {
-                    fprintf(stderr, "keyrelease, alt\n");
-                }
+                /*if ( keySym == XK_Alt_L ) {*/
+                    /*fprintf(stderr, "keyrelease, alt\n");*/
+                /*}*/
 
-                if(keySym == XK_Tab
-                        && CLEANMASK(AltMask) == CLEANMASK(keyMod) ){
+                /*if(keySym == XK_Alt_L || (keySym == XK_Tab*/
+                        /*&& CLEANMASK(AltMask) == CLEANMASK(keyMod) )){*/
+                    if ( keySym == XK_Alt_L ) {
+                        fprintf(stderr, "keyrelease, alt\n");
+                    /*}*/
                     fprintf(stderr, "     @upddate: altTab release detected!!!!!! \n");
                 }
 
@@ -4664,12 +4667,7 @@ void altTab() {
                 break;
         }
 
-        // TODO: just-in-case counter; deleteme:
         c++;
-        if (c > 9) {
-            fprintf(stderr, "     exiting because of safety counter count %d\n ", c);
-            break;
-        }
     } while(ev.type != KeyRelease || keySym != XK_Alt_L ); // until alt is released
     /*} while(ev.type != KeyRelease || ( keySym != XK_Alt_L && !(keySym & Mod1Mask) )); // until alt is released*/
 
