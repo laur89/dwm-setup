@@ -162,6 +162,7 @@ static const Rule rules[] = {
     //{ "Calibre-ebook-viewer",        NULL,        NULL,        1 << 5,          False,        False,         -1 },
     { "Ario",        NULL,        NULL,        1 << 6,          False,        False,         -1 },
     { "Smplayer",        NULL,        NULL,        1 << 6,          False,        False,         -1 },
+    { "mpv",        NULL,        NULL,        1 << 6,          False,        False,         -1 },
     { "mplayer",        NULL,        NULL,        1 << 6,          False,        False,         -1 },
     { "vlc",        NULL,        NULL,        1 << 6,          False,        False,         -1 },
     { "Spotify",        NULL,        NULL,        1 << 6,          False,        False,         -1 },
