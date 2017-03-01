@@ -202,6 +202,7 @@ static const Rule rules[] = {
     { "Main.py",        "guake",        "Guake!",        NULL,            True,        False,        -1 },
 
     { "Galculator",        NULL,        NULL,        0,            True,        True,        -1 },
+    { "Seafile Client",        NULL,        NULL,        0,            True,        True,        -1 },
     { "Gnome-clocks",        NULL,        NULL,        0,            True,        True,        -1 },
     { "Gsimplecal",        NULL,        NULL,        0,            True,        False,        -1 },
     { "XCalc",        NULL,        NULL,        0,            True,        True,        -1 },
