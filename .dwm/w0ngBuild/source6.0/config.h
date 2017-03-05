@@ -206,6 +206,7 @@ static const Rule rules[] = {
     { "Gnome-clocks",        NULL,        NULL,        0,            True,        True,        -1 },
     { "Gsimplecal",        NULL,        NULL,        0,            True,        False,        -1 },
     { "XCalc",        NULL,        NULL,        0,            True,        True,        -1 },
+    { "Go-for-it",        NULL,        NULL,        0,            True,        True,        -1 },
     { "keepassx",        "keepassx",        "Auto-Type - KeePassX",        NULL,            True,        True,        -1 },
     { "Screenkey",        "screenkey",        "screenkey",        NULL,            True,        False,        -1 }
 };
