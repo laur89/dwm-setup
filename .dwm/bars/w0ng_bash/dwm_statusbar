@@ -165,7 +165,7 @@ init() {
         tx_old=0
     fi
 
-    # mail constants:
+    # define mailboxes and their display prefixes:
     if is_work; then
 
         MAILDIRS=(
@@ -174,6 +174,7 @@ init() {
         )
     else
         MAILDIRS=(
+            [$HOME/mail/personal/INBOX/new]='ix'
         )
     fi
 }
