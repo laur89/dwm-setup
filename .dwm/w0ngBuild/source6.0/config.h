@@ -205,6 +205,7 @@ static const Rule rules[] = {
     { "Seafile Client",        NULL,        NULL,        0,            True,        True,        -1 },
     { "Gnome-clocks",        NULL,        NULL,        0,            True,        True,        -1 },
     { "Gsimplecal",        NULL,        NULL,        0,            True,        False,        -1 },
+    { "Gxmessage",        NULL,        NULL,        0,            True,        True,        -1 },
     { "XCalc",        NULL,        NULL,        0,            True,        True,        -1 },
     { "System-config-printer.py",        NULL,        NULL,        0,            True,        True,        -1 },
     { "Go-for-it",        NULL,        NULL,        0,            True,        True,        -1 },
