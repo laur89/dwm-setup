@@ -146,6 +146,7 @@ static const Rule rules[] = {
     { "Slack",        NULL,        NULL,        1 << 2,          False,        False,         -1 },
     { "Mattermost",        "mattermost",        NULL,        1 << 2,          False,        False,         -1 },
     { "Franz",        NULL,        NULL,        1 << 2,          False,        False,         -1 },
+    { "Rambox",        NULL,        NULL,        1 << 2,          False,        False,         -1 },
     { "Pidgin",        NULL,        NULL,        1 << 2,          False,        False,         -1 },
     { "URxvt",        NULL,        NULL,        1 << 3,          False,        False,         -1 },
     { "Spacefm",        NULL,        NULL,        1 << 4,          False,        False,         -1 },
